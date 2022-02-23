@@ -1,0 +1,51 @@
+html, body{
+margin: 0px;
+padding: 0px;
+font-family: "DejaVu Sans", Arial, sans-serif;
+}
+
+.pageWrapper{
+margin: 0px;
+padding: 50px 0px 0px 0px;
+width: 100vw;
+}
+
+
+#topEls{
+display: flex;
+position: fixed;
+top: 0px;
+left: 0px;
+width: 100%;
+justify-content: space-between;
+align-items: center;
+z-index: 50;
+}
+
+#topEls > div{
+display: flex;
+justify-content: center;
+align-items: center;
+color: white;
+font-weight: bold;
+background-color: #71AEEC;
+}
+
+#topEls > .leftNav{
+border-radius: 0px 0px 6px 0px;
+min-width: 150px;
+min-height: 40px;
+width: 10%;
+height: 10%;
+}
+
+
+#topEls > .rightNav{
+border-radius: 0px 0px 0px 6px;
+min-width: 150px;
+min-height: 40px;
+width: 10%;
+height: 10%;
+}
+
+

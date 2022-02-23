@@ -3,18 +3,54 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href=""/>
-    <script async>
+    <link rel="stylesheet" href="./css/main.css"/>
+    <link rel="stylesheet" href="./css/calendar.css"/>
+    <script href="./js/main.js"></script>
+    <script>
     var state={
       "dbFilePath":"",
-      "user":{},
-      "pos":""
+      "user":{
+        "username":"testing"
+        },
+      "pos":"Testing",
+      "calendar":{}
     };
-
     </script>
   </head>
 
   <body>
+    <div class="pageWrapper">
+      <div id="topEls">
+        <div class="leftNav"></div>
+        <div class="rightNav"></div>
+      </div>
 
+
+      <div id="calendarEl">
+        <div class="week">
+          <div class="dyOfWk">Sun</div>
+          <div class="dyOfWk">Mon</div>
+          <div class="dyOfWk">Tue</div>
+          <div class="dyOfWk">Wed</div>
+          <div class="dyOfWk">Thu</div>
+          <div class="dyOfWk">Fri</div>
+          <div class="dyOfWk">Sat</div>
+          <div class="wkVw">&nbsp;</div>
+        </div>
+
+        <div class="week">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div class="wkVw">&nbsp;</div>
+        </div>
+      </div>
+     
+    </div>
   </body>
+
 </html>

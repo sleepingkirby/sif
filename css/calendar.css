@@ -1,0 +1,40 @@
+#calendarEl{
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: stretch;
+width: 100%;
+padding: 0px 4px 0px 4px;
+box-sizing: border-box;
+}
+
+#calendarEl div{
+border-style: solid;
+border-color: #c5c5c5;
+border-width: 1px 0px 0px 1px;
+display: flex;
+width:100%;
+justify-content: center;
+}
+
+#calendarEl .week:last-child > div{
+border-bottom-width: 1px;
+}
+
+#calendarEl .dyOfWk{
+background-color: #1371CF;
+color: white;
+font-weight: 900;
+}
+
+#calendarEl .wkVw{
+max-width: 15px;
+}
+
+#calendarEl .week{
+border: 0px;
+}
+
+#calendarEl .week > div:last-child{
+border-right-width: 1px;
+} 
