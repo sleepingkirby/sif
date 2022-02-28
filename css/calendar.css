@@ -30,21 +30,19 @@ vertical-align: top;
 
 #calendarEl td > div{
 box-sizing: border-box;
-max-height: 120px;
+word-break: break-word;
 overflow-x: hidden;
-overflow-y: auto;
 padding: 3px;
 }
 
-#calendarEl td > div > div{
-overflow-x: hidden;
-}
-
-#calendarEl td > div > div:first-child{
+#calendarEl td > div:first-child{
 text-align: right;
 }
 
-#calendarEl td > div > div:last-child{
+#calendarEl td > div:last-child{
+overflow-y: auto;
+height: 100%;
+max-height: 120px;
 }
 
 
@@ -85,7 +83,6 @@ border-bottom-right-radius: 4px;
 }  
 
 
-
 #calendarEl .dyOfWk{
 background-color: #1371CF;
 color: white;
@@ -104,5 +101,14 @@ margin-bottom: 10px;
 margin-right: 4px;
 }
 
+#calendarEl td[name=today]{
+color: white;
+background-color: #c5c5c5;
+} 
 
- 
+#calendarEl td[name=today] > div:first-child{
+font-weight: 900
+} 
+
+
+
