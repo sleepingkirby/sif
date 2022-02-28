@@ -6,17 +6,17 @@ font-family: "DejaVu Sans", Arial, sans-serif;
 
 .pageWrapper{
 margin: 0px;
-padding: 50px 0px 0px 0px;
+padding: 0px;
 width: 100vw;
 }
 
 
 #topEls{
 display: flex;
-position: fixed;
+position: sticky;
 top: 0px;
-left: 0px;
 width: 100%;
+margin-bottom: 20px;
 justify-content: space-between;
 align-items: center;
 z-index: 50;
@@ -39,7 +39,6 @@ width: 10%;
 height: 10%;
 }
 
-
 #topEls > .rightNav{
 border-radius: 0px 0px 0px 6px;
 min-width: 150px;
@@ -48,4 +47,6 @@ width: 10%;
 height: 10%;
 }
 
-
+#mainEl{
+width: 100%;
+}

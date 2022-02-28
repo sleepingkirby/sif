@@ -4,7 +4,7 @@ flex-direction: column;
 justify-content: flex-start;
 align-items: stretch;
 width: 100%;
-padding: 0px 4px 0px 4px;
+padding: 0px 10px 0px 10px;
 box-sizing: border-box;
 }
 
@@ -17,8 +17,15 @@ width:100%;
 justify-content: center;
 }
 
-#calendarEl .week:last-child > div{
-border-bottom-width: 1px;
+#calendarEl .wkVw{
+max-width: 12px;
+justify-content: center;
+align-items: center;
+color: #c5c5c5;
+}
+
+#calendarEl > .week{
+border: 0px;
 }
 
 #calendarEl .dyOfWk{
@@ -27,14 +34,27 @@ color: white;
 font-weight: 900;
 }
 
-#calendarEl .wkVw{
-max-width: 15px;
+#calendarEl .week > div{
+min-height: 90px;
 }
 
-#calendarEl .week{
-border: 0px;
+#calendarEl .week:first-child > div{
+min-height: auto;
 }
 
-#calendarEl .week > div:last-child{
+#calendarEl .week:last-child > div{
+border-bottom-width: 1px;
+}
+
+#calendarEl > div > div:last-child{
 border-right-width: 1px;
-} 
+}
+
+#mnthEl{
+width: 100%;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-bottom: 10px;
+}
+ 
