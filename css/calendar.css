@@ -42,7 +42,7 @@ text-align: right;
 #calendarEl td > div:last-child{
 overflow-y: auto;
 height: 100%;
-max-height: 120px;
+max-height: 100px;
 }
 
 
