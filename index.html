@@ -5,8 +5,8 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="./css/main.css"/>
     <link rel="stylesheet" href="./css/calendar.css"/>
-    <script href="./js/main.js"></script>
-    <script href="./js/cal.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/cal.js"></script>
     <script>
     var state={
       "dbFilePath":"",
@@ -14,7 +14,8 @@
         "username":"testing"
         },
       "pos":"Testing",
-      "calendar":{}
+      "calendar":{},
+      "curDate":{}
     };
     </script>
   </head>
@@ -50,20 +51,13 @@
             <th class="wkVw">&nbsp;</th>
           </tr>
 
-          <tr>
-            <td><div>12</div><div>some appointment</div></td>
-            <td name="today"><div>12</div><div>some appointment<br>some appointment<br>some appointment<br>some appointment<br></div></td>
-            <td><div>12</div><div>1234567890123456789</div></td>
-            <td><div>12</div><div>&nbsp;</div></td>
-            <td><div>12</div><div>&nbsp;</div></td>
-            <td><div>12</div><div>asdfasdfasdf</div></td>
-            <td><div>12</div><div>&nbsp;</div></td>
-            <td class="wkVw"><div>🞂</div></td>
-          </tr>
-
         </table>
       </div> <!-- mainEl end -->
     </div>
   </body>
-
+  <script>
+  var html=drawCal('calendarEl',2022,02,01);
+  var el=document.getElementById("calendarEl");
+  el.innerHTML=el.innerHTML+html;  
+  </script>
 </html>
