@@ -6,6 +6,13 @@ var epch=Date.parse(date.toISOString())/1000;
 return Math.floor(epch);
 }
 
+//outputs yyyymmdd, ex 20220201
+function toTimeStr(date){
+var rtrn=String(date.getFullYear());
+rtrn+=String(date.getMonth()).padStart(2, '0');
+rtrn+=String(date.getDate()).padStart(2, '0');
+return rtrn;
+}
 
 /*-----------------------------------------------
 pre: none
@@ -58,7 +65,7 @@ var i=0; //thnis always starts as 0 because we're always starting on a sunday.
     if(ptrDt.getMonth()!=mon){
     cls=' class="fade"';
     }
-  rtrn+='<td id="date-'+epochTime(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+  rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
 
     //set end of week.
     if(i%7>=6){
