@@ -1,10 +1,10 @@
 #calendarEl{
 padding: 0px 10px 0px 10px;
-color: #a5a5a5;
+color: #909090;
 border-collapse: separate;
 border-spacing: 0px;
 width: 100%;
-margin: 0px 8px 0px 8px;
+margin: 0px 10px 0px 10px;
 table-layout: fixed;
 }
 
@@ -19,7 +19,6 @@ min-width: 40px;
 #calendarEl th{
 justify-content: center;
 align-items: center;
-color: #c5c5c5;
 }
 
 
@@ -41,7 +40,7 @@ text-align: right;
 
 #calendarEl td > div:last-child{
 overflow-y: auto;
-height: 100px;
+min-height: 80px;
 }
 
 
@@ -87,6 +86,21 @@ background-color: #1371CF;
 color: white;
 font-weight: 900;
 }
+
+#calendarEl td[name=today]{
+color: white;
+background-color: #c5c5c5;
+} 
+
+#calendarEl td[name=today] > div:first-child{
+font-weight: 900
+} 
+
+
+#calendarEl .fade{
+color: #d5d5d5; 
+}
+
 
 #mnNav{
 width: 100%;
