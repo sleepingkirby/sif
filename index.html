@@ -5,15 +5,13 @@
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="./css/main.css"/>
     <link rel="stylesheet" href="./css/calendar.css"/>
-    <script src="./js/main.js"></script>
-    <script src="./js/cal.js"></script>
     <script>
     var state={
       "dbFilePath":"",
       "user":{
         "username":"testing"
         },
-      "pos":"Testing",
+      "pos":"calendar",
       "events":{},
       "shwDate":{}
     };
@@ -30,34 +28,9 @@
 
       <div id="mainEl">
 
-        <div id="mnNav">
-          <div id="yrEl">
-          2022
-          </div>
-          <div id="mnthEl">
-          Month
-          </div>
-        </div>
-       
-        <table id="calendarEl">
-          <tr>
-            <th class="dyOfWk">Sun</th>
-            <th class="dyOfWk">Mon</th>
-            <th class="dyOfWk">Tue</th>
-            <th class="dyOfWk">Wed</th>
-            <th class="dyOfWk">Thu</th>
-            <th class="dyOfWk">Fri</th>
-            <th class="dyOfWk">Sat</th>
-            <th class="wkVw">&nbsp;</th>
-          </tr>
 
-        </table>
       </div> <!-- mainEl end -->
     </div>
   </body>
-  <script>
-  var html=drawCal('calendarEl',2022,02,01);
-  var el=document.getElementById("calendarEl");
-  el.innerHTML=el.innerHTML+html;  
-  </script>
+    <script src="./js/main.js" defer></script>
 </html>
