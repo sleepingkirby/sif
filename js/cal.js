@@ -1,8 +1,24 @@
+class cal{
+
+  constructor(yr, mn, dy){
+
+  var date=new Date();
+  this.year=yr;
+    if(!yr||yr==null){
+    this.year=date.getFullYear();
+    }
+   
+  this.mon=mn; 
+    if(!mn||mn==null){
+    this.mon=date.getMonth();
+    }
+    
+  this.day=dy;
+    if(!dy||dy==null){
+    this.day=date.getDate();
+    }
 
 
-class Cal{
-
-  constructor(){
 
   this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   this.calEl=` 
@@ -19,7 +35,6 @@ class Cal{
           </tr>
         </table>
   `;
-  console.log("test class");
   }
 
 
@@ -43,26 +58,7 @@ class Cal{
   draws calendar of month and year on element of id
   params: id=calender element id, yr=year (ex. 2022), mn=month (0~11), dy=day of month(1~31)
   -----------------------------------------------*/
-  drawCal(id, yr, mn, dy){
-    if(!id||id==null||id==""){
-    return null;
-    }
-    
-  var date=new Date();
-  var year=yr;
-    if(!year||year==null){
-    year=date.getFullYear();
-    }
-   
-  var mon=mn; 
-    if(!mn||mn==null){
-    mn=date.getMonth();
-    }
-    
-  var day=dy;
-    if(!dy||dy==null){
-    dy=date.getDate();
-    }
+  genCal(year=this.year, mon=this.mon, day=this.day){
 
   //get where to start building calendar. This could be last month if it's in the week
   var ptrDt=new Date(year, mon, 1);
@@ -88,7 +84,8 @@ class Cal{
       if(ptrDt.getMonth()!=mon){
       cls=' class="fade"';
       }
-    rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+    
+    rtrn+='<td id="date-'+this.toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
 
       //set end of week.
       if(i%7>=6){
@@ -102,13 +99,25 @@ class Cal{
     ptrDt.setFullYear(year,mon,curDy);
     i=ptrDt.getDay();
     }
+
+  rtrn=`
+        <table id="calendarEl">
+          <tr>
+            <th class="dyOfWk">Sun</th>
+            <th class="dyOfWk">Mon</th>
+            <th class="dyOfWk">Tue</th>
+            <th class="dyOfWk">Wed</th>
+            <th class="dyOfWk">Thu</th>
+            <th class="dyOfWk">Fri</th>
+            <th class="dyOfWk">Sat</th>
+            <th class="wkVw">&nbsp;</th>
+          </tr>`+rtrn+'</table>';
   return rtrn;
   }
 
+  
 }
 
-/*
-var html=drawCal('calendarEl',2022,02,05);
-var el=document.getElementById("calendarEl");
-*/
+var calObj=new cal();
+document.getElementById('mainEl').innerHTML=calObj.genCal();
 
