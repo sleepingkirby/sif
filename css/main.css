@@ -18,7 +18,7 @@ top: 0px;
 width: 100%;
 margin: 0px 0px 20px 0px;
 justify-content: space-between;
-align-items: center;
+align-items: flex-start;
 z-index: 50;
 }
 
@@ -35,7 +35,6 @@ background-color: #71AEEC;
 border-radius: 0px 0px 6px 0px;
 min-width: 150px;
 min-height: 40px;
-width: 10%;
 height: 10%;
 }
 

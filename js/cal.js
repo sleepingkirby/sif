@@ -39,7 +39,7 @@ class cal{
   this.tmpl={};
   this.tmpl['leftNav']=[];
   this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div class="calNavYear">';
-  this.tmpl.leftNav[1]='</div><div class="calNavYearMod"><div>+</div><div>-</div></div></div><span id="calMon">';
+  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div><span id="calMon">';
   this.tmpl.leftNav[2]='</span></div>';
   }
 

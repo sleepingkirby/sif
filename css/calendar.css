@@ -126,15 +126,48 @@ font-weight: 900
 .calNav{
 display: flex;
 flex-direction:row;
+align-items: center;
+padding: 6px 8px 6px 8px;
 }
 
 .calNav div{
 display: flex;
-flex-direction: row;
 }
 
 #calYear{
 margin-right: 10px;
-border: 1px solid red;
+align-items: center;
+}
+
+.calNavYear{
+border-width: 2px 0px 2px 2px;
+border-style: solid;
+border-color: white;
+padding: 0px 6px 0px 6px;
+align-self: stretch;
+align-items: center;
+height: auto;
+border-radius: 4px 0px 0px 4px;
+font-size: xx-large;
+}
+
+.calNavMod{
+flex-direction: column;
+align-items: stretch;
+}
+
+.calNavMod div{
+height: 19px;
+justify-content: center;
+border: 2px solid white;
+width: 19px;
+}
+
+.calNavMod div:first-child{
+border-radius: 0px 4px 0px 0px;
+}
+
+.calNavMod div:last-child{
+border-radius: 0px 0px 4px 0px;
 }
 
