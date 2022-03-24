@@ -123,5 +123,18 @@ background-color: #c5c5c5;
 font-weight: 900
 } 
 
+.calNav{
+display: flex;
+flex-direction:row;
+}
 
+.calNav div{
+display: flex;
+flex-direction: row;
+}
+
+#calYear{
+margin-right: 10px;
+border: 1px solid red;
+}
 

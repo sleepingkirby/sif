@@ -1,13 +1,11 @@
-
+/* -----------------main class for sif------------------
+pre:global variable state, global variable mod
+post: html changed
+------------------------------------------------------*/
 class sif{
 
-  constructor(){
-  this.mod={};
-    this.mod['cal']={
-    'class':'cal',
-    'path':'./js/cal.js',
-    'eval': ''
-    };
+  constructor(modObj){
+  this.mod=modObj;
   }
 
   draw(str){
@@ -33,6 +31,10 @@ class sif{
 
 }
 
+function padDate(str){
+  return String(str).padStart(2, '0');
+}
+
 function testfunc(){
 var scrpt=document.createElement('script');
 scrpt.src="./js/cal.js";
@@ -50,5 +52,5 @@ testFunc();
 
 }
 
-var mainObj=new sif();
+var mainObj=new sif(mod);
 mainObj.draw(state.pos);

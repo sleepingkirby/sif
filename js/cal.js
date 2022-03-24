@@ -35,6 +35,12 @@ class cal{
           </tr>
         </table>
   `;
+
+  this.tmpl={};
+  this.tmpl['leftNav']=[];
+  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div class="calNavYear">';
+  this.tmpl.leftNav[1]='</div><div class="calNavYearMod"><div>+</div><div>-</div></div></div><span id="calMon">';
+  this.tmpl.leftNav[2]='</span></div>';
   }
 
 
@@ -49,6 +55,18 @@ class cal{
   var rtrn=String(date.getFullYear());
   rtrn+=String(date.getMonth()).padStart(2, '0');
   rtrn+=String(date.getDate()).padStart(2, '0');
+  return rtrn;
+  }
+
+  /*-----------------------------------------------
+  pre: none
+  post: generates leftNav Element
+  generates HTML of leftNav element for calendar
+  -----------------------------------------------*/
+  genLeftNavCal(year=this.year, mon=this.mon){
+    
+    var rtrn="";
+    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon)+this.tmpl.leftNav[2];
   return rtrn;
   }
 
@@ -120,4 +138,5 @@ class cal{
 
 var calObj=new cal();
 document.getElementById('mainEl').innerHTML=calObj.genCal();
+document.getElementById('leftNav').innerHTML=calObj.genLeftNavCal();
 

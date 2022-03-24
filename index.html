@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="./css/main.css"/>
     <link rel="stylesheet" href="./css/calendar.css"/>
     <script>
+    var mod={
+      'cal':{
+      'class':'cal',
+      'path':'./js/cal.js',
+      'eval': ''
+      }
+    };
     var state={
       "dbFilePath":"",
       "user":{
@@ -13,7 +20,8 @@
         },
       "pos":"cal",
       "events":{},
-      "shwDate":{}
+      "shwDate":{},
+      "timeZn": ""
     };
     function testFunc(){
     console.log("testasfsd");
@@ -24,8 +32,8 @@
   <body>
     <div class="pageWrapper">
       <div id="topEls">
-        <div class="leftNav"></div>
-        <div class="rightNav"></div>
+        <div id="leftNav" class="leftNav"></div>
+        <div id="rightNav" class="rightNav"></div>
       </div>
 
 
