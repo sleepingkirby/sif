@@ -31,10 +31,33 @@ font-weight: bold;
 background-color: #71AEEC;
 }
 
+#menu{
+margin: 0px;
+}
+
 #menuLogo{
-width: 96px;
+width: 46px;
 border: 1px solid red;
-height: 100%;
+height: 46px;
+margin: 8px 8px 8px 10px;
+}
+
+#menu:hover #menuDropDown{
+max-height: 1000px;
+padding: 0px 8px 8px 10px;
+}
+
+#menuDropDown{
+background-color: #71AEEC;
+max-height: 0px;
+height: 300px;
+width: 68px;
+padding: 0px 8px 0px 10px;
+position: absolute;
+box-sizing: border-box;
+border-radius: 0px 0px 4px 4px;
+transition: max-height 1s ease-in-out; 
+transition-delay: 0s;
 }
 
 #topEls > .leftNav{
