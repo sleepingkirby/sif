@@ -38,9 +38,9 @@ class cal{
 
   this.tmpl={};
   this.tmpl['leftNav']=[];
-  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div class="calNavYear">';
-  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div><span id="calMon">';
-  this.tmpl.leftNav[2]='</span></div>';
+  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div class="calNavYear" contenteditable="true">';
+  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div><div id="calMon"><div class="calNavYear" contenteditable="true">';
+  this.tmpl.leftNav[2]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div></div></div>';
   }
 
 
@@ -138,5 +138,5 @@ class cal{
 
 var calObj=new cal();
 document.getElementById('mainEl').innerHTML=calObj.genCal();
-document.getElementById('leftNav').innerHTML=calObj.genLeftNavCal();
+document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
 
