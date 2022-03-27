@@ -38,9 +38,9 @@ class cal{
 
   this.tmpl={};
   this.tmpl['leftNav']=[];
-  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div class="calNavYear" contenteditable="true">';
-  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div><div id="calMon"><div class="calNavYear" contenteditable="true">';
-  this.tmpl.leftNav[2]='</div><div class="calNavMod"><div>+</div><div>-</div></div></div></div></div>';
+  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
+  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" contenteditable="true">';
+  this.tmpl.leftNav[2]='</div><div name="calNavMon" class="calNavMod"><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum()">+</div><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum(false)">-</div></div></div></div></div>';
   }
 
 
@@ -56,6 +56,56 @@ class cal{
   rtrn+=String(date.getMonth()).padStart(2, '0');
   rtrn+=String(date.getDate()).padStart(2, '0');
   return rtrn;
+  }
+
+  /*----------------------------
+  pre: onclick attached to this function. global event variable. The element has "for" attribute
+  post: modifies the element named in "for" attribute
+  finds the number in the named element and increment.
+  optional attributes: padLen, padChar, minVal, maxVal
+  ----------------------------*/ 
+  modDate(){
+
+  }
+
+  /*----------------------------
+  pre: onclick attached to this function. global event variable. The element has "for" attribute
+  post: modifies the element named in "for" attribute
+  finds the number in the named element and increment.
+  optional attributes: padLen, padChar, minVal, maxVal
+  ----------------------------*/ 
+  modToElNum(add=true){
+    if(!event || !"target" in event || !event.target.hasAttribute("for")){
+    return false;
+    }
+  
+  var el=document.getElementsByName(event.target.getAttribute("for"))[0];
+  let num=Number(el.innerText);
+    if(isNaN(num)){
+    return false;
+    }
+
+  let min=event.target.getAttribute("minVal");
+  let max=event.target.getAttribute("maxVal");
+  let len=event.target.getAttribute("padLen");
+  let chr=event.target.getAttribute("padChar");
+
+  add?num++:num--;
+    if(min&&max){
+      if(num<min){
+      num=max;
+      }
+      if(num>max){
+      num=min;
+      }
+    }
+  
+    if(len&&chr){
+    num=String(num).padStart(len, chr);
+    }
+
+  el.innerText=num;
+  return true;
   }
 
   /*-----------------------------------------------

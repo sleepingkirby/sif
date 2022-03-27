@@ -139,7 +139,7 @@ margin-right: 10px;
 align-items: center;
 }
 
-.calNavYear{
+.calNavNum{
 border-width: 0px 0px 2px 0px;
 border-style: solid;
 border-color: white;
@@ -165,9 +165,11 @@ width: 19px;
 
 .calNavMod div:first-child{
 border-radius: 4px 4px 0px 0px;
+cursor: pointer;
 }
 
 .calNavMod div:last-child{
 border-radius: 0px 0px 4px 4px;
+cursor: pointer;
 }
 
