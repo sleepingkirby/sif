@@ -1,6 +1,6 @@
 class cal{
 
-  constructor(yr, mn, dy){
+  constructor(yr=null, mn=null, dy=null){
 
   var date=new Date();
   this.year=yr;
@@ -59,13 +59,21 @@ class cal{
   }
 
   /*----------------------------
-  pre: onclick attached to this function. global event variable. The element has "for" attribute
-  post: modifies the element named in "for" attribute
-  finds the number in the named element and increment.
-  optional attributes: padLen, padChar, minVal, maxVal
+  pre:  
+  post: 
   ----------------------------*/ 
-  modDate(){
+  modDate( year=this.year, mon=this.mon, day=this.day){
+    if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon-1) && state['shwDate']['day']==day){
+    //if date is the same, no need to update.
+    return false;
+    }
 
+  this.year=state['shwDate']['year']=year;
+  this.mon=state['shwDate']['mon']=(mon-1);
+  this.day=state['shwDate']['day']=day;
+  document.getElementById('mainEl').innerHTML=this.genCal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
+
+  return true;
   }
 
   /*----------------------------
@@ -105,6 +113,10 @@ class cal{
     }
 
   el.innerText=num;
+
+    let year=document.getElementsByName("calNavYear")[0].innerText;
+    let mon=document.getElementsByName("calNavMon")[0].innerText;
+  this.modDate(year, mon);
   return true;
   }
 
@@ -116,7 +128,7 @@ class cal{
   genLeftNavCal(year=this.year, mon=this.mon){
     
     var rtrn="";
-    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon)+this.tmpl.leftNav[2];
+    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
   return rtrn;
   }
 
@@ -130,6 +142,7 @@ class cal{
 
   //get where to start building calendar. This could be last month if it's in the week
   var ptrDt=new Date(year, mon, 1);
+  var today=new Date();
   var curDy=(1 - ptrDt.getDay())%7;
   ptrDt.setFullYear(year, mon, curDy);
   var rtrn="";
@@ -144,7 +157,7 @@ class cal{
 
       //set day
       let tdy="";
-      if(curDy==day&&ptrDt.getMonth()==mon){
+      if(curDy==today.getDate()&&ptrDt.getMonth()==today.getMonth()&&ptrDt.getFullYear()==today.getFullYear()){
       tdy=' name="today"';
       }
       //set fade days outside the current month to fade
