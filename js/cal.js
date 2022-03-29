@@ -39,8 +39,8 @@ class cal{
   this.tmpl={};
   this.tmpl['leftNav']=[];
   this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
-  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" contenteditable="true">';
-  this.tmpl.leftNav[2]='</div><div name="calNavMon" class="calNavMod"><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum()">+</div><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()>T</div></div>';
+  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">';
+  this.tmpl.leftNav[2]='</div><div class="calNavMod"><div for="calNavMon" onclick="calObj.modToElNum()">+</div><div for="calNavMon" onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()>T</div></div>';
   }
 
 
@@ -58,9 +58,41 @@ class cal{
   return rtrn;
   }
 
+  //----------------------------
+  //determines whether or not the element wants padding
+  padVal(el, val){
+  let v=val;
 
-  dateUpdt(){
+  let min=el.getAttribute("minVal");
+  let max=el.getAttribute("maxVal");
+  let len=el.getAttribute("padLen");
+  let chr=el.getAttribute("padChar");
+
+    if(min&&max){
+      if(v<min){
+      v=max;
+      }
+      if(v>max){
+      v=min;
+      }
+    }
+
+    if(len&&chr){
+    v=String(v).padStart(len, chr);
+    }
+
+  el.innerText=v;
+  }
+
+  //---------------------------------------------------
+  //updates html elements with the current date
+  dateUpdt(year=this.year, mon=this.mon){
+  var yrEl=document.getElementsByName("calNavYear")[0];
+  var mnEl=document.getElementsByName("calNavMon")[0];
   
+  this.padVal(yrEl, year);
+  this.padVal(mnEl, mon);
+
   }
 
   //changes the calendar to today/this month.
@@ -68,7 +100,7 @@ class cal{
   let dt=new Date();
   this.modDate(dt.getFullYear(), dt.getMonth()+1);
   
-   
+  this.dateUpdt(dt.getFullYear(), dt.getMonth()+1); 
   }
 
   /*----------------------------
@@ -105,30 +137,31 @@ class cal{
     if(isNaN(num)){
     return false;
     }
-
-  let min=event.target.getAttribute("minVal");
-  let max=event.target.getAttribute("maxVal");
-  let len=event.target.getAttribute("padLen");
-  let chr=event.target.getAttribute("padChar");
-
-  add?num++:num--;
-    if(min&&max){
-      if(num<min){
-      num=max;
-      }
-      if(num>max){
-      num=min;
-      }
-    }
   
-    if(len&&chr){
-    num=String(num).padStart(len, chr);
+  
+  add?num++:num--;
+
+  this.padVal(el, num);
+
+    //check if element being changed is the month
+    //if so, see if need to inc or dec year.
+    if(el.getAttribute('name')=='calNavMon'){
+      let yrEl=document.getElementsByName('calNavYear')[0];
+      let yrNm=yrEl.innerText;
+      if(num>el.getAttribute('maxVal')){
+      //increment year
+      this.padVal(yrEl, parseInt(yrNm)+1);
+      }
+      if(num<el.getAttribute('minVal')){
+      //decrement year
+      this.padVal(yrEl, parseInt(yrNm)-1);
+      }
     }
 
-  el.innerText=num;
 
-    let year=document.getElementsByName("calNavYear")[0].innerText;
-    let mon=document.getElementsByName("calNavMon")[0].innerText;
+  let year=document.getElementsByName("calNavYear")[0].innerText;
+  let mon=document.getElementsByName("calNavMon")[0].innerText;
+
   this.modDate(year, mon);
   return true;
   }
