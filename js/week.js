@@ -1,4 +1,4 @@
-class cal{
+class week{
 
   constructor(yr=null, mn=null, dy=null){
 
@@ -242,10 +242,17 @@ class cal{
   return rtrn;
   }
 
+  genWk(){
+  return "<div>testing</div>";
+  }
   
+  genLeftNavWk(){
+  return "<div>nav</div>";
+  }
+
 }
 
-var calObj=new cal();
-document.getElementById('mainEl').innerHTML=calObj.genCal();
-document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
+var wkObj=new week();
+document.getElementById('mainEl').innerHTML=wkObj.genWk();
+document.getElementById('leftNavMod').innerHTML=wkObj.genLeftNavWk();
 

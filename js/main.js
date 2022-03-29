@@ -6,17 +6,20 @@ class sif{
 
   constructor(modObj){
   this.mod=modObj;
+  this.scrpt=document.createElement('script'); //element that holds the script
   }
 
+
+  //----------- draw the module ----------
   draw(str){
     if(!str||str==null||str==""||!this.mod.hasOwnProperty(str)){
     return false;
     }
 
-  var scrpt=document.createElement('script');
-  scrpt.src=this.mod[str].path;
-  scrpt.defer=true;
-  scrpt.id="modScript";
+
+  this.scrpt.src=this.mod[str].path;
+  this.scrpt.defer=true;
+  this.scrpt.id="modScript";
     if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
       scrpt.onload = () => {
       /*
@@ -26,9 +29,19 @@ class sif{
       eval(this.mod[str].eval);
       };
     }
-  document.head.appendChild(scrpt);
+
+    //if script exists in document, remove.
+    if(document.getElementById(this.scrpt.id)){
+    document.head.removeChild(this.scrpt);
+    }
+
+  document.head.appendChild(this.scrpt);
   }
 
+}
+
+function padDate(str){
+  return String(str).padStart(2, '0');
 }
 
 function changePos(pos){
@@ -36,8 +49,7 @@ function changePos(pos){
   return false;
   }
 
-  
-
+  state.pos=pos;
 }
 
 
