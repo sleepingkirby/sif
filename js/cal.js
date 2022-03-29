@@ -40,7 +40,7 @@ class cal{
   this.tmpl['leftNav']=[];
   this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
   this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" contenteditable="true">';
-  this.tmpl.leftNav[2]='</div><div name="calNavMon" class="calNavMod"><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum()">+</div><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=goToday()>Today</div></div>';
+  this.tmpl.leftNav[2]='</div><div name="calNavMon" class="calNavMod"><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum()">+</div><div for="calNavMon" padLen=2 padChar="0" minVal=1 maxVal=12 onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()>T</div></div>';
   }
 
 
@@ -56,6 +56,19 @@ class cal{
   rtrn+=String(date.getMonth()).padStart(2, '0');
   rtrn+=String(date.getDate()).padStart(2, '0');
   return rtrn;
+  }
+
+
+  dateUpdt(){
+  
+  }
+
+  //changes the calendar to today/this month.
+  goToday(){
+  let dt=new Date();
+  this.modDate(dt.getFullYear(), dt.getMonth()+1);
+  
+   
   }
 
   /*----------------------------

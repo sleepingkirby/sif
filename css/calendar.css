@@ -127,7 +127,7 @@ font-weight: 900
 display: flex;
 flex-direction:row;
 align-items: center;
-margin: 8px 20px 8px 6px;
+margin: 8px 16px 8px 6px;
 }
 
 .calNav div{
@@ -174,5 +174,11 @@ cursor: pointer;
 }
 
 .calToday{
-margin-left: 10px;
+margin-left: 16px;
+font-size: xx-large;
+border: 2px solid white;
+border-radius: 4px;
+box-sizing: border-box;
+padding: 2px 8px 2px 8px;
+cursor: pointer;
 }
