@@ -31,9 +31,15 @@ class sif{
 
 }
 
-function padDate(str){
-  return String(str).padStart(2, '0');
+function changePos(pos){
+  if(!pos||pos==""){
+  return false;
+  }
+
+  
+
 }
+
 
 function testfunc(){
 var scrpt=document.createElement('script');
