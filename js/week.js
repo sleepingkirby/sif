@@ -31,16 +31,16 @@ class week{
             <th class="dyOfWk">Thu</th>
             <th class="dyOfWk">Fri</th>
             <th class="dyOfWk">Sat</th>
-            <th class="wkVw">&nbsp;</th>
           </tr>
         </table>
   `;
 
   this.tmpl={};
   this.tmpl['leftNav']=[];
-  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
-  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">';
-  this.tmpl.leftNav[2]='</div><div class="calNavMod"><div for="calNavMon" onclick="calObj.modToElNum()">+</div><div for="calNavMon" onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()>T</div></div>';
+  this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=wkObj.modDate()>';
+  this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=wkObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="wkObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">';
+  this.tmpl.leftNav[2]='</div><div class="calNavMod"><div for="calNavMon" onclick="wkObj.modToElNum()">+</div><div for="calNavMon" onclick="wkObj.modToElNum(false)">-</div></div></div><div id="calDay"><div name="calNavDay" class="calNavNum" contenteditable="true" oninput=wkObj.modDate()>';
+  this.tmpl.leftNav[3]='</div><div class="calNavMod"><div for="calNavDay" onclick="wkObj.modToElNum()">+</div><div for="calNavDay" onclick="wkObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=wkObj.goToday()>T</div></div>';
   }
 
 
@@ -171,10 +171,10 @@ class week{
   post: generates leftNav Element
   generates HTML of leftNav element for calendar
   -----------------------------------------------*/
-  genLeftNavCal(year=this.year, mon=this.mon){
+  genLeftNavWk(year=this.year, mon=this.mon, day=this.day){
     
     var rtrn="";
-    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
+    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2]+padDate(day)+this.tmpl.leftNav[3];
   return rtrn;
   }
 
@@ -216,6 +216,70 @@ class week{
 
       //set end of week.
       if(i%7>=6){
+      rtrn+='</tr>'+"\n";
+        if(ptrDt.getMonth()!=mon){
+        end=true;
+        }
+      }
+
+    curDy++;
+    ptrDt.setFullYear(year,mon,curDy);
+    i=ptrDt.getDay();
+    }
+
+  rtrn=`
+        <table id="calendarEl">
+          <tr>
+            <th class="dyOfWk">Sun</th>
+            <th class="dyOfWk">Mon</th>
+            <th class="dyOfWk">Tue</th>
+            <th class="dyOfWk">Wed</th>
+            <th class="dyOfWk">Thu</th>
+            <th class="dyOfWk">Fri</th>
+            <th class="dyOfWk">Sat</th>
+          </tr>`+rtrn+'</table>';
+  return rtrn;
+  }
+
+
+  /*-----------------------------------------------
+  pre: none
+  post: element of id (calendar element) drawn
+  draws calendar of month and year on element of id
+  params: id=calender element id, yr=year (ex. 2022), mn=month (0~11), dy=day of month(1~31)
+  -----------------------------------------------*/
+  genWk(year=this.year, mon=this.mon, day=this.day){
+
+  //get where to start building calendar. This could be last month if it's in the week
+  var ptrDt=new Date(year, mon, day);
+  var today=new Date();
+  var curDy=(1 - ptrDt.getDay())%7;//get the day of the week for this date for this month
+  ptrDt.setFullYear(year, mon, curDy);
+  var rtrn="";
+  var end=false;
+  var i=0; //thnis always starts as 0 because we're always starting on a sunday.
+
+    while(i<6){
+      //if start of week.
+      if(i%7<=0){
+      rtrn+="<tr>";
+      }
+
+      //set today
+      let tdy="";
+      if(curDy==today.getDate()&&ptrDt.getMonth()==today.getMonth()&&ptrDt.getFullYear()==today.getFullYear()){
+      tdy=' name="today"';
+      }
+      //set fade days outside the current month to fade
+      let cls="";
+      if(ptrDt.getMonth()!=mon){
+      cls=' class="fade"';
+      }
+    
+    rtrn+='<td id="date-'+this.toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+
+      //set end of week.
+      if(i%7>=6){
       rtrn+='<td class="wkVw" ><div>🞂</div></td></tr>'+"\n";
         if(ptrDt.getMonth()!=mon){
         end=true;
@@ -240,15 +304,11 @@ class week{
             <th class="wkVw">&nbsp;</th>
           </tr>`+rtrn+'</table>';
   return rtrn;
-  }
 
-  genWk(){
+
   return "<div>testing</div>";
   }
   
-  genLeftNavWk(){
-  return "<div>nav</div>";
-  }
 
 }
 

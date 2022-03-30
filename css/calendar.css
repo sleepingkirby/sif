@@ -182,3 +182,7 @@ box-sizing: border-box;
 padding: 2px 8px 2px 8px;
 cursor: pointer;
 }
+
+#calDay{
+margin-left: 10px;
+}
