@@ -49,7 +49,7 @@ class week{
         </div>
       </div>
       <div id="calMon">
-        <div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="truei">`;
+        <div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">`;
   this.tmpl.leftNav[2]=`
         </div>
         <div class="calNavMod">
@@ -58,7 +58,7 @@ class week{
         </div>
       </div>
       <div id="calDay">
-        <div name="calNavDay" class="calNavNum" contenteditable="true" oninput=wkObj.modDate()>`;
+        <div name="calNavDay" class="calNavNum" padLen=2 padChar="0" contenteditable="true" oninput=wkObj.modDate()>`;
   this.tmpl.leftNav[3]=`
         </div>
         <div class="calNavMod">
@@ -158,38 +158,42 @@ class week{
     if(!event || !"target" in event || !event.target.hasAttribute("for")){
     return false;
     }
-  
-  var el=document.getElementsByName(event.target.getAttribute("for"))[0];
+  var forId=event.target.getAttribute("for");
+  var el=document.getElementsByName(forId)[0];
   let num=Number(el.innerText);
     if(isNaN(num)){
     return false;
     }
-  
-  
+ 
+  var yrEl=document.getElementsByName('calNavYear')[0];
+  var mnEl=document.getElementsByName('calNavMon')[0];
+  var dyEl=document.getElementsByName('calNavDay')[0];
+ 
+ 
+  var dt=new Date(yrEl.innerText,Number(mnEl.innerText)-1,dyEl.innerText);
+
   add?num++:num--;
 
-  this.padVal(el, num);
-
-    //check if element being changed is the month
-    //if so, see if need to inc or dec year.
-    if(el.getAttribute('name')=='calNavMon'){
-      let yrEl=document.getElementsByName('calNavYear')[0];
-      let yrNm=yrEl.innerText;
-      if(num>el.getAttribute('maxVal')){
-      //increment year
-      this.padVal(yrEl, parseInt(yrNm)+1);
-      }
-      if(num<el.getAttribute('minVal')){
-      //decrement year
-      this.padVal(yrEl, parseInt(yrNm)-1);
-      }
+    switch(forId){
+      case "calNavDay":
+      dt.setDate(num);
+      break;
+      case "calNavMon":
+      dt.setMonth(num-1);
+      break;
+      case "calNavYear":
+      dt.setFullYear(num);
+      break;
+      default:
+      break;
     }
 
 
-  let year=document.getElementsByName("calNavYear")[0].innerText;
-  let mon=document.getElementsByName("calNavMon")[0].innerText;
+  this.padVal(yrEl,dt.getFullYear());
+  this.padVal(mnEl,dt.getMonth()+1);
+  this.padVal(dyEl,dt.getDate());
 
-  this.modDate(year, mon);
+  //this.modDate(year, mon, day);
   return true;
   }
 
