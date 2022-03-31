@@ -135,13 +135,13 @@ class week{
   post: 
   ----------------------------*/ 
   modDate( year=this.year, mon=this.mon, day=this.day){
-    if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon-1) && state['shwDate']['day']==day){
+    if(state['shwDate']['year']==year && state['shwDate']['mon']==mon && state['shwDate']['day']==day){
     //if date is the same, no need to update.
     return false;
     }
 
   this.year=state['shwDate']['year']=year;
-  this.mon=state['shwDate']['mon']=(mon-1);
+  this.mon=state['shwDate']['mon']=mon;
   this.day=state['shwDate']['day']=day;
   document.getElementById('mainEl').innerHTML=this.genWk(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 
@@ -167,10 +167,10 @@ class week{
  
   var yrEl=document.getElementsByName('calNavYear')[0];
   var mnEl=document.getElementsByName('calNavMon')[0];
-  var dyEl=document.getElementsByName('calNavDay')[0];
+  var dyEl=document.getElementsByName('calNavDay').length>=1?document.getElementsByName('calNavDay')[0]:null;
  
  
-  var dt=new Date(yrEl.innerText,Number(mnEl.innerText)-1,dyEl.innerText);
+  var dt=new Date(yrEl.innerText,Number(mnEl.innerText)-1,dyEl?dyEl.innerText:this.day);
 
   add?num++:num--;
 
@@ -191,9 +191,9 @@ class week{
 
   this.padVal(yrEl,dt.getFullYear());
   this.padVal(mnEl,dt.getMonth()+1);
-  this.padVal(dyEl,dt.getDate());
+  dyEl?this.padVal(dyEl,dt.getDate()):null;
 
-  //this.modDate(year, mon, day);
+  this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
   return true;
   }
 
@@ -221,6 +221,7 @@ class week{
 
   //get where to start building calendar. This could be last month if it's in the week
   var ptrDt=new Date(year, mon, day);
+  
   var today=new Date();
   ptrDt.setDate(ptrDt.getDate()-ptrDt.getDay());
   var i=0;
