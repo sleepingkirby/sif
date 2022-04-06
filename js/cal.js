@@ -20,6 +20,7 @@ class cal{
 
 
 
+
   this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   this.calEl=` 
         <table id="calendarEl">
@@ -91,16 +92,16 @@ class cal{
   var mnEl=document.getElementsByName("calNavMon")[0];
   
   this.padVal(yrEl, year);
-  this.padVal(mnEl, mon);
+  this.padVal(mnEl, Number(mon)+1);
 
   }
 
   //changes the calendar to today/this month.
   goToday(){
   let dt=new Date();
-  this.modDate(dt.getFullYear(), dt.getMonth()+1);
+  this.modDate(dt.getFullYear(), dt.getMonth());
   
-  this.dateUpdt(dt.getFullYear(), dt.getMonth()+1); 
+  this.dateUpdt(dt.getFullYear(), dt.getMonth()); 
   }
 
   /*----------------------------
@@ -108,7 +109,7 @@ class cal{
   post: 
   ----------------------------*/ 
   modDate( year=this.year, mon=this.mon, day=this.day){
-    if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon-1) && state['shwDate']['day']==day){
+    if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon) && state['shwDate']['day']==day){
     //if date is the same, no need to update.
     return false;
     }
@@ -116,7 +117,7 @@ class cal{
   console.log(year+" "+mon+" "+day);
 
   this.year=state['shwDate']['year']=year;
-  this.mon=state['shwDate']['mon']=(mon-1);
+  this.mon=state['shwDate']['mon']=mon;
   this.day=state['shwDate']['day']=day;
   document.getElementById('mainEl').innerHTML=this.genCal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 
@@ -143,8 +144,6 @@ class cal{
   
   add?num++:num--;
 
-  this.padVal(el, num);
-
     //check if element being changed is the month
     //if so, see if need to inc or dec year.
     if(el.getAttribute('name')=='calNavMon'){
@@ -160,9 +159,10 @@ class cal{
       }
     }
 
+    this.padVal(el, num);
 
   let year=document.getElementsByName("calNavYear")[0].innerText;
-  let mon=document.getElementsByName("calNavMon")[0].innerText;
+  let mon=Number(document.getElementsByName("calNavMon")[0].innerText)-1;
 
   this.modDate(year, mon);
   return true;

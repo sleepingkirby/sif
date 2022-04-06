@@ -113,21 +113,23 @@ class week{
 
   //---------------------------------------------------
   //updates html elements with the current date
-  dateUpdt(year=this.year, mon=this.mon){
+  dateUpdt(year=this.year, mon=this.mon, day=this.day){
   var yrEl=document.getElementsByName("calNavYear")[0];
   var mnEl=document.getElementsByName("calNavMon")[0];
+  var dtEl=document.getElementsByName("calNavDay")[0];
   
   this.padVal(yrEl, year);
-  this.padVal(mnEl, mon);
+  this.padVal(mnEl, Number(mon)+1);
+  this.padVal(dtEl, day);
 
   }
 
   //changes the calendar to today/this month.
   goToday(){
   let dt=new Date();
-  this.modDate(dt.getFullYear(), dt.getMonth()+1);
   
-  this.dateUpdt(dt.getFullYear(), dt.getMonth()+1); 
+  this.modDate(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  this.dateUpdt(dt.getFullYear(), dt.getMonth(), dt.getDate()); 
   }
 
   /*----------------------------
