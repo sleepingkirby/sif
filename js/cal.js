@@ -113,6 +113,8 @@ class cal{
     return false;
     }
 
+  console.log(year+" "+mon+" "+day);
+
   this.year=state['shwDate']['year']=year;
   this.mon=state['shwDate']['mon']=(mon-1);
   this.day=state['shwDate']['day']=day;
