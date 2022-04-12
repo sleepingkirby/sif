@@ -54,6 +54,13 @@ class sqljs{
 }
 
 
+function loadDB(el){
+  if(el.target.files.length<1){
+  return null;
+  }
+  console.log(el.target.files);
+}
+
 function padDate(str){
   return String(str).padStart(2, '0');
 }
@@ -88,3 +95,5 @@ testFunc();
 
 var mainObj=new sif(mod);
 mainObj.draw(state.pos);
+
+document.getElementById("enterDatabase").onchange=loadDB;
