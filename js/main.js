@@ -46,36 +46,9 @@ class sqljs{
   constructor(){}
 
   async main(){
+
   const initSqlJs = require('sql.js');
-  //const initSqlJs = window.initSqlJs;
-
-    const SQL = await initSqlJs({
-    // Required to load the wasm binary asynchronously. Of course, you can host it wherever you want
-    // You can omit locateFile completely when running in node
-    locateFile: file => './sql-wasm.wasm'
-    });
-
-  //========= load db
-  /*
-    dbFileElm.onchange = () => {
-      const f = dbFileElm.files[0];
-      const r = new FileReader();
-      r.onload = function() {
-        const Uints = new Uint8Array(r.result);
-        db = new SQL.Database(Uints);
-      }
-      r.readAsArrayBuffer(f);
-    }
-  */
-
-  /*=== export to disk
-    const fs = require("fs");
-    // [...] (create the database)
-    const data = db.export();
-    const buffer = new Buffer(data);
-    fs.writeFileSync("filename.sqlite", buffer);
-  */
-
+  const db = new SQL.Database();
   }
 
 }
