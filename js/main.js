@@ -1,12 +1,15 @@
 /* -----------------main class for sif------------------
-pre:global variable state, global variable mod
+pre:global variable state, global variable mod, sqljs object
 post: html changed
 ------------------------------------------------------*/
 class sif{
 
-  constructor(modObj){
+  constructor(modObj, dbInId, overId, sqljs){
   this.mod=modObj;
   this.scrpt=document.createElement('script'); //element that holds the script
+  this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
+  this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
+  this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
   }
 
 
@@ -38,19 +41,84 @@ class sif{
   document.head.appendChild(this.scrpt);
   }
 
+  //--------- setState --------------
+  //if pos, redraw
+  //if dbFile, turn on or off element Id "enterDatabase"
+  setState(id, val){
+    if(!state.hasOwnProperty(id)){
+    return false;
+    }
+    state[id]=val;
+    switch(id){
+      case "dbFile":
+        //validate if db file. If not, empty. if so hide element
+        let ext=state.dbFile.name.substr(-3);
+        if(ext!=".db"){
+        state[id]="";
+        return false;
+        }
+        if(!state.dbFile){
+        document.getElementById(this.overId).style.display="flex";
+        }
+        else{
+        document.getElementById(this.overId).style.display="none";
+        this.sqlObj.load();
+        }
+      break;
+      case "pos":
+      break;
+      default:
+      break;
+    }
+  }
+
+  //----------hook to turn on or off the enter Database page
+  hookEl(elId=this.dbPgId){
+  var el=document.getElementById(elId);
+    if(el){
+      el.onchange=(e)=>{
+      this.setState('dbFile', e.target.files[0]);
+      };
+    }
+  }
+
+  getBlob(elId=this.dbPgId){
+  var el=document.getElementById(elId);
+    if(el){
+      el.onchange=(e)=>{
+      var r=new FileReader();
+        r.onload=function(){
+        const uints=new Uint8Array(r.result);
+        console.log(uints);
+        }
+      r.readAsArrayBuffer(e.target.files[0]);
+      };
+    }
+  }
+
+  
 }
 
 
 class sqljs{
 
-  constructor(){}
-
-  async main(){
-
-  const initSqlJs = require('sql.js');
-  const db = new SQL.Database();
+  constructor(){
   }
 
+  load(){
+  /*
+  const db = new SQL.Database();
+    if(state.dbFile){
+    const f = state.dbFile;
+    const r = new FileReader();
+      r.onload = function() {
+        const Uints = new Uint8Array(r.result);
+        db = new SQL.Database(Uints);
+      }
+    r.readAsArrayBuffer(f);
+    }
+  */
+  }
 }
 
 
@@ -91,9 +159,8 @@ testFunc();
 
 }
 
-
-
+var sqlObj=new sqljs();
 var mainObj=new sif(mod);
 mainObj.draw(state.pos);
-
-document.getElementById("enterDatabase").onchange=loadDB;
+//mainObj.hookEl();
+mainObj.getBlob();
