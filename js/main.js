@@ -10,6 +10,11 @@ class sif{
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
+
+  this.hookEl();
+
+  window.onbeforeunload=(e)=>{return "Are you sure you want to leave?";}
+  window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
   }
 
 
@@ -61,8 +66,7 @@ class sif{
         document.getElementById(this.overId).style.display="flex";
         }
         else{
-        document.getElementById(this.overId).style.display="none";
-        this.sqlObj.load();
+        this.sqlObj.loadDB((e)=>{document.getElementById(this.overId).style.display="none";});
         }
       break;
       case "pos":
@@ -100,34 +104,78 @@ class sif{
 }
 
 
+/*-------------------------
+pre: state variable, sql.js loaded, wasm binary
+post: state updated, database modified.
+class to handle and interact with the database
+-------------------------*/
 class sqljs{
 
   constructor(){
   }
 
-  load(){
-  /*
-  const db = new SQL.Database();
-    if(state.dbFile){
-    const f = state.dbFile;
+
+  /*----------------------------------------------
+  pre: state.dbFile.db, wasm, sql,js
+  post: state modified
+  load DB
+  ----------------------------------------------*/
+  async loadDB(callback){
+    if(wasm.length<=0||typeof wasm!="string"){
+    console.log("sqljs->loadDB() failed. wasm is not a string or empty");
+    return false;
+    }
+
+  //convert wasm to uint8array to blob so sql.js can load it.
+  var bin=atob(wasm);
+  var len=bin.length;
+
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) {
+      bytes[i] = bin.charCodeAt(i);
+  }
+
+  var myBlob=new Blob([bytes], {type: 'application/wasm'});
+
+  const config = await initSqlJs({
+  locateFile: file => URL.createObjectURL(myBlob)
+  });
+
+    initSqlJs(config).then(function(SQL){
     const r = new FileReader();
       r.onload = function() {
-        const Uints = new Uint8Array(r.result);
-        db = new SQL.Database(Uints);
+      var Uints = new Uint8Array(r.result);
+      state.dbObj = new SQL.Database(Uints);
+      callback();
       }
-    r.readAsArrayBuffer(f);
-    }
-  */
+    r.readAsArrayBuffer(state.dbFile);
+    });
+  }
+
+
+  runQuery(){
+    /*
+      //Create the database
+      const db = new SQL.Database();
+      // Run a query without reading the results
+      db.run("CREATE TABLE test (col1, col2);");
+      // Insert two rows: (1,111) and (2,222)
+      db.run("INSERT INTO test VALUES (?,?), (?,?)", [1,111,2,222]);
+
+      // Prepare a statement
+      const stmt = db.prepare("SELECT * FROM test WHERE col1 BETWEEN $start AND $end");
+      stmt.getAsObject({$start:1, $end:1}); // {col1:1, col2:111}
+
+      // Bind new values
+      stmt.bind({$start:1, $end:2});
+      while(stmt.step()) { //
+        const row = stmt.getAsObject();
+        console.log('Here is a row: ' + JSON.stringify(row));
+      }
+    */
   }
 }
 
-
-function loadDB(el){
-  if(el.target.files.length<1){
-  return null;
-  }
-  console.log(el.target.files);
-}
 
 function padDate(str){
   return String(str).padStart(2, '0');
@@ -137,30 +185,26 @@ function changePos(pos){
   if(!pos||pos==""){
   return false;
   }
-
   state.pos=pos;
 }
 
-
+/*
 function testfunc(){
 var scrpt=document.createElement('script');
 scrpt.src="./js/cal.js";
 scrpt.defer=true;
 scrpt.onload = () => { testFuncCal();};
 document.head.appendChild(scrpt);
-/*
 var c=document.createElement('script');
 c.textContent='('+function () {
 testFunc();
 } +')();';
 
 (document.head || document.documentElement).appendChild(c);
+}
 */
 
-}
 
 var sqlObj=new sqljs();
 var mainObj=new sif(mod);
 mainObj.draw(state.pos);
-//mainObj.hookEl();
-mainObj.getBlob();
