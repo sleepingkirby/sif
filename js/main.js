@@ -86,6 +86,11 @@ class sif{
     }
   }
 
+
+  modShowHide(elId, val=null){
+  let el=document.getElementById(elId);
+  }
+
   getBlob(elId=this.dbPgId){
   var el=document.getElementById(elId);
     if(el){
