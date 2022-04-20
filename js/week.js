@@ -242,7 +242,7 @@ class week{
       }
       //set fade days outside the current month to fade
       let cls="";
-      if(ptrDt.getMonth()!=today.getMonth()){
+      if(ptrDt.getMonth()!=today.getMonth()||ptrDt.getYear()!=today.getYear()){
       cls=' class="fade"';
       }
     
