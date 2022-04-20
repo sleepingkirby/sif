@@ -12,6 +12,8 @@ class sif{
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
 
   this.hookEl();
+  this.modOpenClose("lftMod");
+
 
   window.onbeforeunload=(e)=>{return "Are you sure you want to leave?";}
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
@@ -86,11 +88,46 @@ class sif{
     }
   }
 
-
-  modShowHide(elId, val=null){
+  /*-------------------------------------------------------
+  pre:
+  post:
+  sets up mod open clse
+  -------------------------------------------------------*/
+  modOpenClose(elId){
   let el=document.getElementById(elId);
+  let cls=el.getElementsByClassName("close")[0];
+  console.log(cls);
+  cls.onclick=this.modPrcCls;
   }
 
+  /*-------------------------------------------------------
+  pre:
+  post:
+  hides or shows the element of elId.
+  -------------------------------------------------------*/
+  modPrcCls(e){
+  console.log(e);
+  let el=e.target;
+  let oLft=el.getAttribute("oLft");
+  let nLft=el.getAttribute("nLft");
+  let prntEl=document.getElementById(el.getAttribute("hideEl"));
+    if(prntEl.style.left=='' || prntEl.style.left==oLft){
+
+    console.log(nLft);
+    prntEl.style.left=nLft;
+    return null;
+    }
+    if(prntEl.style.left!=oLft){
+    console.log(oLft);
+    prntEl.style.left=oLft;
+    return null;
+    }
+  }
+
+  /*-------------------------------------------------------
+  pre:
+  post:
+  -------------------------------------------------------*/
   getBlob(elId=this.dbPgId){
   var el=document.getElementById(elId);
     if(el){

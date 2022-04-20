@@ -108,43 +108,48 @@ align-items: center;
 padding-bottom: 20px;
 }
 
-#lftMod{
+.sdMd{
 position: fixed;
 top: 20px;
-left: 0px;
 border-color: white;
 border-radius: 0px 6px 6px 0px;
 border-width: 1px 1px 1px 0px;
 border-style: solid;
 background-color: #71AEEC;
-min-width: 90vw;
+min-width: 96vw;
 min-height: calc(100vh - 40px);
 color: white;
 display: flex;
 flex-direction: column;
+box-shadow: 0px 0px 4px rgba(255, 255, 255, 0.65);
 z-index: 80;
+transition: all 0.45s ease-in-out;
 }
 
-#lftMod > div{
+#lftMod{
+left: 0vw;
+}
+
+.sdMd > div{
 display: flex;
 width: 100%;
 box-sizing: border-box;
-border: 1px solid red;
 }
 
-#lftMod > div:first-child{
+.sdMd > div:first-child{
 flex-direction: row;
 justify-content: flex-end;
 }
 
-#lftMod > div:last-child{
+.sdMd > div:last-child{
 flex-grow:100;
 }
 
-#lftMod div.close{
+.sdMd div.close{
 display: flex;
-border: 1px solid white;
-margin: 6px;
-padding: 6px;
 width: min-content;
+font-size: xx-large;
+padding-top: 4px;
+padding-right: 8px;
+align-items:flex-start;
 }
