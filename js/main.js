@@ -13,6 +13,7 @@ class sif{
 
   this.hookEl();
   this.modOpenClose("lftMod");
+  this.modOpenClose("rghtMod");
 
 
   window.onbeforeunload=(e)=>{return "Are you sure you want to leave?";}
@@ -96,7 +97,6 @@ class sif{
   modOpenClose(elId){
   let el=document.getElementById(elId);
   let cls=el.getElementsByClassName("close")[0];
-  console.log(cls);
   cls.onclick=this.modPrcCls;
   }
 
@@ -106,22 +106,35 @@ class sif{
   hides or shows the element of elId.
   -------------------------------------------------------*/
   modPrcCls(e){
-  console.log(e);
   let el=e.target;
   let oLft=el.getAttribute("oLft");
   let nLft=el.getAttribute("nLft");
+  let oRght=el.getAttribute("oRght");
+  let nRght=el.getAttribute("nRght");
   let prntEl=document.getElementById(el.getAttribute("hideEl"));
-    if(prntEl.style.left=='' || prntEl.style.left==oLft){
 
-    console.log(nLft);
-    prntEl.style.left=nLft;
-    return null;
+    if(oLft&&nLft){
+      if(prntEl.style.left==''||prntEl.style.left==oLft){
+      prntEl.style.left=nLft;
+      return null;
+      }
+      if(prntEl.style.left!=oLft){
+      prntEl.style.left=oLft;
+      return null;
+      }
     }
-    if(prntEl.style.left!=oLft){
-    console.log(oLft);
-    prntEl.style.left=oLft;
-    return null;
+
+    if(oRght&&nRght){
+      if(prntEl.style.right==''||prntEl.style.right==oRght){
+      prntEl.style.right=nRght;
+      return null;
+      }
+      if(prntEl.style.right!=oRght){
+      prntEl.style.right=oRght;
+      return null;
+      }
     }
+
   }
 
   /*-------------------------------------------------------
