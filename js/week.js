@@ -269,15 +269,15 @@ class week{
             <th class="dyOfWk">Sat</th>
           </tr>`+rtrn+'</table>';
   return rtrn;
-
-
-  return "<div>testing</div>";
   }
   
+  run(){
+  document.getElementById('mainEl').innerHTML=wkObj.genWk();
+  document.getElementById('leftNavMod').innerHTML=wkObj.genLeftNavWk();
+  }
 
 }
 
 var wkObj=new week();
-document.getElementById('mainEl').innerHTML=wkObj.genWk();
-document.getElementById('leftNavMod').innerHTML=wkObj.genLeftNavWk();
-
+wkObj.run();
+console.log("week called");

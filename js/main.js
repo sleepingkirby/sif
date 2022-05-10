@@ -4,9 +4,13 @@ post: html changed
 ------------------------------------------------------*/
 class sif{
 
-  constructor(modObj, dbInId, overId, sqljs){
+  constructor(modObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
   this.scrpt=document.createElement('script'); //element that holds the script
+  this.scrptWrpId=scrptWrpId?scrptWrpId:"endJs";//file input to enter database file
+  this.scrptWrpEl=document.getElementById(this.scrptWrpId);
+  this.scrptWrpObsrv=null; //place holder for mutation observer.
+  this.setMutationObsrv(this.scrptWrpEl);
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
@@ -20,25 +24,33 @@ class sif{
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
   }
 
+  
+  //sets mutation observer for the element.
+  setMutationObsrv(el, optsObj){
+    if(!el){
+    return null; //element is null, do nothing.
+    }
+  
+  let opts=optsObj;
+    if(!opts){
+    opts={childList:true};
+    }
 
-  //----------- draw the module ----------
+    this.scrptWrpObsrv=new MutationObserver(function(e){
+    console.log("=========== testing mutation observer ==========");
+    console.log(e);
+    
+    });
+
+  this.scrptWrpObsrv.observe(el, opts);
+  }
+
+  /*----------- draw the module ----------
+
+  --------------------------------------*/
   draw(str){
     if(!str||str==null||str==""||!this.mod.hasOwnProperty(str)){
     return false;
-    }
-
-
-  this.scrpt.src=this.mod[str].path;
-  this.scrpt.defer=true;
-  this.scrpt.id="modScript";
-    if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
-      scrpt.onload = () => {
-      /*
-      var obj = eval(`new ${this.mod[str].class}()`); 
-      document.getElementById('mainEl').innerHTML=obj.genCal();
-      */
-      eval(this.mod[str].eval);
-      };
     }
 
     //if script exists in document, remove.
@@ -46,7 +58,28 @@ class sif{
     document.head.removeChild(this.scrpt);
     }
 
-  document.head.appendChild(this.scrpt);
+  //huh... lesson learned. You can't reuse the same instantiated element to get the code to run.
+  //you have to create a new element and then add for it to run.
+  this.scrpt=document.createElement('script');
+  this.scrpt.src=this.mod[str].path;
+  this.scrpt.id="modScript";
+  this.scrpt.setAttribute("defer", true);
+  this.scrpt.setAttribute('type',"text/javascript");
+    if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
+      console.log("eval");
+      this.scrpt.onload = () => {
+      console.log("eval onload");
+      /*
+      var obj = eval(`new ${this.mod[str].class}()`); 
+      document.getElementById('mainEl').innerHTML=obj.genCal();
+      */
+      console.log(this.mod[str].eval);
+      eval(this.mod[str].eval);
+      };
+    }
+
+  console.log(this.scrpt); 
+  document.head.append(this.scrpt);
   }
 
   //--------- setState --------------
@@ -73,6 +106,7 @@ class sif{
         }
       break;
       case "pos":
+      this.draw(val);
       break;
       default:
       break;
@@ -155,6 +189,10 @@ class sif{
     }
   }
 
+
+  testFunc(v){
+  console.log(v);
+  }
   
 }
 
@@ -258,6 +296,10 @@ testFunc();
 (document.head || document.documentElement).appendChild(c);
 }
 */
+
+function testFunc(v){
+console.log(v);
+}
 
 
 var sqlObj=new sqljs();

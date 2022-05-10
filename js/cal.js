@@ -218,7 +218,7 @@ class cal{
 
       //set end of week.
       if(i%7>=6){
-      rtrn+='<td class="wkVw" ><div>🞂</div></td></tr>'+"\n";
+      rtrn+='<td class="wkVw" onclick=mainObj.setState("pos","week")><div>🞂</div></td></tr>'+"\n";
         if(ptrDt.getMonth()!=mon){
         end=true;
         }
