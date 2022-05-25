@@ -7,10 +7,6 @@ class sif{
   constructor(modObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
   this.scrpt=document.createElement('script'); //element that holds the script
-  this.scrptWrpId=scrptWrpId?scrptWrpId:"endJs";//file input to enter database file
-  this.scrptWrpEl=document.getElementById(this.scrptWrpId);
-  this.scrptWrpObsrv=null; //place holder for mutation observer.
-  this.setMutationObsrv(this.scrptWrpEl);
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
@@ -20,33 +16,23 @@ class sif{
   this.modOpenClose("rghtMod");
 
 
-  window.onbeforeunload=(e)=>{return "Are you sure you want to leave?";}
+    window.onbeforeunload=(e)=>{
+      if(state.dbModded){
+      this.sqlObj.writeDb();
+      }
+    return "Are you sure you want to leave?";
+    }
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
   }
 
   
-  //sets mutation observer for the element.
-  setMutationObsrv(el, optsObj){
-    if(!el){
-    return null; //element is null, do nothing.
-    }
-  
-  let opts=optsObj;
-    if(!opts){
-    opts={childList:true};
-    }
-
-    this.scrptWrpObsrv=new MutationObserver(function(e){
-    console.log("=========== testing mutation observer ==========");
-    console.log(e);
-    
-    });
-
-  this.scrptWrpObsrv.observe(el, opts);
-  }
 
   /*----------- draw the module ----------
-
+  pre: global mod variable
+  post: html redrawn
+  param: str=name of module in global varibale "mod"
+  returns: false if str empty or not valid
+  inital draw for any new module
   --------------------------------------*/
   draw(str){
     if(!str||str==null||str==""||!this.mod.hasOwnProperty(str)){
@@ -58,33 +44,29 @@ class sif{
     document.head.removeChild(this.scrpt);
     }
 
-  //huh... lesson learned. You can't reuse the same instantiated element to get the code to run.
-  //you have to create a new element and then add for it to run.
+  //huh... lesson learned. You can't reuse the same instantiated script element to get the code within the script to run
+  //you have to create a new script element and then add for it to run the code
   this.scrpt=document.createElement('script');
   this.scrpt.src=this.mod[str].path;
   this.scrpt.id="modScript";
   this.scrpt.setAttribute("defer", true);
   this.scrpt.setAttribute('type',"text/javascript");
     if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
-      console.log("eval");
       this.scrpt.onload = () => {
-      console.log("eval onload");
-      /*
-      var obj = eval(`new ${this.mod[str].class}()`); 
-      document.getElementById('mainEl').innerHTML=obj.genCal();
-      */
-      console.log(this.mod[str].eval);
       eval(this.mod[str].eval);
       };
     }
-
-  console.log(this.scrpt); 
   document.head.append(this.scrpt);
   }
 
-  //--------- setState --------------
-  //if pos, redraw
-  //if dbFile, turn on or off element Id "enterDatabase"
+  /*--------- setState --------------
+  pre: this class, global state variable
+  post: state modified, html modified(possibly)
+  params: id=which index in global var "state" to modify, val=what value to modify to
+  returns: false on empty or non-existent id 
+  sets values in state global variable. And, if necessary, change/redraw the page
+  basically, similar idea to react's setState. Only redraw when state is changed AND is necessary
+  ---------------------------------*/
   setState(id, val){
     if(!state.hasOwnProperty(id)){
     return false;
@@ -102,7 +84,14 @@ class sif{
         document.getElementById(this.overId).style.display="flex";
         }
         else{
-        this.sqlObj.loadDB((e)=>{document.getElementById(this.overId).style.display="none";});
+          this.sqlObj.loadDB((e)=>{
+          document.getElementById(this.overId).style.display="none";
+          this.draw(state.pos);
+          /*reminder for later if needed
+          let mod=eval(`new ${state.pos}()`);
+          mod.draw();
+          */
+          });
         }
       break;
       case "pos":
@@ -113,7 +102,13 @@ class sif{
     }
   }
 
-  //----------hook to turn on or off the enter Database page
+  /*---------------------------------------
+  pre: setState(), global state
+  post: element elId onchange is set
+  params: elId=which element by id to attach onchange to.
+  returns: none
+  sets up onchange to elId
+  ---------------------------------------*/
   hookEl(elId=this.dbPgId){
   var el=document.getElementById(elId);
     if(el){
@@ -124,23 +119,35 @@ class sif{
   }
 
   /*-------------------------------------------------------
-  pre:
-  post:
-  sets up mod open clse
+  pre: this.modPrcCls(), element of elId to be modal
+  post: modal's state changes
+  sets up modal open close
   -------------------------------------------------------*/
   modOpenClose(elId){
   let el=document.getElementById(elId);
   let cls=el.getElementsByClassName("close")[0];
-  cls.onclick=this.modPrcCls;
+  cls.onclick=(e)=>{this.modPrcCls(e);};
   }
 
   /*-------------------------------------------------------
-  pre:
-  post:
-  hides or shows the element of elId.
+  pre: modal existing, modPrcClsCall()
+  post: modal's state changes
+  params: onclick event's "e"
+  hides or shows the element. *This is an adapter to modPrcClsCall() to for onclick event*
   -------------------------------------------------------*/
   modPrcCls(e){
   let el=e.target;
+  this.modPrcClsCall(el);
+  }
+
+
+  /*-------------------------------------------------------
+  pre: modal existing
+  post: modal's state changes
+  params: el=element (not ID, actual element) to be changed
+  hides or shows the element of el. 
+  -------------------------------------------------------*/
+  modPrcClsCall(el){
   let oLft=el.getAttribute("oLft");
   let nLft=el.getAttribute("nLft");
   let oRght=el.getAttribute("oRght");
@@ -168,12 +175,10 @@ class sif{
       return null;
       }
     }
-
   }
 
   /*-------------------------------------------------------
-  pre:
-  post:
+  not use currently.
   -------------------------------------------------------*/
   getBlob(elId=this.dbPgId){
   var el=document.getElementById(elId);
@@ -245,27 +250,60 @@ class sqljs{
     });
   }
 
+  /*------------------------------------------------
+  pre: state, state.dbObj filled
+  post: db file written to.
+  write to db file
+  ------------------------------------------------*/
+  writeDb(){
+	var blob = new Blob([state.dbObj.export()]);
+	var a = document.createElement("a");
+	document.body.appendChild(a);
+	a.href = window.URL.createObjectURL(blob);
+	a.download = "sql.db";
+	  a.onclick = function () {
+		  setTimeout(function () {
+			window.URL.revokeObjectURL(a.href);
+		  }, 1500);
+	  };
+	a.click();
+  }
 
-  runQuery(){
-    /*
-      //Create the database
-      const db = new SQL.Database();
-      // Run a query without reading the results
-      db.run("CREATE TABLE test (col1, col2);");
-      // Insert two rows: (1,111) and (2,222)
-      db.run("INSERT INTO test VALUES (?,?), (?,?)", [1,111,2,222]);
+  /*-------------------------------------------------
+  pre: sql.js, database loaded
+  post: db modified (potentially)
+  param: qry=sqlite query to run, binds=object to beind to the qry statement
+  returns: object of results.
+  runs the qry with binds, if needed. 
+  -------------------------------------------------*/
+  runQuery(qry, binds){
+    //do nothing, no query
+    if(!qry || qry==""){
+    return null;
+    }
+    if(!state.dbObj){
+    console.log("unable to run query. dbObj in state is empty");
+    }
 
-      // Prepare a statement
-      const stmt = db.prepare("SELECT * FROM test WHERE col1 BETWEEN $start AND $end");
-      stmt.getAsObject({$start:1, $end:1}); // {col1:1, col2:111}
-
-      // Bind new values
-      stmt.bind({$start:1, $end:2});
-      while(stmt.step()) { //
-        const row = stmt.getAsObject();
-        console.log('Here is a row: ' + JSON.stringify(row));
+  let stmt=state.dbObj.prepare(qry);
+  var rtrn=[];
+    if(stmt && stmt.bind(binds)){
+      while(stmt.step()){
+      rtrn.push(stmt.getAsObject());
       }
-    */
+    stmt.free();
+    }
+    else{
+    console.log("unable to run query: "+qry);
+    }
+
+  //setting dbModded state to true
+  let q=qry.toLocaleLowerCase();
+    if(q.indexOf('select')!=0){
+    state.dbModded=true;
+    }
+
+  return rtrn;
   }
 }
 
@@ -274,34 +312,17 @@ function padDate(str){
   return String(str).padStart(2, '0');
 }
 
-function changePos(pos){
-  if(!pos||pos==""){
-  return false;
-  }
-  state.pos=pos;
-}
-
-/*
-function testfunc(){
-var scrpt=document.createElement('script');
-scrpt.src="./js/cal.js";
-scrpt.defer=true;
-scrpt.onload = () => { testFuncCal();};
-document.head.appendChild(scrpt);
-var c=document.createElement('script');
-c.textContent='('+function () {
-testFunc();
-} +')();';
-
-(document.head || document.documentElement).appendChild(c);
-}
-*/
-
 function testFunc(v){
 console.log(v);
 }
 
+//pulled this off the internet
+function createUUID() {
+   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+   });
+}
 
 var sqlObj=new sqljs();
 var mainObj=new sif(mod);
-mainObj.draw(state.pos);

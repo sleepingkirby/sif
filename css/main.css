@@ -4,6 +4,7 @@ padding: 0px;
 font-family: "DejaVu Sans", Arial, sans-serif;
 }
 
+
 .enterDatabase{
 position: fixed;
 top: 0px;
@@ -18,7 +19,7 @@ flex-direction: column;
 font-family: "DejaVu Sans", Arial, sans-serif;
 border-radius: 4px;
 z-index: 100;
-display: none;
+display: flex;
 }
 
 #enterDatabase{
@@ -62,9 +63,15 @@ margin: 0px;
 
 #menuLogo{
 width: 46px;
-border: 1px solid red;
+border: 1px solid white;
+border-radius: 6px;
+background-color: white;
 height: 46px;
 margin: 8px 8px 8px 10px;
+color: #71AEEC;
+display:flex;
+justify-content: center;
+align-items: center;
 }
 
 #menu:hover #menuDropDown{
@@ -96,6 +103,8 @@ border-width: 0px 1px 1px 0px;
 min-width: 150px;
 min-height: 40px;
 height: 10%;
+justify-content: flex-start;
+padding-right: 6px;
 }
 
 #topEls > .rightNav{
@@ -105,6 +114,9 @@ min-width: 150px;
 min-height: 40px;
 width: 10%;
 height: 10%;
+justify-content: flex-end;
+font-size: xxx-large;
+padding-right: 4px;
 }
 
 #mainEl{
@@ -121,7 +133,7 @@ top: 20px;
 border-color: white;
 border-style: solid;
 background-color: #71AEEC;
-min-width: 96vw;
+min-width: 35vw;
 min-height: calc(100vh - 40px);
 color: white;
 display: flex;
@@ -156,14 +168,12 @@ cursor: pointer;
 }
 
 #lftMod{
-left: -100vw;
 border-radius: 0px 6px 6px 0px;
 border-width: 1px 1px 1px 0px;
 z-index: 80;
 }
 
 #rghtMod{
-right: -100vw;
 border-radius: 6px 0px 0px 6px;
 border-width: 1px 0px 1px 1px;
 z-index: 79;
