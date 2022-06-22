@@ -2,6 +2,7 @@ html, body{
 margin: 0px;
 padding: 0px;
 font-family: "DejaVu Sans", Arial, sans-serif;
+min-width: 500px;
 }
 
 
@@ -54,6 +55,7 @@ align-items: center;
 color: white;
 font-weight: bold;
 background-color: #71AEEC;
+box-shadow: 0px 1px 2px 0px rgba(60,64,67,0.6);
 }
 
 
@@ -77,6 +79,7 @@ align-items: center;
 #menu:hover #menuDropDown{
 max-height: 1000px;
 padding: 0px 8px 8px 10px;
+box-shadow: 0px 1px 2px 0px rgba(60 64 67 0.6);
 }
 
 #menuDropDown{
@@ -90,16 +93,17 @@ box-sizing: border-box;
 border-radius: 0px 0px 4px 4px;
 transition: max-height 1s ease-in-out; 
 transition-delay: 0s;
+
 }
 
 #topEls > div{
 border-color: white;
 border-style: solid;
+border-width: 0px;
 }
 
 #topEls > .leftNav{
 border-radius: 0px 0px 6px 0px;
-border-width: 0px 1px 1px 0px;
 min-width: 150px;
 min-height: 40px;
 height: 10%;
@@ -109,7 +113,6 @@ padding-right: 6px;
 
 #topEls > .rightNav{
 border-radius: 0px 0px 0px 6px;
-border-width: 0px 0px 1px 1px;
 min-width: 150px;
 min-height: 40px;
 width: 10%;
