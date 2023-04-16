@@ -93,7 +93,7 @@ box-sizing: border-box;
 border-radius: 0px 0px 4px 4px;
 transition: max-height 1s ease-in-out; 
 transition-delay: 0s;
-
+overflow: hidden;
 }
 
 #topEls > div{
@@ -172,13 +172,15 @@ cursor: pointer;
 
 #lftMod{
 border-radius: 0px 6px 6px 0px;
-border-width: 1px 1px 1px 0px;
+border-width: 0px;
+box-shadow: 0px 1px 2px 1px rgba(60,64,67,0.6);
 z-index: 80;
 }
 
 #rghtMod{
 border-radius: 6px 0px 0px 6px;
-border-width: 1px 0px 1px 1px;
+border-width: 0px;
+box-shadow: 0px 1px 2px 1px rgba(60,64,67,0.6);
 z-index: 79;
 }
 
