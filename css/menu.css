@@ -1,0 +1,15 @@
+#menuDropDown div{
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 50px;
+margin-bottom: 8px;
+}
+
+#menuDropDown div:first-child{
+margin-top: 8px;
+}
+
+#menuDropDown .menuLftItm{
+cursor: pointer;
+}

@@ -68,7 +68,7 @@ if(typeof cal==='undefined'){
             <div for="calNavDay" onclick="wkObj.modToElNum(false)">-</div>
           </div>
         </div>
-        <div name="calToday" class="calToday" onclick=wkObj.goToday()>T</div>
+        <div name="calToday" class="calToday" onclick=wkObj.goToday()><img src="`+getEvalIcon(iconSets, state.user.iconSet, 'today' )+`"/></div>
       </div>`;
     }
 
