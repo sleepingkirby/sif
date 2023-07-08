@@ -6,41 +6,27 @@ if(typeof cal==='undefined'){
     var date=new Date();
     this.year=yr;
       if(!yr||yr==null){
-      this.year=date.getFullYear();
+      this.year=state['shwDate']['year']=date.getFullYear();
       }
      
     this.mon=mn; 
       if(!mn||mn==null){
-      this.mon=date.getMonth();
+      this.mon=state['shwDate']['mon']=date.getMonth();
       }
       
     this.day=dy;
       if(!dy||dy==null){
-      this.day=date.getDate();
+      this.day=state['shwDate']['day']=date.getDate();
       }
 
-
     this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    this.calEl=` 
-          <table id="calendarEl">
-            <tr>
-              <th class="dyOfWk">Sun</th>
-              <th class="dyOfWk">Mon</th>
-              <th class="dyOfWk">Tue</th>
-              <th class="dyOfWk">Wed</th>
-              <th class="dyOfWk">Thu</th>
-              <th class="dyOfWk">Fri</th>
-              <th class="dyOfWk">Sat</th>
-              <th class="wkVw">&nbsp;</th>
-            </tr>
-          </table>
-    `;
 
     this.tmpl={};
     this.tmpl['leftNav']=[];
     this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
     this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">';
     this.tmpl.leftNav[2]='</div><div class="calNavMod"><div for="calNavMon" onclick="calObj.modToElNum()">+</div><div for="calNavMon" onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()><img src="'+getEvalIcon(iconSets, state.user.iconSet, 'today' )+'" /></div></div>';
+
     }
 
 
@@ -107,13 +93,11 @@ if(typeof cal==='undefined'){
     pre:  
     post: 
     ----------------------------*/ 
-    modDate( year=this.year, mon=this.mon, day=this.day){
+    modDate(year=this.year, mon=this.mon, day=this.day){
       if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon) && state['shwDate']['day']==day){
       //if date is the same, no need to update.
       return false;
       }
-
-    console.log(year+" "+mon+" "+day);
 
     this.year=state['shwDate']['year']=year;
     this.mon=state['shwDate']['mon']=mon;
@@ -179,6 +163,17 @@ if(typeof cal==='undefined'){
     return rtrn;
     }
 
+    /*----------------------------------------------
+    pre: state and mainObj.setState()
+    post: state changed
+    used for moving from monthly calendar to weekly calendar on click
+    sets the shwDate on state and then sets the state for pos
+    ----------------------------------------------*/
+    setDteGoWk(yr, mn='1', dy='1'){
+    state.shwDate={year: yr, mon: mn, day: dy};
+    mainObj.setState('pos', 'week');
+    }
+
     /*-----------------------------------------------
     pre: none
     post: element of id (calendar element) drawn
@@ -217,7 +212,7 @@ if(typeof cal==='undefined'){
 
         //set end of week.
         if(i%7>=6){
-        rtrn+='<td class="wkVw" onclick=mainObj.setState("pos","week")><div>🞂</div></td></tr>'+"\n";
+        rtrn+=`<td class="wkVw" onclick="calObj.setDteGoWk(`+ptrDt.getFullYear()+`, `+ptrDt.getMonth()+`, `+ptrDt.getDate()+`)"><div>🞂</div></td></tr>`+"\n";
           if(ptrDt.getMonth()!=mon){
           end=true;
           }
@@ -244,7 +239,7 @@ if(typeof cal==='undefined'){
     }
   }
 
-var calObj=new cal();
+var calObj=new cal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 document.getElementById('mainEl').innerHTML=calObj.genCal();
 document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
 }

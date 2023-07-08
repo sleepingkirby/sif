@@ -7,35 +7,20 @@ if(typeof cal==='undefined'){
     var date=new Date();
     this.year=yr;
       if(!yr||yr==null){
-      this.year=date.getFullYear();
+      this.year=state['shwDate']['year']=date.getFullYear();
       }
-     
-    this.mon=mn; 
+
+    this.mon=mn;
       if(!mn||mn==null){
-      this.mon=date.getMonth();
+      this.mon=state['shwDate']['mon']=date.getMonth();
       }
-      
+
     this.day=dy;
       if(!dy||dy==null){
-      this.day=date.getDate();
+      this.day=state['shwDate']['day']=date.getDate();
       }
 
-
-
     this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    this.calEl=` 
-          <table id="calendarEl">
-            <tr>
-              <th class="dyOfWk">Sun</th>
-              <th class="dyOfWk">Mon</th>
-              <th class="dyOfWk">Tue</th>
-              <th class="dyOfWk">Wed</th>
-              <th class="dyOfWk">Thu</th>
-              <th class="dyOfWk">Fri</th>
-              <th class="dyOfWk">Sat</th>
-            </tr>
-          </table>
-    `;
 
     this.tmpl={};
     this.tmpl['leftNav']=[];
@@ -68,6 +53,7 @@ if(typeof cal==='undefined'){
             <div for="calNavDay" onclick="wkObj.modToElNum(false)">-</div>
           </div>
         </div>
+        <div name="calToMon" class="calToday" onclick=mainObj.setState('pos','cal')><img src="`+getEvalIcon(iconSets, state.user.iconSet, 'calendar' )+`"/></div>
         <div name="calToday" class="calToday" onclick=wkObj.goToday()><img src="`+getEvalIcon(iconSets, state.user.iconSet, 'today' )+`"/></div>
       </div>`;
     }
@@ -260,7 +246,7 @@ if(typeof cal==='undefined'){
       }
 
     rtrn=`
-          <table id="calendarEl">
+          <table id="calendarEl" class="calendarElWeek">
             <tr>
               <th class="dyOfWk">Sun</th>
               <th class="dyOfWk">Mon</th>
@@ -280,6 +266,6 @@ if(typeof cal==='undefined'){
 
   }
 
-var wkObj=new week();
+var wkObj=new week(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 wkObj.run();
 }
