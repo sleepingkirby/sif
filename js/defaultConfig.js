@@ -1,0 +1,3 @@
+var defaultConfig={
+'iconSet':'default'
+}

@@ -1,10 +1,10 @@
 /* -----------------main class for sif------------------
-pre:global variable state, global variable mod, sqljs object
+pre:global variable state, default configs, menuLftObj(class instance), global variable mod, sqljs object
 post: html changed
 ------------------------------------------------------*/
 class sif{
 
-  constructor(modObj, scrptWrpId, dbInId, overId, sqljs){
+  constructor(modObj, menuLftObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
   this.scrpt=document.createElement('script'); //element that holds the script
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
@@ -42,8 +42,8 @@ class sif{
   --------------------------------------*/
   genRightNav(){
   var rtrn='';
-  rtrn+=this.tmpl['rightNav'][0]+getEvalIcon(iconSets, state.user.iconSet, 'settings')+this.tmpl['rightNav'][1];
-  rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.iconSet, 'logout')+this.tmpl['rightNav'][3];
+  rtrn+=this.tmpl['rightNav'][0]+getEvalIcon(iconSets, state.user.config.iconSet, 'settings')+this.tmpl['rightNav'][1];
+  rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.config.iconSet, 'logout')+this.tmpl['rightNav'][3];
   return rtrn;
   }
 
@@ -107,8 +107,10 @@ class sif{
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";
           console.log(this.sqlObj.runQuery("select * from config"));
+          state.user.config=defaultConfig;
           document.getElementById('rightNav').innerHTML=this.genRightNav();
-
+          menuLftObj.setMenu();
+          console.log(state.user.config);
           this.draw(state.pos);
           /*reminder for later if needed
           let mod=eval(`new ${state.pos}()`);
@@ -278,12 +280,12 @@ class sqljs{
   post: db file written to.
   write to db file
   ------------------------------------------------*/
-  writeDb(){
+  writeDb(fn){
 	var blob = new Blob([state.dbObj.export()]);
 	var a = document.createElement("a");
 	document.body.appendChild(a);
 	a.href = window.URL.createObjectURL(blob);
-	a.download = "sql.db";
+	a.download = fn||"sif.db";
 	  a.onclick = function () {
 		  setTimeout(function () {
 			window.URL.revokeObjectURL(a.href);
@@ -348,4 +350,4 @@ function createUUID() {
 }
 
 var sqlObj=new sqljs();
-var mainObj=new sif(mod);
+var mainObj=new sif(mod, menuLftObj);
