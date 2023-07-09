@@ -1,4 +1,4 @@
-:root {
+:root{
 --default-blue: #71AEEC;
 }
 
@@ -123,7 +123,6 @@ width: 10%;
 height: 10%;
 justify-content: flex-end;
 font-size: xxx-large;
-padding-right: 4px;
 }
 
 #mainEl{

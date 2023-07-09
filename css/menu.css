@@ -13,3 +13,39 @@ margin-top: 8px;
 #menuDropDown .menuLftItm{
 cursor: pointer;
 }
+
+.rightNav{
+padding: 8px 10px 8px 8px;
+}
+
+.rightNavActns{
+display: flex;
+}
+
+.rightNavActns > .menuIcon{
+margin-left: 16px;
+}
+
+.menuIcon{
+display: flex;
+box-sizing: border-box;
+cursor: pointer;
+min-height: 46px;
+min-width: 46px;
+border-radius: 6px;
+}
+
+.menuIcon svg{
+height: 46px;
+width: 46px;
+fill: #FFFFFF;
+}
+
+.menuIcon:hover{
+background-color: #FFFFFF;
+}
+
+.menuIcon:hover svg{
+border-radius: 3px;
+fill: var(--default-blue);
+}

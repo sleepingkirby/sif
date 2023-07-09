@@ -15,6 +15,13 @@ class sif{
   this.modOpenClose("lftMod");
   this.modOpenClose("rghtMod");
 
+  this.tmpl={};
+  this.tmpl['rightNav']=[];
+  this.tmpl['rightNav'][0]=`<div class="rightNavActns"><div class="menuIcon" title="Settings">`;
+  this.tmpl['rightNav'][1]=`</div>`;
+  this.tmpl['rightNav'][2]=`<div class="menuIcon" title="Logout">`;
+  this.tmpl['rightNav'][3]=`</div></div></div>`;
+
 
     window.onbeforeunload=(e)=>{
       if(state.dbModded){
@@ -25,7 +32,20 @@ class sif{
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
   }
 
-  
+
+  /*----------- draw the module ----------
+  pre: global state, global iconSets, this.tmpl, iconLib.getEvalIcon()
+  post: none
+  param:iconSet=name of iconset to use
+  returns: html
+  generate righNav
+  --------------------------------------*/
+  genRightNav(){
+  var rtrn='';
+  rtrn+=this.tmpl['rightNav'][0]+getEvalIcon(iconSets, state.user.iconSet, 'settings')+this.tmpl['rightNav'][1];
+  rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.iconSet, 'logout')+this.tmpl['rightNav'][3];
+  return rtrn;
+  }
 
   /*----------- draw the module ----------
   pre: global mod variable
@@ -86,6 +106,9 @@ class sif{
         else{
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";
+          console.log(this.sqlObj.runQuery("select * from config"));
+          document.getElementById('rightNav').innerHTML=this.genRightNav();
+
           this.draw(state.pos);
           /*reminder for later if needed
           let mod=eval(`new ${state.pos}()`);

@@ -14,7 +14,7 @@ class menuLft {
   var modsLst=Object.keys(mod);
     for(const modNm of modsLst){
       if(mod[modNm].hasOwnProperty('menu')&&mod[modNm].menu.hasOwnProperty('enabled')&&mod[modNm].menu.enabled){
-      menu+=`<div class="menuLftItm" onclick=mainObj.setState("pos","`+modNm+`")><img src="`+getEvalIcon(iconSets, state.user.iconSet, mod[modNm].menu.icon)+`" /></div>
+      menu+=`<div class="menuLftItm menuIcon" onclick=mainObj.setState("pos","`+modNm+`") title="`+modNm+`">`+getEvalIcon(iconSets, state.user.iconSet, mod[modNm].menu.icon)+`</div>
 `;
       }
     }

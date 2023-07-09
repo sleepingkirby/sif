@@ -53,8 +53,8 @@ if(typeof cal==='undefined'){
             <div for="calNavDay" onclick="wkObj.modToElNum(false)">-</div>
           </div>
         </div>
-        <div name="calToMon" class="calToday" onclick=mainObj.setState('pos','cal')><img src="`+getEvalIcon(iconSets, state.user.iconSet, 'calendar' )+`"/></div>
-        <div name="calToday" class="calToday" onclick=wkObj.goToday()><img src="`+getEvalIcon(iconSets, state.user.iconSet, 'today' )+`"/></div>
+        <div name="calToMon" class="menuIcon calToday" onclick=mainObj.setState('pos','cal') title="Month view">`+getEvalIcon(iconSets, state.user.iconSet, 'calendar' )+`</div>
+        <div name="calToday" class="menuIcon calToday" onclick=wkObj.goToday() title="Set to today">`+getEvalIcon(iconSets, state.user.iconSet, 'today' )+`</div>
       </div>`;
     }
 
