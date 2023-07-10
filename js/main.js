@@ -104,13 +104,32 @@ class sif{
         document.getElementById(this.overId).style.display="flex";
         }
         else{
+          // ----- this is, essentially, the initialization for the app once the user provides the database -----
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";
-          console.log(this.sqlObj.runQuery("select * from config"));
+          var config=this.sqlObj.runQuery(`
+          select
+          config.uuid,
+          config.users_id,
+          config.json,
+          users.username,
+          users.email,
+          users.notes,
+          type.name
+          from config
+          left join users
+          on config.users_id=users.uuid
+          left join type
+          on config.type_id=type.uuid
+          where 
+          type.name="global"
+          `);
           state.user.config=defaultConfig;
+            if(config&&config.length>0){
+            state.user.config=JSON.parse(config[0].json);
+            }
           document.getElementById('rightNav').innerHTML=this.genRightNav();
           menuLftObj.setMenu();
-          console.log(state.user.config);
           this.draw(state.pos);
           /*reminder for later if needed
           let mod=eval(`new ${state.pos}()`);
@@ -323,7 +342,7 @@ class sqljs{
     }
 
   //setting dbModded state to true
-  let q=qry.toLocaleLowerCase();
+  let q=qry.trim().toLocaleLowerCase();
     if(q.indexOf('select')!=0){
     state.dbModded=true;
     }
