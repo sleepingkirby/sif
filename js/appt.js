@@ -1,48 +1,7 @@
 if(false){
   class appt{
-
     constructor(yr=null, mn=null, dy=null){
 
-    var date=new Date();
-    this.year=yr;
-      if(!yr||yr==null){
-      this.year=date.getFullYear();
-      }
-     
-    this.mon=mn; 
-      if(!mn||mn==null){
-      this.mon=date.getMonth();
-      }
-      
-    this.day=dy;
-      if(!dy||dy==null){
-      this.day=date.getDate();
-      }
-
-
-
-
-    this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    this.calEl=` 
-          <table id="calendarEl">
-            <tr>
-              <th class="dyOfWk">Sun</th>
-              <th class="dyOfWk">Mon</th>
-              <th class="dyOfWk">Tue</th>
-              <th class="dyOfWk">Wed</th>
-              <th class="dyOfWk">Thu</th>
-              <th class="dyOfWk">Fri</th>
-              <th class="dyOfWk">Sat</th>
-              <th class="wkVw">&nbsp;</th>
-            </tr>
-          </table>
-    `;
-
-    this.tmpl={};
-    this.tmpl['leftNav']=[];
-    this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
-    this.tmpl.leftNav[1]='</div><div class="calNavMod"><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick=calObj.modToElNum()>+</div><div for="calNavYear" padLen=4 padChar="0" minVal=0 maxVal=99999 onclick="calObj.modToElNum(false)">-</div></div></div><div id="calMon"><div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">';
-    this.tmpl.leftNav[2]='</div><div class="calNavMod"><div for="calNavMon" onclick="calObj.modToElNum()">+</div><div for="calNavMon" onclick="calObj.modToElNum(false)">-</div></div></div><div name="calToday" class="calToday" onclick=calObj.goToday()>T</div></div>';
     }
 
 
@@ -248,7 +207,7 @@ if(false){
     
   }
 
-var calObj=new cal();
-document.getElementById('mainEl').innerHTML=calObj.genCal();
-document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
+var apptObj=new appt();
+// document.getElementById('mainEl').innerHTML=calObj.genCal();
+// document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
 }

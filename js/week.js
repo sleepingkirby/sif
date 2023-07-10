@@ -58,47 +58,6 @@ if(typeof cal==='undefined'){
       </div>`;
     }
 
-
-    //date object. returns epoch time
-    epochTime(date){
-    var epch=Date.parse(date.toISOString())/1000;
-    return Math.floor(epch);
-    }
-
-    //outputs yyyymmdd, ex 20220201
-    toTimeStr(date){
-    var rtrn=String(date.getFullYear());
-    rtrn+=String(date.getMonth()).padStart(2, '0');
-    rtrn+=String(date.getDate()).padStart(2, '0');
-    return rtrn;
-    }
-
-    //----------------------------
-    //determines whether or not the element wants padding
-    padVal(el, val){
-    let v=val;
-
-    let min=el.getAttribute("minVal");
-    let max=el.getAttribute("maxVal");
-    let len=el.getAttribute("padLen");
-    let chr=el.getAttribute("padChar");
-
-      if(min&&max){
-        if(v<min){
-        v=max;
-        }
-        if(v>max){
-        v=min;
-        }
-      }
-
-      if(len&&chr){
-      v=String(v).padStart(len, chr);
-      }
-
-    el.innerText=v;
-    }
-
     //---------------------------------------------------
     //updates html elements with the current date
     dateUpdt(year=this.year, mon=this.mon, day=this.day){
@@ -106,9 +65,9 @@ if(typeof cal==='undefined'){
     var mnEl=document.getElementsByName("calNavMon")[0];
     var dtEl=document.getElementsByName("calNavDay")[0];
     
-    this.padVal(yrEl, year);
-    this.padVal(mnEl, Number(mon)+1);
-    this.padVal(dtEl, day);
+    padVal(yrEl, year);
+    padVal(mnEl, Number(mon)+1);
+    padVal(dtEl, day);
 
     }
 
@@ -179,9 +138,9 @@ if(typeof cal==='undefined'){
       }
 
 
-    this.padVal(yrEl,dt.getFullYear());
-    this.padVal(mnEl,dt.getMonth()+1);
-    dyEl?this.padVal(dyEl,dt.getDate()):null;
+    padVal(yrEl,dt.getFullYear());
+    padVal(mnEl,dt.getMonth()+1);
+    dyEl?padVal(dyEl,dt.getDate()):null;
 
     this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
     return true;
@@ -234,7 +193,7 @@ if(typeof cal==='undefined'){
         cls=' class="fade"';
         }
       
-      rtrn+='<td id="date-'+this.toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
 
         //set end of week.
         if(i>=6){
