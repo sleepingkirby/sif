@@ -88,8 +88,8 @@ if(typeof cal==='undefined'){
         }
 
       //closes modal
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      // let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      // mainObj.modPrcClsCall(el);
 
       //redraw mainEl
       this.draw();

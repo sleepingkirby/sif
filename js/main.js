@@ -33,6 +33,20 @@ class sif{
   }
 
 
+  /*-------------------------------------
+  pre: global state, iconSets, config
+  post: html drawn
+  draws the bottom elements
+  -------------------------------------*/
+  drawBottomEls(){
+  const html=`<div class="menuIcon" onclick=(function(){console.log("asfasdf");})() title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const els=document.getElementsByClassName('bttmElsActns');
+    for(const el of els){
+    el.innerHTML=html;
+    };
+  }
+
+
   /*----------- draw the module ----------
   pre: global state, global iconSets, this.tmpl, iconLib.getEvalIcon()
   post: none
@@ -129,6 +143,7 @@ class sif{
             state.user.config=JSON.parse(config[0].json);
             }
           document.getElementById('rightNav').innerHTML=this.genRightNav();
+          this.drawBottomEls();
           menuLftObj.setMenu();
           this.draw(state.pos);
           /*reminder for later if needed

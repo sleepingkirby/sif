@@ -10,6 +10,10 @@ margin-bottom: 8px;
 margin-top: 8px;
 }
 
+#menuDropDown div:last-child{
+margin-bottom: 8px;
+}
+
 #menuDropDown .menuLftItm{
 cursor: pointer;
 }
@@ -24,8 +28,8 @@ border-radius: 6px;
 }
 
 .menuIcon svg{
-height: 46px;
-width: 46px;
+height: 60px;
+width: 60px;
 fill: #FFFFFF;
 }
 

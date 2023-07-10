@@ -51,8 +51,8 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     */
     sqlObj.runQuery(`
     select
+    *
     from events
-    
     `);
     var rtrn='';
     rtrn+=this.tmpl.mainEl[0];
