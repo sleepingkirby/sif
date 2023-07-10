@@ -98,11 +98,13 @@ background-color: #c5c5c5;
 font-weight: 900
 } 
 
-
 #calendarEl .fade{
 color: #d5d5d5; 
 }
 
+.calendarElWeek{
+height: 80vh;
+}
 
 #mnNav{
 width: 100%;
@@ -187,3 +189,4 @@ min-width: 46px;
 #calDay{
 margin-left: 10px;
 }
+
