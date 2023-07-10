@@ -22,10 +22,10 @@ class sif{
   this.tmpl['rightNav'][2]=`<div class="menuIcon" title="Logout">`;
   this.tmpl['rightNav'][3]=`</div></div></div>`;
 
-
     window.onbeforeunload=(e)=>{
       if(state.dbModded){
-      this.sqlObj.writeDb();
+      const fn='sif-'+dtFlNm()+'.db';
+      this.sqlObj.writeDb(fn);
       }
     return "Are you sure you want to leave?";
     }
