@@ -1,14 +1,12 @@
 if(typeof cal==='undefined'){
   /*-------------------------------------------
-  pre: mainObj, global state variable
+  pre: global mainObj, sqlObj, state variable
   post: html changed, db updated
   class to handle adding new users;
   -------------------------------------------*/
   class contacts{
 
     constructor(){
-      this.mainObj=new sif(mod);
-      this.sqlObj=new sqljs();
       this.rghtModForm=`
       <div id="contactsUserForm">
         <div class="row" style="justify-content: flex-start; margin-bottom: 18px;"><div class="lbl">Add new user</div></div>
@@ -56,7 +54,7 @@ if(typeof cal==='undefined'){
     hookEl(){
       document.getElementById("contactsAddBtn").onclick=(e)=>{
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      this.mainObj.modPrcClsCall(el);
+      mainObj.modPrcClsCall(el);
       };
 
     
@@ -71,7 +69,7 @@ if(typeof cal==='undefined'){
       //inserts into users table
       let user_uuid=createUUID(); 
         try{
-        this.sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email});
+        sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email});
         }
         catch(e){
         console.log('Unable to add entry to "users" table. query: '+'insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))'+', binds: '+JSON.stringify({$uuid:createUUID(), $email:hsh.email}));
@@ -81,7 +79,7 @@ if(typeof cal==='undefined'){
 
       //inserts into contacts
         try{
-        this.sqlObj.runQuery('insert into contacts(uuid, user_id, fName, surName, mName, addr, addr2, city, prov, zip, country, phone, cellphone) values($uuid, $u_uuid, $fName, $surName, $mName, $addr, $addr2, $city, $prov, $zip, $country, $phone, $cellphone)', {$uuid:createUUID(), $u_uuid:user_uuid, $fName:hsh.fName, $surName:hsh.surName, $mName:hsh.mName, $addr:hsh.addr, $addr2:hsh.addr2, $city:hsh.city, $prov:hsh.prov, $zip:hsh.zip, $country:hsh.country, $phone:hsh.phone, $cellphone:hsh.cellphone});
+        sqlObj.runQuery('insert into contacts(uuid, user_id, fName, surName, mName, addr, addr2, city, prov, zip, country, phone, cellphone) values($uuid, $u_uuid, $fName, $surName, $mName, $addr, $addr2, $city, $prov, $zip, $country, $phone, $cellphone)', {$uuid:createUUID(), $u_uuid:user_uuid, $fName:hsh.fName, $surName:hsh.surName, $mName:hsh.mName, $addr:hsh.addr, $addr2:hsh.addr2, $city:hsh.city, $prov:hsh.prov, $zip:hsh.zip, $country:hsh.country, $phone:hsh.phone, $cellphone:hsh.cellphone});
         }
         catch(e){
         console.log('Unable to add entry to "contacts" table. query: '+'insert into contacts(uuid, user_id, fName, surName, mName, addr, addr2, city, prov, zip, country, phone, cellphone, email) values($uuid, $u_uuid, $fName, $surName, $mName, $addr, $addr2, $city, $prov, $zip, $country, $phone, $cellphone)'+', binds: '+JSON.stringify({$uuid:createUUID(), $u_uuid:user_uuid, $fName:hsh.fName, $surName:hsh.surName, $mName:hsh.mName, $addr:hsh.addr, $addr2:hsh.addr2, $city:hsh.city, $prov:hsh.prov, $zip:hsh.zip, $country:hsh.country, $phone:hsh.phone, $cellphone:hsh.cellphone}));
@@ -91,7 +89,7 @@ if(typeof cal==='undefined'){
 
       //closes modal
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      this.mainObj.modPrcClsCall(el);
+      mainObj.modPrcClsCall(el);
 
       //redraw mainEl
       this.draw();
@@ -117,7 +115,7 @@ if(typeof cal==='undefined'){
     return object of table query
     ---------------------------------*/
     getList(){
-    return this.sqlObj.runQuery("select c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone, c.addr as addr, c.addr2 as addr2, c.city as city, c.prov as prov, c.zip as zip, c.country as country from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
+    return sqlObj.runQuery("select c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone, c.addr as addr, c.addr2 as addr2, c.city as city, c.prov as prov, c.zip as zip, c.country as country from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
     }
 
 

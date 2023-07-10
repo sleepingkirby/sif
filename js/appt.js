@@ -1,131 +1,30 @@
-if(false){
+if(typeof appt==='undefined'){
   class appt{
-    constructor(yr=null, mn=null, dy=null){
-
-    }
-
-
-    //date object. returns epoch time
-    epochTime(date){
-    var epch=Date.parse(date.toISOString())/1000;
-    return Math.floor(epch);
-    }
-
-    //outputs yyyymmdd, ex 20220201
-    toTimeStr(date){
-    var rtrn=String(date.getFullYear());
-    rtrn+=String(date.getMonth()).padStart(2, '0');
-    rtrn+=String(date.getDate()).padStart(2, '0');
-    return rtrn;
-    }
-
-    //----------------------------
-    //determines whether or not the element wants padding
-    padVal(el, val){
-    let v=val;
-
-    let min=el.getAttribute("minVal");
-    let max=el.getAttribute("maxVal");
-    let len=el.getAttribute("padLen");
-    let chr=el.getAttribute("padChar");
-
-      if(min&&max){
-        if(v<min){
-        v=max;
-        }
-        if(v>max){
-        v=min;
-        }
+    constructor(apptId=null){
+      if(state.pageVars&&!state.pageVars.appt){
+      state.pageVars.appt={};
       }
-
-      if(len&&chr){
-      v=String(v).padStart(len, chr);
-      }
-
-    el.innerText=v;
+    state.pageVars.appt.id=apptId;
+    this.tmpl={};
+    this.tmpl["mainEl"]=[];
+    this.tmpl.mainEl[0]=`
+      <div id="apptAdd">
+        <div id="apptAddBtn">⨁</div>
+      </div>
+    `;
     }
 
-    //---------------------------------------------------
-    //updates html elements with the current date
-    dateUpdt(year=this.year, mon=this.mon){
-    var yrEl=document.getElementsByName("calNavYear")[0];
-    var mnEl=document.getElementsByName("calNavMon")[0];
-    
-    this.padVal(yrEl, year);
-    this.padVal(mnEl, Number(mon)+1);
 
-    }
-
-    //changes the calendar to today/this month.
-    goToday(){
-    let dt=new Date();
-    this.modDate(dt.getFullYear(), dt.getMonth());
-    
-    this.dateUpdt(dt.getFullYear(), dt.getMonth()); 
-    }
-
-    /*----------------------------
-    pre:  
-    post: 
-    ----------------------------*/ 
-    modDate( year=this.year, mon=this.mon, day=this.day){
-      if(state['shwDate']['year']==year && state['shwDate']['mon']==(mon) && state['shwDate']['day']==day){
-      //if date is the same, no need to update.
-      return false;
-      }
-
-    console.log(year+" "+mon+" "+day);
-
-    this.year=state['shwDate']['year']=year;
-    this.mon=state['shwDate']['mon']=mon;
-    this.day=state['shwDate']['day']=day;
-    document.getElementById('mainEl').innerHTML=this.genCal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
-
-    return true;
-    }
-
-    /*----------------------------
-    pre: onclick attached to this function. global event variable. The element has "for" attribute
-    post: modifies the element named in "for" attribute
-    finds the number in the named element and increment.
-    optional attributes: padLen, padChar, minVal, maxVal
-    ----------------------------*/ 
-    modToElNum(add=true){
-      if(!event || !"target" in event || !event.target.hasAttribute("for")){
-      return false;
-      }
-    
-    var el=document.getElementsByName(event.target.getAttribute("for"))[0];
-    let num=Number(el.innerText);
-      if(isNaN(num)){
-      return false;
-      }
-    
-    
-    add?num++:num--;
-
-      //check if element being changed is the month
-      //if so, see if need to inc or dec year.
-      if(el.getAttribute('name')=='calNavMon'){
-        let yrEl=document.getElementsByName('calNavYear')[0];
-        let yrNm=yrEl.innerText;
-        if(num>el.getAttribute('maxVal')){
-        //increment year
-        this.padVal(yrEl, parseInt(yrNm)+1);
-        }
-        if(num<el.getAttribute('minVal')){
-        //decrement year
-        this.padVal(yrEl, parseInt(yrNm)-1);
-        }
-      }
-
-      this.padVal(el, num);
-
-    let year=document.getElementsByName("calNavYear")[0].innerText;
-    let mon=Number(document.getElementsByName("calNavMon")[0].innerText)-1;
-
-    this.modDate(year, mon);
-    return true;
+    /*----------------------------------
+    pre: everything this class requires
+    post: events added to elements.
+    adds event hooks to elements that need it
+    ----------------------------------*/
+    hookEl(){
+      document.getElementById("apptAddBtn").onclick=(e)=>{
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      };
     }
 
     /*-----------------------------------------------
@@ -133,81 +32,44 @@ if(false){
     post: generates leftNav Element
     generates HTML of leftNav element for calendar
     -----------------------------------------------*/
-    genLeftNavCal(year=this.year, mon=this.mon){
-      
-      var rtrn="";
-      rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
+    genLeftNavAppt(){
+    var rtrn='Appointments';
     return rtrn;
     }
 
     /*-----------------------------------------------
     pre: none
-    post: element of id (calendar element) drawn
-    draws calendar of month and year on element of id
-    params: id=calender element id, yr=year (ex. 2022), mn=month (0~11), dy=day of month(1~31)
+    post: none
     -----------------------------------------------*/
-    genCal(year=this.year, mon=this.mon, day=this.day){
-
-    //get where to start building calendar. This could be last month if it's in the week
-    var ptrDt=new Date(year, mon, 1);
-    var today=new Date();
-    var curDy=(1 - ptrDt.getDay())%7;
-    ptrDt.setFullYear(year, mon, curDy);
-    var rtrn="";
-    var end=false;
-    var i=0; //thnis always starts as 0 because we're always starting on a sunday.
-
-      while(!end){
-        //if start of week.
-        if(i%7<=0){
-        rtrn+="<tr>";
-        }
-
-        //set day
-        let tdy="";
-        if(curDy==today.getDate()&&ptrDt.getMonth()==today.getMonth()&&ptrDt.getFullYear()==today.getFullYear()){
-        tdy=' name="today"';
-        }
-        //set fade days outside the current month to fade
-        let cls="";
-        if(ptrDt.getMonth()!=mon){
-        cls=' class="fade"';
-        }
-      
-      rtrn+='<td id="date-'+this.toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
-
-        //set end of week.
-        if(i%7>=6){
-        rtrn+='<td class="wkVw" ><div>🞂</div></td></tr>'+"\n";
-          if(ptrDt.getMonth()!=mon){
-          end=true;
-          }
-        }
-
-      curDy++;
-      ptrDt.setFullYear(year,mon,curDy);
-      i=ptrDt.getDay();
-      }
-
-    rtrn=`
-          <table id="calendarEl">
-            <tr>
-              <th class="dyOfWk">Sun</th>
-              <th class="dyOfWk">Mon</th>
-              <th class="dyOfWk">Tue</th>
-              <th class="dyOfWk">Wed</th>
-              <th class="dyOfWk">Thu</th>
-              <th class="dyOfWk">Fri</th>
-              <th class="dyOfWk">Sat</th>
-              <th class="wkVw">&nbsp;</th>
-            </tr>`+rtrn+'</table>';
+    genAppts(){
+    /*
+CREATE TABLE events(uuid text not null primary key, forUser_id text not null, byUser_id text not null, create_date int not null, on_date int not null, done_date int null, duration int null, notes text, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid));
+sqlite> .schema events_invntSrv
+CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
+sqlite> .schema events_type
+CREATE TABLE events_type(uuid text not null primary key, event_uuid text not null, type_uuid text not null, foreign key(event_uuid) references events(uuid), foreign key(type_uuid) references type(uuid));
+    */
+    sqlObj.runQuery(`
+    select
+    from events
+    
+    `);
+    var rtrn='';
+    rtrn+=this.tmpl.mainEl[0];
     return rtrn;
     }
 
-    
+    /*-----------------------------------------------
+    pre: none
+    post: write the html to the page
+    -----------------------------------------------*/
+    run(){
+    document.getElementById('mainEl').innerHTML=this.genAppts();
+    document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
+    this.hookEl();
+    }
   }
 
 var apptObj=new appt();
-// document.getElementById('mainEl').innerHTML=calObj.genCal();
-// document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
+apptObj.run();
 }
