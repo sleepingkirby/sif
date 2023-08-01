@@ -14,6 +14,7 @@ if(typeof appt==='undefined'){
     `;
     this.lftModForm=`
     <div id="apptNewApptForm">
+      <div class="lbl">Add new appointment</div>
       <div id="apptNewApptFormUser">
         <div id="apptNewApptFormUserSlct">
           <select id="apptNewApptFormUserLastName" onchange="apptObj.testFunc(event)">
