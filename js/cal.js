@@ -195,10 +195,17 @@ if(typeof cal==='undefined'){
             </tr>`+rtrn+'</table>';
     return rtrn;
     }
-  }
 
+    // run main function
+    run(){
+    document.getElementById('mainEl').innerHTML=this.genCal();
+    document.getElementById('leftNavMod').innerHTML=this.genLeftNavCal();
+    }
+    testFunc(){
+    console.log("asfasdfds");
+    }
+  }
 var calObj=new cal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
-document.getElementById('mainEl').innerHTML=calObj.genCal();
-document.getElementById('leftNavMod').innerHTML=calObj.genLeftNavCal();
+state.depModuleObjs['cal']=calObj;
 }
 

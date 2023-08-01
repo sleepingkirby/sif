@@ -1,4 +1,4 @@
-if(typeof cal==='undefined'){
+if(typeof contacts==='undefined'){
   /*-------------------------------------------
   pre: global mainObj, sqlObj, state variable
   post: html changed, db updated
@@ -159,7 +159,7 @@ if(typeof cal==='undefined'){
     post: html page changed
     runs the main function to initialize the page
     -------------------------------------*/ 
-    main(){
+    run(){
     document.getElementById('mainEl').innerHTML=this.mainEl();
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.rghtMod();
     document.getElementById('leftNavMod').innerHTML="Contacts";
@@ -178,5 +178,5 @@ if(typeof cal==='undefined'){
   }
 
 var cntctsObj=new contacts(mainObj, sqlObj);
-cntctsObj.main();
+state.depModuleObjs['contacts']=cntctsObj;
 }

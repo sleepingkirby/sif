@@ -1,4 +1,4 @@
-if(typeof cal==='undefined'){
+if(typeof week==='undefined'){
 
   class week{
 
@@ -226,5 +226,5 @@ if(typeof cal==='undefined'){
   }
 
 var wkObj=new week(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
-wkObj.run();
+state.depModuleObjs['week']=wkObj;
 }

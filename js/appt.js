@@ -66,10 +66,11 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     run(){
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML='';
     this.hookEl();
     }
   }
 
 var apptObj=new appt();
-apptObj.run();
+state.depModuleObjs['appt']=apptObj;
 }

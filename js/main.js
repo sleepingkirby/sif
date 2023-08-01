@@ -7,6 +7,7 @@ class sif{
   constructor(modObj, menuLftObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
   this.scrpt=document.createElement('script'); //element that holds the script
+  this.scrpt.id='modScript';
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
@@ -32,6 +33,36 @@ class sif{
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
   }
 
+  /*-------------------------------------
+  pre: this.mod
+  post: module added to page.
+  adds the module to the page.
+  huh... lesson learned. You can't reuse the same instantiated script element to get the code within the script to run
+  you have to create a new script element and then add for it to run the code
+  -------------------------------------*/
+  addModule(str, id, run=true, func=null){
+    var el=document.getElementById(id);
+    this.scrpt=document.createElement('script');
+    this.scrpt.src=this.mod[str].path;
+    this.scrpt.id=id;
+    this.scrpt.setAttribute("defer", true);
+    this.scrpt.setAttribute('type',"text/javascript");
+      this.scrpt.onload = () => {
+        if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
+        eval(this.mod[str].eval);
+        }
+        if(run&&state.depModuleObjs[str]){
+        state.depModuleObjs[str].run();
+        }
+        if(typeof func=='function'&&func){
+        func();
+        }
+      };
+    document.head.append(this.scrpt);
+  }
+
+  populateNew
+
 
   /*-------------------------------------
   pre: global state, iconSets, config
@@ -39,13 +70,24 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div class="menuIcon" onclick=(function(){console.log("asfasdf");})() title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  //const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modPrcClsCall(document.getElementById('rghtMod').getElementsByClassName('close')[0]);" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const newAppntBttn=document.createElement('div');
+  newAppntBttn.id="mainBttmElsNewAppntment";
+  newAppntBttn.className="menuIcon";
+  newAppntBttn.title="Add Appointment";
+  newAppntBttn.innerHTML=getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment');
+    newAppntBttn.onclick=function(){
+    // mainObj.addModule("contacts","mainObjDepBttmElsAppntmentBttn",false,function(){console.log("anon func");});
+    
+    mainObj.modRghtOpenClose();
+    };
   const els=document.getElementsByClassName('bttmElsActns');
+    // should only be one
     for(const el of els){
-    el.innerHTML=html;
+    els[0].innerHTML='';
+    els[0].appendChild(newAppntBttn);
     };
   }
-
 
   /*----------- draw the module ----------
   pre: global state, global iconSets, this.tmpl, iconLib.getEvalIcon()
@@ -78,19 +120,7 @@ class sif{
     document.head.removeChild(this.scrpt);
     }
 
-  //huh... lesson learned. You can't reuse the same instantiated script element to get the code within the script to run
-  //you have to create a new script element and then add for it to run the code
-  this.scrpt=document.createElement('script');
-  this.scrpt.src=this.mod[str].path;
-  this.scrpt.id="modScript";
-  this.scrpt.setAttribute("defer", true);
-  this.scrpt.setAttribute('type',"text/javascript");
-    if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
-      this.scrpt.onload = () => {
-      eval(this.mod[str].eval);
-      };
-    }
-  document.head.append(this.scrpt);
+  this.addModule(str, "modScript");
   }
 
   /*--------- setState --------------
@@ -177,6 +207,17 @@ class sif{
     }
   }
 
+
+  /*-------------------------------------------------------
+  pre: rghtMod element exists, modPrcClsCall()
+  post: rghtMod modal opened or closed
+  open/close right modal
+  -------------------------------------------------------*/
+  modRghtOpenClose(){
+  let el=document.getElementById('rghtMod').getElementsByClassName('close')[0];
+  this.modPrcClsCall(el);
+  }
+
   /*-------------------------------------------------------
   pre: this.modPrcCls(), element of elId to be modal
   post: modal's state changes
@@ -235,6 +276,7 @@ class sif{
       }
     }
   }
+
 
   /*-------------------------------------------------------
   not use currently.
