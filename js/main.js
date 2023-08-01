@@ -70,22 +70,24 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  //const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modPrcClsCall(document.getElementById('rghtMod').getElementsByClassName('close')[0]);" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose()" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  /*
   const newAppntBttn=document.createElement('div');
   newAppntBttn.id="mainBttmElsNewAppntment";
   newAppntBttn.className="menuIcon";
   newAppntBttn.title="Add Appointment";
   newAppntBttn.innerHTML=getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment');
     newAppntBttn.onclick=function(){
-    // mainObj.addModule("contacts","mainObjDepBttmElsAppntmentBttn",false,function(){console.log("anon func");});
-    
-    mainObj.modRghtOpenClose();
+    mainObj.modLftOpenClose();
     };
+  */
   const els=document.getElementsByClassName('bttmElsActns');
-    // should only be one
+    /*
+    why the for loop? This inserts the same element into bttmElsSpc, hence making sure that that spacer element will always have the same height at the bottom of the page
+    */
     for(const el of els){
-    els[0].innerHTML='';
-    els[0].appendChild(newAppntBttn);
+    console.log(el);
+    el.innerHTML=html;
     };
   }
 
@@ -213,8 +215,8 @@ class sif{
   post: rghtMod modal opened or closed
   open/close right modal
   -------------------------------------------------------*/
-  modRghtOpenClose(){
-  let el=document.getElementById('rghtMod').getElementsByClassName('close')[0];
+  modLftOpenClose(){
+  let el=document.getElementById('lftMod').getElementsByClassName('close')[0];
   this.modPrcClsCall(el);
   }
 
