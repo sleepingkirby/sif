@@ -14,3 +14,49 @@ margin-bottom: 20px;
 cursor: pointer;
 }
 
+#apptNewApptForm{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+padding:0px 6px 0px 6px;
+}
+
+#apptNewApptForm > div{
+display:flex;
+}
+
+#apptNewApptForm select,option{
+background-color:var(--default-blue);
+color:white;
+border-width:0px;
+border-bottom:1px solid white;
+padding:4px 6px 4px 6px;
+font-size:x-large;
+}
+
+#apptNewApptForm select{
+margin-right: 12px;
+}
+
+#apptNewApptFormUser{
+margin-bottom:18px;
+}
+
+#apptNewApptFormUserNew{
+display:flex;
+justify-content:flex-end;
+align-items:center;
+margin-left: 50px;
+}
+
+#apptNewApptFormUserInfo{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+padding: 24px 28px 24px 28px;
+}
+
+#apptNewApptFormUserInfo > div{
+}

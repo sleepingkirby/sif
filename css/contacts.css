@@ -36,53 +36,10 @@ width: 100%;
 display: flex;
 }
 
-#contactsUserForm .row{
-display: flex;
-justify-content: flex-end;
-align-items: center;
-margin-bottom: 16px;
-}
-
 #contactsUserForm .lbl{
 font-weight: 600;
 margin-right: 6px;
 }
-
-#contactsUserForm textarea{
-border-width: 0px 0px 1px 0px;
-border-color: white;
-color: white;
-background-color: transparent;
-padding-left: 8px;
-font-family: "DejaVu Sans", Arial, sans-serif;
-font-weight: 600;
-resize: auto;
-overflow: auto;
-margin-right: 10px;
-min-height: 16px;
-height: 16px;
-align-items: flex-end;
-}
-
-#contactsUserForm textarea::placeholder{
-color: rgba(255, 255, 255, 0.6);
-}
-
-#contactsUserFormAddBtn{
-background-color: transparent;
-border: 1px solid white;
-color: white;
-border-radius: 6px;
-font-family: "DejaVu Sans", Arial, sans-serif;
-padding: 4px 6px 4px 6px;
-}
-
-#contactsUserFormAddBtn:active{
-color: #71aeec;
-background-color: white;
-border-color: #71aeec;
-}
-
 
 #contactsList{
 padding: 0px;

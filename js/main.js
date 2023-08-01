@@ -70,23 +70,9 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose()" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
-  /*
-  const newAppntBttn=document.createElement('div');
-  newAppntBttn.id="mainBttmElsNewAppntment";
-  newAppntBttn.className="menuIcon";
-  newAppntBttn.title="Add Appointment";
-  newAppntBttn.innerHTML=getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment');
-    newAppntBttn.onclick=function(){
-    mainObj.modLftOpenClose();
-    };
-  */
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();console.log('asdfasfeae');" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
-    /*
-    why the for loop? This inserts the same element into bttmElsSpc, hence making sure that that spacer element will always have the same height at the bottom of the page
-    */
     for(const el of els){
-    console.log(el);
     el.innerHTML=html;
     };
   }
