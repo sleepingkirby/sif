@@ -1,10 +1,10 @@
 function dtFlNm(dateTime=null){
 var dt=new Date();
   if(Number.isFinite(dateTime)){
-    dt=new Date(dateTime);
+  dt=new Date(dateTime);
   }
-  var dateStr=dt.getFullYear().toString()+(dt.getMonth()+1).toString().padStart(2,'0')+dt.getDate().toString().padStart(2,'0');
-  var timeStr=dt.getHours().toString().padStart(2,'0')+dt.getMinutes().toString().padStart(2,'0')+dt.getSeconds().toString().padStart(2,'0');
+var dateStr=dt.getFullYear().toString()+(dt.getMonth()+1).toString().padStart(2,'0')+dt.getDate().toString().padStart(2,'0');
+var timeStr=dt.getHours().toString().padStart(2,'0')+dt.getMinutes().toString().padStart(2,'0')+dt.getSeconds().toString().padStart(2,'0');
 return dateStr+'-'+timeStr; 
 }
 
@@ -21,3 +21,13 @@ rtrn+=String(date.getDate()).padStart(2, '0');
 return rtrn;
 }
 
+function toInptValFrmt(dateTime=null){
+var dt=new Date();
+  if(Number.isFinite(dateTime)){
+  dt=new Date(dateTime);
+  }
+
+var dateStr=dt.getFullYear().toString()+"-"+(dt.getMonth()+1).toString().padStart(2,'0')+"-"+dt.getDate().toString().padStart(2,'0');
+var timeStr=dt.getHours().toString().padStart(2,'0')+":"+dt.getMinutes().toString().padStart(2,'0');
+return dateStr+"T"+timeStr;
+}

@@ -12,56 +12,62 @@ if(typeof appt==='undefined'){
         <div id="apptAddBtn">⨁</div>
       </div>
     `;
+    var dt=toInptValFrmt();
     this.lftModForm=`
     <div id="apptNewApptForm">
       <div class="lbl">Add new appointment</div>
       <div id="apptNewApptFormUser">
         <div id="apptNewApptFormUserSlct">
-          <select id="apptNewApptFormUserLastName" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserLastName" name="conactSelect[surName]" onchange="apptObj.testFunc(event)">
             <option value="lastnameval">lastname</option>
             <option>null</option>
             <option>null</option>
             <option>null</option>
           </select>
-          <select id="apptNewApptFormUserFirstName" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
             <option value="firstnameval">firstname</option>
             <option>null</option>
             <option>null</option>
             <option>null</option>
           </select>
-          <select id="apptNewApptFormUserEmail" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
             <option value="emailval">email</option>
             <option>null</option>
             <option>null</option>
             <option>null</option>
           </select>
-          <select id="apptNewApptFormUserPhone" onchange="apptObj.testFunc(event)">
-            <option value="phoneval">phone</option>
+          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
+            <option value="cellphoneval">cell phone</option>
             <option>null</option>
             <option>null</option>
             <option>null</option>
           </select>
         </div>
         <div id="apptNewApptFormUserNew">
-          <input id="apptNewApptFormUserNewUser" type="submit" value="NewUser">
+          <input id="apptNewApptFormUserNewUser" type="submit" value="NewUser" disabled>
         </div>
       </div>
       <div id="apptNewApptFormUserInfo">
-        <div class="row" style="margin-bottom: 26px;">
+        <div class="row">
           <textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea>
           <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea>
           <textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea>
         </div>
-        <div class="row" style="margin-bottom: 22px;">
+        <div class="row">
           <textarea name="contact[phone]" type="text" placeholder="home phone"></textarea>
-          <textarea name="contact[email]" type="text" placeholder="email address"></textarea>
+          <textarea name="contact[email]" type="text" style="margin-left:40px;flex-grow:100;" placeholder="email address"></textarea>
         </div>
       </div
       <div id="apptNewApptFormApptInfo">
       &nbsp;
+        <div class="row" style="justify-content:flex-start;">
+          <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
+        </div>       
       </div>
     </div>
     `;
+//CREATE TABLE events(uuid text not null primary key, forUser_id text not null, byUser_id text not null, create_date int not null, on_date int not null, done_date int null, duration int null, notes text, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid));
+
     }
 
     testFunc(e){

@@ -1,16 +1,18 @@
 :root{
 --default-blue: #71AEEC;
+--faded-white: rgba(255,255,255,0.4);
+--font-family:"DejaVu Sans", Arial, sans-serif;
 }
 
 html, body{
 margin: 0px;
 padding: 0px;
-font-family: "DejaVu Sans", Arial, sans-serif;
+font-family: var(--font-family);
 min-width: 500px;
 }
 
 div,select,option{
-font-family: "DejaVu Sans", Arial, sans-serif;
+font-family: var(--font-family);
 }
 
 input[type="submit"]{
@@ -18,17 +20,45 @@ background-color: transparent;
 border: 1px solid white;
 color: white;
 border-radius: 6px;
-font-family: "DejaVu Sans", Arial, sans-serif;
-padding: 4px 6px 4px 6px;
+font-family: var(--font-family);
+padding: 4px 6px;
+margin: 0px 0px;
 font-size:larger;
+transition-property: padding, margin;
+transition-duration: 0.2s;
+transition-timing-function: cubic-bezier(0.2,0,0.2,1);
+}
+
+input[type="submit"]:hover{
+color: var(--default-blue);
+background-color: white;
+border-color: var(--default-blue);
 }
 
 input[type="submit"]:active{
 color: #71aeec;
 background-color: white;
 border-color: #71aeec;
+padding: 0px 2px;
+margin: 4px 4px;
 }
 
+input[type="submit"]:disabled{
+color: var(--faded-white);
+background-color: transparent;
+border-color: var(--faded-white);
+}
+
+input[type="datetime-local"]{
+padding: 4px 6px;
+background-color: transparent;
+border: 1px solid white;
+border-radius: 6px;
+color: white;
+font-family:var(--font-family);
+font-size: x-large;
+color-scheme:dark;
+}
 
 textarea{
 border-width: 0px 0px 1px 0px;
@@ -36,7 +66,7 @@ border-color: white;
 color: white;
 background-color: transparent;
 padding-left: 8px;
-font-family: "DejaVu Sans", Arial, sans-serif;
+font-family: var(--font-family);
 font-weight: 600;
 resize: auto;
 overflow: auto;
@@ -61,7 +91,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 flex-direction: column;
-font-family: "DejaVu Sans", Arial, sans-serif;
+font-family: var(--font-family);
 border-radius: 4px;
 z-index: 100;
 display: flex;
@@ -69,7 +99,7 @@ display: flex;
 
 #enterDatabase{
 background-color: white;
-font-family: "DejaVu Sans", Arial, sans-serif;
+font-family: var(--font-family);
 border-radius: 4px;
 }
 
