@@ -62,6 +62,9 @@ if(typeof appt==='undefined'){
         <div class="row" style="justify-content:flex-start;">
           <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
           <select id="apptNewApptFormApptInfoSrv">
+	  </select>
+	  <select id="" name="event[by_user]">
+	    <option>by user</option>
           </select>
         </div>       
       </div>
@@ -132,9 +135,13 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     post: none
     gets all the invntSrv records 
     ----------------------------------------------*/
-    getInvntSrv(username=null){
-    const q=`select invntSrv.uuid, invntSrv.name, type_uuid, type.name as type, invntSrv.create_date, invntSrv.mod_date, invntSrv.status, users.username as username, invntSrv.srv_durtn, invntSrv.sku, invntSrv.amnt, invntSrv.buy, invntSrv.sell, invntSrv.notes from invntSrv left join type on invntSrv.type_uuid=type.uuid left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid left join users on invntSrv_users.users_id=users.uuid where username is null or username="${username}"`;
-    var invntSrv=sqlObj.runQuery(q);
+    getInvntSrv(username=null, excldNull=false){
+    var whereUsr=' where username is null or username=$username';
+      if(excldNull){
+      whereUsr=' where username=$username';
+      }
+    const q=`select invntSrv.uuid, invntSrv.name, type_uuid, type.name as type, invntSrv.create_date, invntSrv.mod_date, invntSrv.status, users.username as username, invntSrv.srv_durtn, invntSrv.sku, invntSrv.amnt, invntSrv.buy, invntSrv.sell, invntSrv.notes from invntSrv left join type on invntSrv.type_uuid=type.uuid left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid left join users on invntSrv_users.users_id=users.uuid${whereUsr}`;
+    var invntSrv=sqlObj.runQuery(q,{$email:username});
     var invntSrvObj={};
       for(const r of invntSrv){
         if(!invntSrvObj.hasOwnProperty(r.uuid)){

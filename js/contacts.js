@@ -70,6 +70,7 @@ if(typeof contacts==='undefined'){
       let user_uuid=createUUID(); 
         try{
         sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email});
+	//add type
         }
         catch(e){
         console.log('Unable to add entry to "users" table. query: '+'insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))'+', binds: '+JSON.stringify({$uuid:createUUID(), $email:hsh.email}));
