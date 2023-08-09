@@ -12,6 +12,13 @@ if(typeof appt==='undefined'){
         <div id="apptAddBtn">⨁</div>
       </div>
     `;
+    this.tmpl["invntSrvListEls"]=[];
+    this.tmpl.invntSrvListEls[0]=`
+    `;
+    this.tmpl.invntSrvListEls[1]=`
+    `;
+    this.invntSrvAddedArr=[];
+    this.invntSrvList=null;
     var dt=toInptValFrmt();
     this.lftModForm=`
     <div id="apptNewApptForm">
@@ -42,6 +49,7 @@ if(typeof appt==='undefined'){
             <option>null</option>
             <option>null</option>
           </select>
+          <input id="apptNewApptFormApptInfoForUsr" type="hidden" name="event[forUser_id]" />
         </div>
         <div id="apptNewApptFormUserNew">
           <input id="apptNewApptFormUserNewUser" type="submit" value="NewUser" disabled>
@@ -59,14 +67,34 @@ if(typeof appt==='undefined'){
         </div>
       </div
       <div id="apptNewApptFormApptInfo">
+        <div class="row" style="justify-content:space-between;">
+          <div class="row">
+            <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
+	          <select id="apptNewApptFormApptInfoByUser" name="event[byUser_id]">
+	            <option>by user</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="apptNewApptFormApptInfoDur" title="in minutes" style="margin-right:8px;">Duration:</label>
+            <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="20" style="margin-right:0px;"/>
+          </div>
+        </div>
         <div class="row" style="justify-content:flex-start;">
-          <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
-          <select id="apptNewApptFormApptInfoSrv">
-	  </select>
-	  <select id="" name="event[by_user]">
-	    <option>by user</option>
-          </select>
-        </div>       
+          <select id="apptNewApptFormApptInfoSrv" name="event[invntSrv]">
+            <option>service</option>
+	        </select>
+          <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Service"/>
+        </div>
+        <div class="row" style="justify-content:flex-start; align-items:stretch; flex-direction:column; margin-top:18px;">
+          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row" title="Services Added" style="justify-content:flex-start; margin-bottom:6px;">
+          Services to be added
+          </div>
+          <div id="apptNewApptFormApptInfoSrvLst" class="row" title="Services Added">
+          </div>
+        </div>
+        <div class="row" style="margin-bottom:24px;">
+          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment"/>
+        </div>
       </div>
     </div>
     `;
@@ -92,10 +120,22 @@ CREATE TABLE invntSrv(uuid text primary key, name text not null, create_date int
     adds event hooks to elements that need it
     ----------------------------------*/
     hookEl(){
+      //open/close left modal
       document.getElementById("apptAddBtn").onclick=(e)=>{
       let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
+      //add new appointment
+      document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
+      var els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
+      console.log(els);
+      }
+      //
+      document.getElementById("apptNewApptFormApptInfoAddSrv").onclick=(e)=>{
+      var el=document.getElementById("apptNewApptFormApptInfoSrv");
+      this.invntSrvAddedArr.push(el.value);
+      this.genInvntSrvListEls();
+      }
     }
 
     /*-----------------------------------------------
@@ -162,6 +202,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     -----------------------------------------------*/
     genInvntSrv(username, selectedUUID){
     var invntSrv=this.getInvntSrv(username);
+    this.invntSrvList={...invntSrv};
     var keys=Object.keys(invntSrv);
     var html='';
       if(keys.length<=0){
@@ -169,11 +210,45 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
       }
 
       for(const uuid of keys){
-        html+=`<option value="uuid"${selectedUUID==uuid?" selected":""}>${invntSrv[uuid].name}</option>`;
+        html+=`<option value="${uuid}"${selectedUUID==uuid?" selected":""}>${invntSrv[uuid].name}</option>`;
       }
     return html;
     }
-    
+   
+    /*-----------------------------------------------
+    pre: this.invntSrvList filled
+    post: none
+    -----------------------------------------------*/
+    delFromInvntSrvAddedArr(val){
+      console.log(`delFromInvntSrvAddedArr()<<<<<<< ${val}`);
+      if(!val){
+      return null;
+      }
+    var i=this.invntSrvAddedArr.findIndex(el=>el===val);
+    console.log(i);
+      if(i>=0){
+      this.invntSrvAddedArr.splice(i,1);
+      }
+    }
+ 
+    /*-----------------------------------------------
+    pre: this.invntSrvList filled
+    post: none
+    -----------------------------------------------*/
+    genInvntSrvListEls(){
+    var html="";
+      if(this.invntSrvList&&this.invntSrvAddedArr){
+        for(const uuid of this.invntSrvAddedArr){
+        html+=`
+        <div class="invntSrvListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");apptObj.genInvntSrvListEls();'>
+          <div class="invntSrvListItemName">${this.invntSrvList[uuid].name}</div>
+          <div class="invntSrvListItemDel">x</div>
+        </div>
+        `;
+        }
+      document.getElementById("apptNewApptFormApptInfoSrvLst").innerHTML=html;
+      }
+    }
 
     /*-----------------------------------------------
     pre: none

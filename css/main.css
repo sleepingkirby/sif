@@ -60,6 +60,20 @@ font-size: x-large;
 color-scheme:dark;
 }
 
+input[type="number"]{
+padding: 4px 6px;
+background-color: transparent;
+border: 1px solid white;
+border-radius: 6px;
+color: white;
+font-family:var(--font-family);
+font-size: x-large;
+}
+
+input[type="number"]::placeholder{
+color:rgba(255, 255, 255, 0.8);
+}
+
 textarea{
 border-width: 0px 0px 1px 0px;
 border-color: white;

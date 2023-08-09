@@ -35,7 +35,7 @@ padding:4px 6px 4px 6px;
 font-size:x-large;
 }
 
-#apptNewApptForm select,input[type="datetime-local"]{
+#apptNewApptForm select,input[type="datetime-local"],input[type="number"]{
 margin-right: 12px;
 }
 
@@ -68,5 +68,45 @@ background-color:rgba(255,255,255,0.15);
 
 #apptNewApptFormUserInfo > div{
 justify-content:space-between;
+}
+
+#apptNewApptFormApptInfoDur{
+width:55pt;
+}
+
+#apptNewApptFormApptInfoSrvLst{
+border-radius:6px;
+border:1px solid white;
+padding:8px;
+justify-content:flex-start;
+flex-wrap:wrap;
+}
+
+#apptNewApptFormApptInfoSrvLstLbl{
+font-weight: 900;
+}
+
+.invntSrvListItem{
+display:flex;
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+border-radius: 8px;
+border:1px solid white;
+color:white;
+background-color:rgba(255, 255, 255, 0.3);
+padding:3px 6px;
+font-size:x-large;
+cursor:pointer;
+margin-right: 8px;
+margin-bottom: 8px;
+}
+
+.invntSrvListItem > div{
+display:flex;
+}
+
+.invntSrvListItem > div:last-child{
+margin-left:8px;
 }
 
