@@ -76,7 +76,7 @@ if(typeof appt==='undefined'){
           </div>
           <div class="row">
             <label for="apptNewApptFormApptInfoDur" title="in minutes" style="margin-right:8px;">Duration:</label>
-            <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="20" style="margin-right:0px;"/>
+            <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
           </div>
         </div>
         <div class="row" style="justify-content:flex-start;">
@@ -237,6 +237,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     -----------------------------------------------*/
     genInvntSrvListEls(){
     var html="";
+    var total=0;
       if(this.invntSrvList&&this.invntSrvAddedArr){
         for(const uuid of this.invntSrvAddedArr){
         html+=`
@@ -245,8 +246,10 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
           <div class="invntSrvListItemDel">x</div>
         </div>
         `;
+        total+=this.invntSrvList[uuid]&&Number.isFinite(this.invntSrvList[uuid].srv_durtn)?this.invntSrvList[uuid].srv_durtn:0;
         }
       document.getElementById("apptNewApptFormApptInfoSrvLst").innerHTML=html;
+      document.getElementById("apptNewApptFormApptInfoDur").value=total;
       }
     }
 
