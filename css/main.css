@@ -1,5 +1,6 @@
 :root{
 --default-blue: #71AEEC;
+--default-gray: #787878;
 --faded-white: rgba(255,255,255,0.4);
 --font-family:"DejaVu Sans", Arial, sans-serif;
 }

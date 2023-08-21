@@ -37,6 +37,7 @@ if(typeof contacts==='undefined'){
           <th>phone</th>
           <th>cell</th>
           <th>address</th>
+          <th>action</th>
           </tr>
       `;
       this.mainElHtml[1]=`
@@ -69,7 +70,7 @@ if(typeof contacts==='undefined'){
       //inserts into users table
       let user_uuid=createUUID(); 
         try{
-        sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email});
+        sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, (select uuid from status where name="active"), $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email});
 	//add type
         }
         catch(e){
@@ -125,7 +126,63 @@ if(typeof contacts==='undefined'){
     return object of table query
     ---------------------------------*/
     getList(){
-    return sqlObj.runQuery("select c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone, c.addr as addr, c.addr2 as addr2, c.city as city, c.prov as prov, c.zip as zip, c.country as country from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
+    return sqlObj.runQuery("select u.uuid as uuid, c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone, c.addr as addr, c.addr2 as addr2, c.city as city, c.prov as prov, c.zip as zip, c.country as country from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
+    }
+
+
+    /*---------------------------------
+    pre: sqlObj
+    post: none
+    params: user uuid
+    deletes the user
+    ---------------------------------*/
+    delUser(uuid){
+      if(!uuid){
+      return null;
+      }
+      try{
+      sqlObj.runQuery("delete from users where uuid=$uuid",{$uuid:uuid});
+      }
+      catch(e){
+      console.log(e);
+      }
+      this.draw();
+    }
+
+    /*---------------------------------
+    pre: sqlObj
+    post: none
+    params: user uuid
+    disables user
+    ---------------------------------*/
+    userOff(uuid){
+      if(!uuid){
+      return null;
+      }
+      try{
+      sqlObj.runQuery(`update users set status_id=(select uuid from status where name="disabled") where uuid=$uuid`,{$uuid:uuid});
+      }
+      catch(e){
+      console.log(e);
+      }
+    }
+
+    /*---------------------------------
+    pre: sqlObj
+    post: none
+    params: user uuid
+    enables user
+    ---------------------------------*/
+    userOn(uuid){
+      if(!uuid){
+      return null;
+      }
+      try{
+      sqlObj.runQuery(`update users set status_id=(select uuid from status where name="active") where uuid=$uuid`,{$uuid:uuid});
+      }
+      catch(e){
+      console.log(e);
+      }
     }
 
 
@@ -154,6 +211,12 @@ if(typeof contacts==='undefined'){
           <td>`+rcrd.phone+`</td>
           <td>`+rcrd.cellphone+`</td>
           <td>`+rcrd.addr+`<br>`+rcrd.addr2+`<br>`+cpz+rcrd.country+`</td>
+          <td>
+            <div class="contactsCellActns">
+            <div name="contactEditUser" class="menuIcon" onclick=console.log("test"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+            <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.delUser("`+rcrd.uuid+`"); title="Delete User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+            </div>
+          </td>
           </tr>
           `;
         });

@@ -70,20 +70,37 @@ vertical-align: top;
 height:100%;
 }
 
+#contactsList td:last-child > div.contactsCellActns{
+display:flex;
+justify-content: space-around;
+align-items:flex-start;
+width:100%;
+}
+
+#contactsList td:last-child > div.contactsCellActns svg{
+fill:var(--default-gray);
+border-radius:6px;
+}
+
+#contactsList td:last-child > div.contactsCellActns svg:hover{
+fill:white;
+background-color:var(--default-gray);
+}
+
 #contactsList tr:nth-child(odd){
 background-color: #f0f0f0;
 }
 
-#contactsList tr:first-child > th:first-child {
+#contactsList tr:first-child > th:first-child{
 border-top-left-radius: 4px;
 }
-#contactsList tr:first-child > th:last-child {
+#contactsList tr:first-child > th:last-child{
 border-top-right-radius: 4px;
 }
-#contactsList tr:last-child > td:first-child {
+#contactsList tr:last-child > td:first-child{
 border-bottom-left-radius: 4px;
 }
-#contactsList tr:last-child > td:last-child {
+#contactsList tr:last-child > td:last-child{
 border-bottom-right-radius: 4px;
 }
 
