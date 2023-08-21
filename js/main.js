@@ -20,7 +20,7 @@ class sif{
   this.tmpl['rightNav']=[];
   this.tmpl['rightNav'][0]=`<div class="rightNavActns"><div class="menuIcon" title="Settings">`;
   this.tmpl['rightNav'][1]=`</div>`;
-  this.tmpl['rightNav'][2]=`<div class="menuIcon" title="Logout">`;
+  this.tmpl['rightNav'][2]=`<div id="logout" class="menuIcon" title="Logout and save database.">`;
   this.tmpl['rightNav'][3]=`</div></div></div>`;
 
     window.onbeforeunload=(e)=>{
@@ -127,10 +127,9 @@ class sif{
     switch(id){
       case "dbFile":
         //validate if db file. If not, empty. if so hide element
-        let ext=state.dbFile.name.substr(-3);
+        let ext=state.dbFile&&state.dbFile.name?state.dbFile.name.substr(-3):null;
         if(ext!=".db"){
         state[id]="";
-        return false;
         }
         if(!state.dbFile){
         document.getElementById(this.overId).style.display="flex";
@@ -161,6 +160,7 @@ class sif{
             state.user.config=JSON.parse(config[0].json);
             }
           document.getElementById('rightNav').innerHTML=this.genRightNav();
+          this.afterHookEl();
           this.drawBottomEls();
           menuLftObj.setMenu();
           this.draw(state.pos);
@@ -186,12 +186,34 @@ class sif{
   returns: none
   sets up onchange to elId
   ---------------------------------------*/
-  hookEl(elId=this.dbPgId){
-  var el=document.getElementById(elId);
+  hookEl(){
+  var el=document.getElementById(this.dbPgId);
     if(el){
       el.onchange=(e)=>{
       this.setState('dbFile', e.target.files[0]);
+      el.value="";
       };
+    }
+  }
+
+  /*---------------------------------------
+  pre: setState(), global state
+  post: element elId onchange is set
+  params: elId=which element by id to attach onchange to.
+  returns: none
+  sets up onchange to elId
+  ---------------------------------------*/
+  afterHookEl(){
+  var el=document.getElementById("logout");
+    if(el){
+      el.onclick=(e)=>{
+        if(state.dbModded){
+        const fn='sif-'+dtFlNm()+'.db';
+        this.sqlObj.writeDb(fn);
+        }
+      state.dbModded=false;
+      this.setState('dbFile',"");
+      }
     }
   }
 

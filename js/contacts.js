@@ -78,6 +78,15 @@ if(typeof contacts==='undefined'){
         return null;
         }
 
+      //setting user type to users made here. Always users and always customer
+        try{
+        sqlObj.runQuery('insert into users_type(uuid, user_uuid, type_uuid) values($uuid, $user_uuid, (select uuid from type where categ="users" and name="customer"))',{$uuid:createUUID(), $user_uuid:user_uuid});
+        }
+        catch(e){
+        console.log(e);
+        return null;
+        }
+
       //inserts into contacts
         try{
         sqlObj.runQuery('insert into contacts(uuid, user_id, fName, surName, mName, addr, addr2, city, prov, zip, country, phone, cellphone) values($uuid, $u_uuid, $fName, $surName, $mName, $addr, $addr2, $city, $prov, $zip, $country, $phone, $cellphone)', {$uuid:createUUID(), $u_uuid:user_uuid, $fName:hsh.fName, $surName:hsh.surName, $mName:hsh.mName, $addr:hsh.addr, $addr2:hsh.addr2, $city:hsh.city, $prov:hsh.prov, $zip:hsh.zip, $country:hsh.country, $phone:hsh.phone, $cellphone:hsh.cellphone});
