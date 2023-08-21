@@ -12,6 +12,11 @@ if(typeof appt==='undefined'){
         <div id="apptAddBtn">⨁</div>
       </div>
     `;
+    this.tmpl.usersSelect=[];
+    this.tmpl.usersSelect[0]=`<option value="`;
+    this.tmpl.usersSelect[1]=`"`
+    this.tmpl.usersSelect[2]=`>`;
+    this.tmpl.usersSelect[3]=`</option>`;
     this.tmpl["invntSrvListEls"]=[];
     this.tmpl.invntSrvListEls[0]=`
     `;
@@ -25,29 +30,13 @@ if(typeof appt==='undefined'){
       <div class="lbl">Add new appointment</div>
       <div id="apptNewApptFormUser">
         <div id="apptNewApptFormUserSlct">
-          <select id="apptNewApptFormUserLastName" name="conactSelect[surName]" onchange="apptObj.testFunc(event)">
-            <option value="lastnameval">lastname</option>
-            <option>null</option>
-            <option>null</option>
-            <option>null</option>
+          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
           </select>
           <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
-            <option value="firstnameval">firstname</option>
-            <option>null</option>
-            <option>null</option>
-            <option>null</option>
           </select>
           <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
-            <option value="emailval">email</option>
-            <option>null</option>
-            <option>null</option>
-            <option>null</option>
           </select>
           <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
-            <option value="cellphoneval">cell phone</option>
-            <option>null</option>
-            <option>null</option>
-            <option>null</option>
           </select>
           <input id="apptNewApptFormApptInfoForUsr" type="hidden" name="event[forUser_id]" />
         </div>
@@ -170,6 +159,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     return rtrn;
     }
 
+
     /*----------------------------------------------
     pre: sqlObj
     post: none
@@ -254,13 +244,72 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     }
 
     /*-----------------------------------------------
+    pre: this.invntSrvList filled
+    post: none
+    -----------------------------------------------*/
+    getUsers(){
+      try{
+      return sqlObj.runQuery("select u.uuid as uuid, c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
+      }
+      catch(e){
+      console.log(e);
+      }
+    }
+
+    /*-----------------------------------------------
+    -----------------------------------------------*/
+    genUsrSlct(users,prop,dfltVal='none',slctdPrp=null,slctdVl=null){
+      if(!users||users.length<=0){
+      return "";
+      }
+      var html="";
+      html+=this.tmpl.usersSelect[0]+this.tmpl.usersSelect[1]+this.tmpl.usersSelect[2]+dfltVal+this.tmpl.usersSelect[3];
+      for(const usr of users){
+        if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
+        html+=this.tmpl.usersSelect[0]+usr.uuid+this.tmpl.usersSelect[1]+" selected"+this.tmpl.usersSelect[2]+usr[prop]+this.tmpl.usersSelect[3];
+        }
+        else{
+        html+=this.tmpl.usersSelect[0]+usr.uuid+this.tmpl.usersSelect[1]+this.tmpl.usersSelect[2]+usr[prop]+this.tmpl.usersSelect[3];
+        }
+      }
+    return html;
+    }
+
+
+    /*-----------------------------------------------
+    pre:
+    post: left modal filled
+    generates left modal content
+    -----------------------------------------------*/
+    genLftMod(){
+/*
+          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
+          </select>
+          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
+          </select>
+          <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
+          </select>
+          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
+          </select>
+*/
+    var users=this.getUsers();
+    document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
+    document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(users,'surName','Last Name');
+    document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(users,'fName','First Name');
+    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(users,'email', 'eMail');
+    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(users,'cellphone', 'Cell Phone');
+
+    }
+
+
+    /*-----------------------------------------------
     pre: none
     post: write the html to the page
     -----------------------------------------------*/
     run(){
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
-    document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
+    this.genLftMod();
     document.getElementById("apptNewApptFormApptInfoSrv").innerHTML=this.genInvntSrv();
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML='';
     this.hookEl();

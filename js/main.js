@@ -61,8 +61,6 @@ class sif{
     document.head.append(this.scrpt);
   }
 
-  populateNew
-
 
   /*-------------------------------------
   pre: global state, iconSets, config
@@ -70,7 +68,7 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();console.log('asdfasfeae');" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptObj.genLftMod();" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
     for(const el of els){
     el.innerHTML=html;
@@ -163,7 +161,11 @@ class sif{
           this.afterHookEl();
           this.drawBottomEls();
           menuLftObj.setMenu();
+            this.addModule("appt", "modScript", false,(e)=>{
+            state.depModuleObjs.appt.genLftMod();
+            });
           this.draw(state.pos);
+
           /*reminder for later if needed
           let mod=eval(`new ${state.pos}()`);
           mod.draw();
