@@ -24,7 +24,7 @@ if(typeof appt==='undefined'){
     `;
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
-    var dt=toInptValFrmt();
+    let dt=toInptValFrmt();
     this.lftModForm=`
     <div id="apptNewApptForm">
       <div class="lbl">Add new appointment</div>
@@ -87,17 +87,8 @@ if(typeof appt==='undefined'){
       </div>
     </div>
     `;
-    /*
-    <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
-    </select>
-    */
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
+    this.users=null;
     }
 
     testFunc(e){
@@ -105,19 +96,17 @@ if(typeof appt==='undefined'){
     console.log(e.target.value);
     }
 
+
     /*----------------------------------
     pre: select elements
     post: change sync select elements
     changes all select elements in array to select a value
     ----------------------------------*/
     syncSlctEls(slctIdArr, val){
-      if(!val){
-      return null;
-      }
       for(const id of slctIdArr){
       const el=document.getElementById(id);
         if(el){
-        el.value=val;
+        el.value=val||"";
         }
       }
     }
@@ -132,11 +121,9 @@ if(typeof appt==='undefined'){
       for(const id of this.slctIdArr){
       const el=document.getElementById(id);
         if(el){
-          console.log(el);
           el.onchange=(e)=>{
-          console.log(e.target.value);
-            if(e.target&&e.target.value){
-            this.syncSlctEls(this.slctIdArr,e.target.value);
+            if(e.target){
+            this.syncSlctEls(this.slctIdArr,e.target.value||"");
             }
           }
         }
@@ -151,13 +138,13 @@ if(typeof appt==='undefined'){
     hookElLftMod(){
       //add new appointment
       document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
-      var els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
+      let els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
       console.log(els);
       }
 
-      //
+      //add service to new appointment form
       document.getElementById("apptNewApptFormApptInfoAddSrv").onclick=(e)=>{
-      var el=document.getElementById("apptNewApptFormApptInfoSrv");
+      let el=document.getElementById("apptNewApptFormApptInfoSrv");
       this.invntSrvAddedArr.push(el.value);
       this.genInvntSrvListEls();
       }
@@ -182,7 +169,7 @@ if(typeof appt==='undefined'){
     generates HTML of leftNav element for calendar
     -----------------------------------------------*/
     genLeftNavAppt(){
-    var rtrn='Appointments';
+    let rtrn='Appointments';
     return rtrn;
     }
 
@@ -198,12 +185,12 @@ CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, event
 sqlite> .schema events_type
 CREATE TABLE events_type(uuid text not null primary key, event_uuid text not null, type_uuid text not null, foreign key(event_uuid) references events(uuid), foreign key(type_uuid) references type(uuid));
     */
-    var appts=sqlObj.runQuery(`
+    let appts=sqlObj.runQuery(`
     select
     *
     from events
     `);
-    var rtrn='';
+    let rtrn='';
     rtrn+=this.tmpl.mainEl[0];
     return rtrn;
     }
@@ -215,13 +202,13 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     gets all the invntSrv records 
     ----------------------------------------------*/
     getInvntSrv(username=null, excldNull=false){
-    var whereUsr=' where username is null or username=$username';
+    let whereUsr=' where username is null or username=$username';
       if(excldNull){
       whereUsr=' where username=$username';
       }
     const q=`select invntSrv.uuid, invntSrv.name, type_uuid, type.name as type, invntSrv.create_date, invntSrv.mod_date, invntSrv.status, users.username as username, invntSrv.srv_durtn, invntSrv.sku, invntSrv.amnt, invntSrv.buy, invntSrv.sell, invntSrv.notes from invntSrv left join type on invntSrv.type_uuid=type.uuid left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid left join users on invntSrv_users.users_id=users.uuid${whereUsr}`;
-    var invntSrv=sqlObj.runQuery(q,{$email:username});
-    var invntSrvObj={};
+    let invntSrv=sqlObj.runQuery(q,{$email:username});
+    let invntSrvObj={};
       for(const r of invntSrv){
         if(!invntSrvObj.hasOwnProperty(r.uuid)){
         invntSrvObj[r.uuid]={...r};
@@ -240,10 +227,10 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     post: none
     -----------------------------------------------*/
     genInvntSrv(username, selectedUUID){
-    var invntSrv=this.getInvntSrv(username);
+    let invntSrv=this.getInvntSrv(username);
     this.invntSrvList={...invntSrv};
-    var keys=Object.keys(invntSrv);
-    var html='';
+    let keys=Object.keys(invntSrv);
+    let html='';
       if(keys.length<=0){
       return html;
       }
@@ -262,7 +249,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
       if(!val){
       return null;
       }
-    var i=this.invntSrvAddedArr.findIndex(el=>el===val);
+    let i=this.invntSrvAddedArr.findIndex(el=>el===val);
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
       }
@@ -273,8 +260,8 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     post: none
     -----------------------------------------------*/
     genInvntSrvListEls(){
-    var html="";
-    var total=0;
+    let html="";
+    let total=0;
       if(this.invntSrvList&&this.invntSrvAddedArr){
         for(const uuid of this.invntSrvAddedArr){
         html+=`
@@ -291,25 +278,9 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     }
 
     /*-----------------------------------------------
-    pre: this.invntSrvList filled
-    post: none
-    -----------------------------------------------*/
-    getUsers(){
-      try{
-      return sqlObj.runQuery("select u.uuid as uuid, c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
-      }
-      catch(e){
-      console.log(e);
-      }
-    }
-
-    /*-----------------------------------------------
     -----------------------------------------------*/
     genUsrSlct(users,prop,dfltVal='none',slctdPrp=null,slctdVl=null){
-      if(!users||users.length<=0){
-      return "";
-      }
-      var html="";
+      let html="";
       html+=this.tmpl.usersSelect[0]+this.tmpl.usersSelect[1]+this.tmpl.usersSelect[2]+dfltVal+this.tmpl.usersSelect[3];
       for(const usr of users){
         if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
@@ -322,20 +293,20 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     return html;
     }
 
-
     /*-----------------------------------------------
-    pre:
+    pre: this class
     post: left modal filled
     generates left modal content
     -----------------------------------------------*/
     genLftMod(){
-    var users=this.getUsers();
+    this.users=getUsers();
+    const {customer:customers, '':users}=spltUsr(this.users);
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
     this.hookElLftMod();
-    document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(users,'surName','Last Name');
-    document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(users,'fName','First Name');
-    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(users,'email', 'eMail');
-    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(users,'cellphone', 'Cell Phone');
+    document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
+    document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
+    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'email', 'eMail');
+    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone', 'Cell Phone');
     this.hookElSlct();
     document.getElementById("apptNewApptFormApptInfoSrv").innerHTML=this.genInvntSrv();
     }

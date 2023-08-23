@@ -60,8 +60,8 @@ if(typeof contacts==='undefined'){
 
     
       document.getElementById("contactsUserFormAddBtn").onclick=(e)=>{
-      var els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
-      var hsh={};
+      let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
+      let hsh={};
         els.forEach((nd, i)=>{
         let nm=nd.name.replace(/(contact\[|\])/g, "");
         hsh[nm]=nd.value;
@@ -115,18 +115,8 @@ if(typeof contacts==='undefined'){
     generates right modal content
     ----------------------------------*/
     rghtMod(){
-    var html=this.rghtModForm;
+    let html=this.rghtModForm;
     return html; 
-    }
-
-
-    /*---------------------------------
-    pre: sqlObj
-    post: none
-    return object of table query
-    ---------------------------------*/
-    getList(){
-    return sqlObj.runQuery("select u.uuid as uuid, c.fName as fName, c.surName as surName, c.mName as mName, c.email as email, s.name as status, c.phone as phone, c.cellphone as cellphone, c.addr as addr, c.addr2 as addr2, c.city as city, c.prov as prov, c.zip as zip, c.country as country from users as u left join contacts as c on u.uuid=c.user_id left join status as s on u.status_id=s.uuid");
     }
 
 
@@ -192,10 +182,10 @@ if(typeof contacts==='undefined'){
     generates mainEl content
     ----------------------------------*/
     mainEl(){
-      var html=this.mainElHtml[0];
+      let html=this.mainElHtml[0];
       //make rows
       if(state.dbObj&&state.dbObj!=null){
-      let hsh=this.getList();
+      let {customer:hsh, '':users}=spltUsr(getUsers());
         hsh.forEach((rcrd, i)=>{
         let cpz=""; //city prov, zip
         if(rcrd.city!=""||rcrd.prov!=""||rcrd.zip!=""){

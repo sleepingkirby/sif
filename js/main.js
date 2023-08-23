@@ -68,7 +68,7 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptObj.genLftMod();" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
     for(const el of els){
     el.innerHTML=html;
@@ -165,9 +165,7 @@ class sif{
           menuLftObj.setMenu();
 
           //setting up module appt module to set up left modal
-            this.addModule("appt", "modScript", false,(e)=>{
-            state.depModuleObjs.appt.genLftMod();
-            });
+          this.addModule("appt", "modScript", false);
 
           this.draw(state.pos);
 
