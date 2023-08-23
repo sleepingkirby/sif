@@ -57,11 +57,12 @@ if(typeof appt==='undefined'){
       </div
       <div id="apptNewApptFormApptInfo">
         <div class="row" style="justify-content:space-between;">
-          <div class="row">
+          <div class="row" id="apptNewApptFormApptInfoDateUser">
             <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
 	          <select id="apptNewApptFormApptInfoByUser" name="event[byUser_id]">
 	            <option>by user</option>
             </select>
+            <div id="apptNewApptFormApptInfoByUserType">&nbsp;</div>
           </div>
           <div class="row">
             <label for="apptNewApptFormApptInfoDur" title="in minutes" style="margin-right:8px;">Duration:</label>
@@ -278,6 +279,10 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     }
 
     /*-----------------------------------------------
+    pre: none
+    post: none
+    params: users= array of users, prop=property to display, dfltVal=default value, slsctdPrp=which property to match slctdVl against, slctdVl= the value to choose to select
+    generates <option/> for select elements for users
     -----------------------------------------------*/
     genUsrSlct(users,prop,dfltVal='none',slctdPrp=null,slctdVl=null){
       let html="";
@@ -293,6 +298,22 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     return html;
     }
 
+
+    /*-----------------------------------------------
+    -----------------------------------------------*/
+    hookUsrTyp(){
+      document.getElementById('apptNewApptFormApptInfoByUser').onchange=(e)=>{
+      let el=document.getElementById('apptNewApptFormApptInfoByUserType');
+      let user=this.users.find(u=>u.uuid==e.target.value);
+        if(user){
+        el.innerHTML=user.type;
+        }
+        else{
+        el.innerHTML="N/A";
+        }
+      }
+    }
+
     /*-----------------------------------------------
     pre: this class
     post: left modal filled
@@ -306,9 +327,12 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
     document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'email', 'eMail');
-    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone', 'Cell Phone');
+    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone','Cell Phone');
     this.hookElSlct();
-    document.getElementById("apptNewApptFormApptInfoSrv").innerHTML=this.genInvntSrv();
+    document.getElementById('apptNewApptFormApptInfoSrv').innerHTML=this.genInvntSrv();
+    document.getElementById('apptNewApptFormApptInfoByUser').innerHTML=this.genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    this.hookUsrTyp();
+    document.getElementById('apptNewApptFormApptInfoByUserType').innerHTML=state.user.type;
     }
 
 

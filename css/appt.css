@@ -44,6 +44,18 @@ font-weight: 600;
 margin-bottom: 26px;
 }
 
+#apptNewApptForm div#apptNewApptFormApptInfoByUserType{
+opacity: 0.75;
+display:flex;
+align-self:flex-end;
+margin: 4px 4px 8px 4px;
+font-size: small;
+color: var(--default-blue);
+background-color: white;
+padding:1px 2px;
+border-radius: 3px;
+}
+
 #apptNewApptFormUser{
 margin-bottom:18px;
 }
@@ -84,6 +96,11 @@ flex-wrap:wrap;
 
 #apptNewApptFormApptInfoSrvLstLbl{
 font-weight: 900;
+}
+
+#apptNewApptFormApptInfoDateUser{
+justify-content: flex-start;
+flex-wrap: wrap;
 }
 
 .invntSrvListItem{
