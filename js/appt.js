@@ -87,21 +87,51 @@ if(typeof appt==='undefined'){
       </div>
     </div>
     `;
-/*
-CREATE TABLE events(uuid text not null primary key, forUser_id text not null, byUser_id text not null, create_date int not null, on_date int not null, done_date int null, duration int null, notes text, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid));
-sqlite> .schema events_type
-CREATE TABLE events_type(uuid text not null primary key, event_uuid text not null, type_uuid text not null, foreign key(event_uuid) references events(uuid), foreign key(type_uuid) references type(uuid));
-sqlite> .schema events_invntSrv
-CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
-sqlite> .schema invntSrv
-CREATE TABLE invntSrv(uuid text primary key, name text not null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, notes text, foreign key(status) references status(uuid));
-*/
+    /*
+    <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
+    </select>
+    */
+    this.slctIdArr=("apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone");
     }
 
     testFunc(e){
     console.log("asdfasdfasfdasdfd");
     console.log(e.target.value);
     }
+
+    /*----------------------------------
+    pre: select elements
+    post: change sync select elements
+    changes all select elements in array to select a value
+    ----------------------------------*/
+    syncSlctEls(slctIdArr, val){
+      if(!val){
+      return null;
+      }
+    /*
+    <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
+    </select>
+    <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
+    </select>
+    */
+      for(const id of slcIdArr){
+      const el=document.getElementById(id);
+        if(el){
+        el.value=val;
+        }
+      }
+    }
+   
 
     /*----------------------------------
     pre: everything this class requires
@@ -282,23 +312,12 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     generates left modal content
     -----------------------------------------------*/
     genLftMod(){
-/*
-          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
-          </select>
-          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
-          </select>
-          <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
-          </select>
-          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
-          </select>
-*/
     var users=this.getUsers();
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(users,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(users,'fName','First Name');
     document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(users,'email', 'eMail');
     document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(users,'cellphone', 'Cell Phone');
-
     }
 
 
