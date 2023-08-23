@@ -30,13 +30,13 @@ if(typeof appt==='undefined'){
       <div class="lbl">Add new appointment</div>
       <div id="apptNewApptFormUser">
         <div id="apptNewApptFormUserSlct">
-          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]">
           </select>
-          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]">
           </select>
-          <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserEmail" name="contactSelect[email]">
           </select>
-          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
+          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]">
           </select>
           <input id="apptNewApptFormApptInfoForUsr" type="hidden" name="event[forUser_id]" />
         </div>
@@ -97,7 +97,7 @@ if(typeof appt==='undefined'){
     <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
     </select>
     */
-    this.slctIdArr=("apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone");
+    this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     }
 
     testFunc(e){
@@ -114,17 +114,7 @@ if(typeof appt==='undefined'){
       if(!val){
       return null;
       }
-    /*
-    <select id="apptNewApptFormUserLastName" name="contactSelect[surName]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserEmail" name="contactSelect[email]" onchange="apptObj.testFunc(event)">
-    </select>
-    <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]" onchange="apptObj.testFunc(event)">
-    </select>
-    */
-      for(const id of slcIdArr){
+      for(const id of slctIdArr){
       const el=document.getElementById(id);
         if(el){
         el.value=val;
@@ -132,6 +122,46 @@ if(typeof appt==='undefined'){
       }
     }
    
+    /*----------------------------------
+    pre: select elements 
+    post: sets event hooks
+    sets the event hooks for select
+    ----------------------------------*/
+    hookElSlct(){
+      //set select elements on change
+      for(const id of this.slctIdArr){
+      const el=document.getElementById(id);
+        if(el){
+          console.log(el);
+          el.onchange=(e)=>{
+          console.log(e.target.value);
+            if(e.target&&e.target.value){
+            this.syncSlctEls(this.slctIdArr,e.target.value);
+            }
+          }
+        }
+      }
+    }
+
+    /*----------------------------------
+    pre: left modal elements 
+    post: sets event hooks
+    sets the event hooks for the left modal
+    ----------------------------------*/
+    hookElLftMod(){
+      //add new appointment
+      document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
+      var els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
+      console.log(els);
+      }
+
+      //
+      document.getElementById("apptNewApptFormApptInfoAddSrv").onclick=(e)=>{
+      var el=document.getElementById("apptNewApptFormApptInfoSrv");
+      this.invntSrvAddedArr.push(el.value);
+      this.genInvntSrvListEls();
+      }
+    }
 
     /*----------------------------------
     pre: everything this class requires
@@ -144,17 +174,6 @@ if(typeof appt==='undefined'){
       let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
-      //add new appointment
-      document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
-      var els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
-      console.log(els);
-      }
-      //
-      document.getElementById("apptNewApptFormApptInfoAddSrv").onclick=(e)=>{
-      var el=document.getElementById("apptNewApptFormApptInfoSrv");
-      this.invntSrvAddedArr.push(el.value);
-      this.genInvntSrvListEls();
-      }
     }
 
     /*-----------------------------------------------
@@ -240,12 +259,10 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     post: none
     -----------------------------------------------*/
     delFromInvntSrvAddedArr(val){
-      console.log(`delFromInvntSrvAddedArr()<<<<<<< ${val}`);
       if(!val){
       return null;
       }
     var i=this.invntSrvAddedArr.findIndex(el=>el===val);
-    console.log(i);
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
       }
@@ -314,10 +331,13 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     genLftMod(){
     var users=this.getUsers();
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
+    this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(users,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(users,'fName','First Name');
     document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(users,'email', 'eMail');
     document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(users,'cellphone', 'Cell Phone');
+    this.hookElSlct();
+    document.getElementById("apptNewApptFormApptInfoSrv").innerHTML=this.genInvntSrv();
     }
 
 
@@ -329,7 +349,6 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
     this.genLftMod();
-    document.getElementById("apptNewApptFormApptInfoSrv").innerHTML=this.genInvntSrv();
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML='';
     this.hookEl();
     }
