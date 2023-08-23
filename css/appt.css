@@ -50,9 +50,10 @@ display:flex;
 align-self:flex-end;
 margin: 4px 4px 8px 4px;
 font-size: small;
+font-weight: bolder;
 color: var(--default-blue);
 background-color: white;
-padding:1px 2px;
+padding:2px 3px;
 border-radius: 3px;
 }
 

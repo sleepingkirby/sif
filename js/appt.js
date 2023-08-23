@@ -326,7 +326,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
-    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'email', 'eMail');
+    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'cEmail', 'E-Mail');
     document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone','Cell Phone');
     this.hookElSlct();
     document.getElementById('apptNewApptFormApptInfoSrv').innerHTML=this.genInvntSrv();
