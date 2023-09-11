@@ -76,10 +76,10 @@ function createCustUser(hsh, postFunc=null){
 //inserts into users table
 let user_uuid=createUUID();
   try{
-  sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, (select uuid from status where name="active"), $email ,date("now"), date("now"))', {$uuid:user_uuid, $email:hsh.email||""});
+  sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, (select uuid from status where name="active"), $email ,datetime("now"), datetime("now"))', {$uuid:user_uuid, $email:hsh.email||""});
   }
   catch(e){
-  console.log('Unable to add entry to "users" table. query: '+'insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,date("now"), date("now"))'+', binds: '+JSON.stringify({$uuid:user_uuid, $email:hsh.email||""}));
+  console.log('Unable to add entry to "users" table. query: '+'insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,datetime("now"), datetime("now"))'+', binds: '+JSON.stringify({$uuid:user_uuid, $email:hsh.email||""}));
   console.log(e);
   return null;
   }

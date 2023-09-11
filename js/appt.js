@@ -38,7 +38,6 @@ if(typeof appt==='undefined'){
           </select>
           <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]">
           </select>
-          <input id="apptNewApptFormApptInfoForUsr" type="hidden" name="event[forUser_id]" />
         </div>
         <div id="apptNewApptFormUserNew">
           <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled>
@@ -187,8 +186,18 @@ if(typeof appt==='undefined'){
     hookElLftMod(){
       //add new appointment
       document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
-      let els=document.getElementById("apptNewApptForm").querySelectorAll("*[name^=event]");
-      console.log(els);
+      let cust=document.getElementById("apptNewApptFormUserLastName");
+      console.log("<<<<<<<===================");
+      console.log("===forUserId");
+      console.log(cust.value);
+      console.log("sevice list");
+      console.log(this.invntSrvAddedArr);
+      let onDt=document.getElementById("apptNewApptFormApptInfoOnDate");
+      let byUser=document.getElementById("apptNewApptFormApptInfoByUser");
+      let dur=document.getElementById("apptNewApptFormApptInfoDur");
+      console.log(onDt.value);
+      console.log(byUser.value);
+      console.log(dur.value);
       }
 
       //add service to new appointment form
