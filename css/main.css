@@ -133,7 +133,6 @@ width: 100%;
 margin: 0px 0px 20px 0px;
 justify-content: space-between;
 align-items: flex-start;
-flex-wrap: wrap;
 z-index: 50;
 }
 
@@ -216,7 +215,6 @@ border-width: 0px;
 
 #topEls > .leftNav{
 border-radius: 0px 0px 6px 0px;
-min-width: 150px;
 min-height: 40px;
 height: 10%;
 justify-content: flex-start;
@@ -229,9 +227,7 @@ padding-right: 12px;
 
 #topEls > .rightNav{
 border-radius: 0px 0px 0px 6px;
-min-width: 150px;
 min-height: 40px;
-width: 10%;
 height: 10%;
 justify-content: flex-end;
 font-size: xxx-large;

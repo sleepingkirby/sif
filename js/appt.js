@@ -90,6 +90,7 @@ if(typeof appt==='undefined'){
     `;
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     this.users=null;
+    this.customers=null;
     }
 
     testFunc(e){
@@ -111,7 +112,48 @@ if(typeof appt==='undefined'){
         }
       }
     }
-   
+
+    
+    /*----------------------------------
+    pre:
+    post:
+    gets the string within the brackets. i.e contact[subname] gets subname
+    ----------------------------------*/
+    getSubs(str, head="contact"){
+      if(str){
+      const patt=new RegExp('(^'+head+'\\[|\\]$)','g');
+      return str.replace(patt,"");
+      }
+    return "";
+    }
+
+ 
+    /*----------------------------------
+    pre:
+    post:
+    fills out "apptNewApptFormUserInfo"
+    ----------------------------------*/
+    syncUserInfo(val){
+    const cust=this.customers.find(c=>c.uuid==val);
+    const els=document.querySelectorAll('#apptNewApptFormUserInfo textarea[name^="contact["]');
+      if(cust){
+        for(let ta of els){
+        let subName=getSubs(ta.name);
+          if(subName&&cust[subName]){
+          ta.value=cust[subName];
+          }
+          else{
+          ta.value="";
+          }
+        }
+      }
+      else{
+        for(let ta of els){
+        ta.value="";
+        }
+      }
+    }
+
     /*----------------------------------
     pre: select elements 
     post: sets event hooks
@@ -125,6 +167,7 @@ if(typeof appt==='undefined'){
           el.onchange=(e)=>{
             if(e.target){
             this.syncSlctEls(this.slctIdArr,e.target.value||"");
+            this.syncUserInfo(e.target.value||"");
             }
           }
         }
@@ -179,13 +222,6 @@ if(typeof appt==='undefined'){
     post: none
     -----------------------------------------------*/
     genAppts(){
-    /*
-CREATE TABLE events(uuid text not null primary key, forUser_id text not null, byUser_id text not null, create_date int not null, on_date int not null, done_date int null, duration int null, notes text, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid));
-sqlite> .schema events_invntSrv
-CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
-sqlite> .schema events_type
-CREATE TABLE events_type(uuid text not null primary key, event_uuid text not null, type_uuid text not null, foreign key(event_uuid) references events(uuid), foreign key(type_uuid) references type(uuid));
-    */
     let appts=sqlObj.runQuery(`
     select
     *
@@ -322,6 +358,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     genLftMod(){
     this.users=getUsers();
     const {customer:customers, '':users}=spltUsr(this.users);
+    this.customers=[...customers];
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
     this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');

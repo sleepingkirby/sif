@@ -22,3 +22,16 @@ let chr=el.getAttribute("padChar");
 
 el.innerText=v;
 }
+
+/*----------------------------------
+pre:
+post:
+gets the string within the brackets. i.e contact[subname] gets subname
+----------------------------------*/
+function getSubs(str, head="contact"){
+  if(str){
+  const patt=new RegExp('(^'+head+'\\[|\\]$)','g');
+  return str.replace(patt,"");
+  }
+return "";
+}
