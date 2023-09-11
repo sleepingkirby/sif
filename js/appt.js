@@ -41,7 +41,7 @@ if(typeof appt==='undefined'){
           <input id="apptNewApptFormApptInfoForUsr" type="hidden" name="event[forUser_id]" />
         </div>
         <div id="apptNewApptFormUserNew">
-          <input id="apptNewApptFormUserNewUser" type="submit" value="NewUser" disabled>
+          <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled>
         </div>
       </div>
       <div id="apptNewApptFormUserInfo">
@@ -51,7 +51,7 @@ if(typeof appt==='undefined'){
           <textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea>
         </div>
         <div class="row" style="margin-bottom: 6px;">
-          <textarea name="contact[phone]" type="text" placeholder="home phone"></textarea>
+          <textarea name="contact[cellphone]" type="text" placeholder="cellphone"></textarea>
           <textarea name="contact[email]" type="text" style="margin-left:40px;flex-grow:100;" placeholder="email address"></textarea>
         </div>
       </div
@@ -91,6 +91,9 @@ if(typeof appt==='undefined'){
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     this.users=null;
     this.customers=null;
+    this.newUserBtnId="apptNewApptFormUserNewUser";
+    this.userInfoFrmId="apptNewApptFormUserInfo";
+    this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
     }
 
     testFunc(e){
@@ -113,21 +116,7 @@ if(typeof appt==='undefined'){
       }
     }
 
-    
-    /*----------------------------------
-    pre:
-    post:
-    gets the string within the brackets. i.e contact[subname] gets subname
-    ----------------------------------*/
-    getSubs(str, head="contact"){
-      if(str){
-      const patt=new RegExp('(^'+head+'\\[|\\]$)','g');
-      return str.replace(patt,"");
-      }
-    return "";
-    }
 
- 
     /*----------------------------------
     pre:
     post:
@@ -135,7 +124,7 @@ if(typeof appt==='undefined'){
     ----------------------------------*/
     syncUserInfo(val){
     const cust=this.customers.find(c=>c.uuid==val);
-    const els=document.querySelectorAll('#apptNewApptFormUserInfo textarea[name^="contact["]');
+    const els=document.querySelectorAll(this.userInfoFrmSlct);
       if(cust){
         for(let ta of els){
         let subName=getSubs(ta.name);
@@ -168,11 +157,27 @@ if(typeof appt==='undefined'){
             if(e.target){
             this.syncSlctEls(this.slctIdArr,e.target.value||"");
             this.syncUserInfo(e.target.value||"");
+            let btn=document.getElementById(this.newUserBtnId);
+            btn.disabled=true;
             }
           }
         }
       }
     }
+
+    /*----------------------------------
+    pre:
+    post:
+    
+    ----------------------------------*/
+    hookElUserInfoBox(){
+    let el=document.getElementById(this.userInfoFrmId);
+      el.onkeydown=(e)=>{
+      let btn=document.getElementById(this.newUserBtnId)
+      btn.disabled=false;
+      }
+    }
+
 
     /*----------------------------------
     pre: left modal elements 
@@ -351,6 +356,43 @@ if(typeof appt==='undefined'){
     }
 
     /*-----------------------------------------------
+    pre: createCustUser()
+    post: database updated
+    add hook to the new user button
+    -----------------------------------------------*/
+    hookNewUserBtn(){
+    let el=document.getElementById("apptNewApptFormUserNewUser");
+      el.onclick=(e)=>{
+      let els=document.querySelectorAll(this.userInfoFrmSlct);
+      let hsh={};
+        els.forEach((nd, i)=>{
+        let nm=nd.name.replace(/(contact\[|\])/g, "");
+        hsh[nm]=nd.value;
+        });
+
+      //this.userInfoFrmSlct
+        if(hsh){
+          createCustUser(hsh,(val)=>{
+          //refresh users and customers list.
+          this.users=getUsers();
+          const {customer:customers, '':users}=spltUsr(this.users);
+          this.customers=[...customers];
+          //refresh select menus
+          document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
+          document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
+          document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'cEmail', 'E-Mail');
+          document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone','Cell Phone');
+          //sync the select menu
+          this.syncSlctEls(this.slctIdArr,val||"");
+          let btn=document.getElementById(this.newUserBtnId)
+          btn.disabled=true;
+          });
+        }
+
+      }
+    }
+
+    /*-----------------------------------------------
     pre: this class
     post: left modal filled
     generates left modal content
@@ -370,6 +412,8 @@ if(typeof appt==='undefined'){
     document.getElementById('apptNewApptFormApptInfoByUser').innerHTML=this.genUsrSlct(users,'username','Username','uuid',state.user.uuid);
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormApptInfoByUserType').innerHTML=state.user.type;
+    this.hookElUserInfoBox();
+    this.hookNewUserBtn(); //a
     }
 
 
