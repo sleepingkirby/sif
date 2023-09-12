@@ -82,7 +82,7 @@ if(typeof appt==='undefined'){
           </div>
         </div>
         <div class="row" style="margin-bottom:24px;">
-          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment"/>
+          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
     </div>
@@ -93,6 +93,7 @@ if(typeof appt==='undefined'){
     this.newUserBtnId="apptNewApptFormUserNewUser";
     this.userInfoFrmId="apptNewApptFormUserInfo";
     this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
+    this.addApptBtnId="apptNewApptFormApptInfoAddBtn";
     }
 
     testFunc(e){
@@ -158,6 +159,10 @@ if(typeof appt==='undefined'){
             this.syncUserInfo(e.target.value||"");
             let btn=document.getElementById(this.newUserBtnId);
             btn.disabled=true;
+            const addAppt=document.getElementById(this.addApptBtnId);
+              if(addAppt){
+              addAppt.disabled=e.target.value?false:true;
+              }
             }
           }
         }
@@ -177,7 +182,6 @@ if(typeof appt==='undefined'){
       }
     }
 
-
     /*----------------------------------
     pre: left modal elements 
     post: sets event hooks
@@ -185,19 +189,19 @@ if(typeof appt==='undefined'){
     ----------------------------------*/
     hookElLftMod(){
       //add new appointment
-      document.getElementById("apptNewApptFormApptInfoAddBtn").onclick=(e)=>{
+      document.getElementById(this.addApptBtnId).onclick=(e)=>{
       let cust=document.getElementById("apptNewApptFormUserLastName");
-      console.log("<<<<<<<===================");
-      console.log("===forUserId");
-      console.log(cust.value);
-      console.log("sevice list");
-      console.log(this.invntSrvAddedArr);
       let onDt=document.getElementById("apptNewApptFormApptInfoOnDate");
       let byUser=document.getElementById("apptNewApptFormApptInfoByUser");
       let dur=document.getElementById("apptNewApptFormApptInfoDur");
-      console.log(onDt.value);
-      console.log(byUser.value);
-      console.log(dur.value);
+      //function createEvent(forUser, byUser, onDt, dur=30, type="service", invntSrvs, users=null){
+        if(cust&&byUser&&cust.value&&byUser.value){
+        createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr);
+        let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
+          if(el){
+          mainObj.modPrcClsCall(el);
+          }
+        }
       }
 
       //add service to new appointment form
