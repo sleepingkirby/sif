@@ -56,7 +56,6 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
 CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
 */
   //set what services or products are involved in this event
-  console.log(invntSrvs);
   if(invntSrvs&&typeof invntSrvs=="object"&&invntSrvs.length>0){
     invntSrvs.forEach((invnt)=>{
     let subQ='';
