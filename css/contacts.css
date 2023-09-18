@@ -41,14 +41,6 @@ font-weight: 600;
 margin-right: 6px;
 }
 
-#contactsList{
-padding: 0px;
-color: #787878;
-border-collapse: separate;
-border-spacing: 0px;
-width: 100%;
-}
-
 #contactsList th, td{
 border-style: solid;
 border-color: #c5c5c5;
@@ -85,22 +77,5 @@ border-radius:6px;
 #contactsList td:last-child > div.contactsCellActns svg:hover{
 fill:white;
 background-color:var(--default-gray);
-}
-
-#contactsList tr:nth-child(odd){
-background-color: #f0f0f0;
-}
-
-#contactsList tr:first-child > th:first-child{
-border-top-left-radius: 4px;
-}
-#contactsList tr:first-child > th:last-child{
-border-top-right-radius: 4px;
-}
-#contactsList tr:last-child > td:first-child{
-border-bottom-left-radius: 4px;
-}
-#contactsList tr:last-child > td:last-child{
-border-bottom-right-radius: 4px;
 }
 

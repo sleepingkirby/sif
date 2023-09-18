@@ -7,9 +7,26 @@ if(typeof appt==='undefined'){
     state.pageVars.appt.id=apptId;
     this.tmpl={};
     this.tmpl["mainEl"]=[];
+/* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,phone,cellphone,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,create_date,on_date,done_date,duration) */
     this.tmpl.mainEl[0]=`
       <div id="apptAdd">
         <div id="apptAddBtn">⨁</div>
+      </div>
+      <div id="apptMain">
+        <table id="apptList">
+          <tr>
+          <th>on date</th>
+          <th>status</th>
+          <th>cust. contact</th>
+          <th>cust. status</th>
+          <th>create date</th>
+          <th>done date</th>
+          <th>duration</th>
+          <th>action</th>
+          </tr>
+    `;
+    this.tmpl.mainEl[1]=`
+        </table>
       </div>
     `;
     this.tmpl.usersSelect=[];
@@ -240,13 +257,32 @@ if(typeof appt==='undefined'){
     post: none
     -----------------------------------------------*/
     genAppts(){
-    let appts=sqlObj.runQuery(`
-    select
-    *
-    from events
-    `);
+//function selectViewEventUser(param, val, ord, ascDesc, status=null){
+    let appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
     let rtrn='';
-    rtrn+=this.tmpl.mainEl[0];
+    /* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,on_date) */;
+    let cntnt='';
+      for(const appt of appts){
+      let doneDate=appt.done_date||'';
+      cntnt+=`
+      <tr>
+        <td>`+appt.on_date+`</td>
+        <td>`+appt.status+`</td>
+        <td>`+appt.cust_email+`<br>`+appt.cust_phone+`<br>`+appt.cust_cellphone+`</td>
+        <td>`+appt.byUserStatus_status_name+`</td>
+        <td>`+appt.create_date+`</td>
+        <td>`+doneDate+`</td>
+        <td>`+appt.duration+`</td>
+        <td>
+          <div class="apptCellActns">
+          <div name="apptEdit" class="menuIcon" onclick=console.log("test"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+          <div name="apptDel" class="menuIcon" onclick=delEvent("`+appt.event_id+`"); title="Delete Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+          </div>
+        </td>
+      </tr>
+      `;
+      }
+    rtrn+=this.tmpl.mainEl[0]+cntnt+this.tmpl.mainEl[1];
     return rtrn;
     }
 

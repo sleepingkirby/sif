@@ -14,6 +14,30 @@ margin-bottom: 20px;
 cursor: pointer;
 }
 
+#apptMain{
+width: 100%;
+padding: 0px 10px 0px 10px;
+box-sizing: border-box;
+}
+
+#apptMain td:last-child > div.apptCellActns{
+display:flex;
+justify-content: space-around;
+align-items:flex-start;
+width:100%;
+}
+
+#apptMain td:last-child > div.apptCellActns svg{
+fill:var(--default-gray);
+border-radius:6px;
+}
+
+#apptMain td:last-child > div.apptCellActns svg:hover{
+fill:white;
+background-color:var(--default-gray);
+}
+
+
 #apptNewApptForm{
 display:flex;
 flex-direction:column;

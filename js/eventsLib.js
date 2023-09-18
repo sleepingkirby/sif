@@ -16,7 +16,7 @@ CREATE TABLE events(uuid text not null primary key, forUser_id text not null, by
 */
 function createEvent(forUser, byUser, onDt, dur=30, type=null, invntSrvs=[], users=[]){
 let evnt_uuid=createUUID();
-let query='insert into events(uuid, forUser_id, byUser_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, datetime("now"), datetime($on_date), $dur)';
+let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, (select uuid from status where name="active"), datetime("now"), datetime($on_date), $dur)';
 let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $on_date:onDt, $dur:dur};
   sqlObj.runQuery(query,obj);
   /*
@@ -102,4 +102,51 @@ CREATE TABLE events_users(uuid text not null primary key, events_id text not nul
   }
 }
 
+/*-----------------------------------------------
+pre: sqlObj, view_events_user
+post: none
+get event_user
+-----------------------------------------------*/
+function selectViewEventUser(param, val, ord, asc=false, status=null){
+let query='select event_id, cust_uuid, cust_username, cust_status_id, cust_status_name, cust_email, cust_phone, cust_cellphone, byUser_uuid, byUser_username, byUser_status_id, byUserStatus_status_name, byUser_email, status, create_date, done_date, on_date, duration from view_events_user';
+let and=' and ';
+let obj={};
+  if(param){
+    switch(param){
+    case 'byUser_uuid':
+    query+=' where byUser_uuid=$val';
+    obj['$val']=val;
+    break;
+    case 'byUser_username':
+    query+=' where byUser_username=$val';
+    obj['$val']=val;
+    break;
+    case 'cust_uuid':
+    query+=' where cust_uuid=$val';
+    obj['$val']=val;
+    break;
+    case 'cust_username':
+    query+=' where cust_username=$val';
+    obj['$val']=val;
+    break;
+    default:
+    break;
+    }
+    if(status){
+    query+=' and status=$status';
+    obj['$status']=status;
+    }
+    if(ord){
+    query+=' order by $ord';
+    obj['$ord']=ord;
+    query+=asc?' asc':' desc';
+    }
+  return sqlObj.runQuery(query,obj);
+  }
+return null;
+}
 
+
+function delEvent(uuid){
+console.log("<<+++++++++++++=============== delEvent() "+uuid);
+}
