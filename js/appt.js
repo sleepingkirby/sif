@@ -67,6 +67,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             </div>
           </div>
         </div>
+        <div id="apptNewApptFormFullUserSlct">
+            <select id="apptNewApptFormFullUserLastName" name="contactSelect[surName]">
+            </select>
+            <select id="apptNewApptFormFullUserFirstName" name="contactSelect[fName]">
+            </select>
+            <select id="apptNewApptFormFullUserEmail" name="contactSelect[email]">
+            </select>
+            <select id="apptNewApptFormFullUserPhone" name="contactSelect[cellphone]">
+            </select>
+        </div>
       </div>
     </div>
     `;
@@ -509,6 +519,18 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.hookNewUserBtn();
     }
 
+    /*-----------------------------------------------
+    pre: this class
+    post: right modal filled
+    generates right modal content
+    -----------------------------------------------*/
+    genRghtMod(){
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
+    document.getElementById('apptNewApptFormFullUserLastName').innerHTML=this.genUsrSlct(this.customers,'surName','Last Name');
+    document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=this.genUsrSlct(this.customers,'fName','First Name');
+    document.getElementById('apptNewApptFormFullUserEmail').innerHTML=this.genUsrSlct(this.customers,'cEmail', 'E-Mail');
+    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=this.genUsrSlct(this.customers,'cellphone','Cell Phone');
+    }
 
     /*-----------------------------------------------
     pre: none
@@ -517,8 +539,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     run(){
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
-    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
     this.genLftMod();
+    this.genRghtMod();
     this.hookEl();
     }
   }
