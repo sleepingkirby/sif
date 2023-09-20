@@ -1,0 +1,8 @@
+calendar-view monthly some indicator of full day
+be able to set shifts/time of day availbe, start time and end time for shift.
+
+start with universal schedule (start time and end time) for a standard week.
+Provide interface for shifting that on the day or on a certain day.
+
+
+

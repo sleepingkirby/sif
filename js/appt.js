@@ -55,10 +55,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <label id="apptNewApptFormFullUserCheckToggle" class="lblTgglLbl" for="apptNewApptFormFullUserCheck">New User</label>
           <div class="userForm lblTgglLblHd">
             <div class="apptNewApptFormFullUserFormFields">
-            tst
-            </div>
-            <div class="apptNewApptFormFullUserFormBtns">
-              <input id="apptNewApptFormFullUserFormBtnCreateUser" type="submit" value="Create User" disabled />
+              <div class="row" style="margin-bottom: 26px;"><textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea> <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea><textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea></div>
+              <div class="row" style="margin-bottom: 22px;"><textarea name="contact[email]" type="text" placeholder="email address"></textarea></div>
+              <div class="row"><textarea name="contact[addr]" type="text" style="flex-grow: 100;" placeholder="ex. 123 main st."></textarea></div>
+              <div class="row"><textarea name="contact[addr2]" type="text" style="flex-grow: 100;" placeholder="suite 123"></textarea></div>
+              <div class="row"><textarea name="contact[city]" type="text" style="flex-grow: 100;" placeholder="city"></textarea><textarea name="contact[prov]" type="text" style="width: 60px;" placeholder="ST."></textarea><textarea name="contact[zip]" type="text" placeholder="zip code"></textarea></div>
+              <div class="row" style="margin-bottom: 26px;"><textarea name="contact[country]" type="text" style="flex-grow: 100;" placeholder="country"></textarea></div>
+              <div class="row"><textarea name="contact[phone]" type="text" placeholder="primary phone"></textarea></div>
+              <div class="row" style="margin-bottom: 40px;"><textarea name="contact[cellphone]" type="text" placeholder="cell phone"></textarea></div>
+              <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Create User" disabled/></div>
             </div>
           </div>
         </div>

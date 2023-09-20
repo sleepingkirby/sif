@@ -134,6 +134,7 @@ flex-direction:column;
 justify-content:flex-start;
 align-items:stretch;
 padding:0px 12px 0px 12px;
+width: 100%;
 }
 
 #apptNewApptFormFull .lbl{
@@ -141,11 +142,27 @@ font-weight: 600;
 margin-bottom: 26px;
 }
 
+#apptNewApptFormFullUser{
+width: 100%;
+}
+
 #apptNewApptFormFullUserCheck{
 }
 
 #apptNewApptFormFullUserToggle > .userForm{
+width: 100%;
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+border-radius: 6px;
+background-color:rgba(255,255,255,0.15);
+box-sizing: border-box;
 margin-top: 12px;
+}
+
+.apptNewApptFormFullUserFormBtns{
+margin-top:12px;
 }
 
 .invntSrvListItem{

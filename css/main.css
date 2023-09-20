@@ -157,8 +157,8 @@ transition-timing-function: ease-in-out;
 
 .lblTggl:checked ~ div.lblTgglLblHd{
 max-height: 600px;
-padding-top: 6px;
-padding-bottom: 6px;
+padding-top: 12px;
+padding-bottom: 12px;
 }
 
 textarea{
