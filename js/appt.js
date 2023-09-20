@@ -145,6 +145,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     </div>
     `;
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
+    this.slctIdArrFullForm=["apptNewApptFormFullUserLastName","apptNewApptFormFullUserFirstName","apptNewApptFormFullUserEmail","apptNewApptFormFullUserPhone"];
     this.users=null;
     this.customers=null;
     this.appts=null;
@@ -228,6 +229,24 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: select elements 
+    post: sets event hooks
+    sets the event hooks for select
+    ----------------------------------*/
+    hookElSlctFullForm(){
+      for(const id of this.slctIdArrFullForm){
+      const el=document.getElementById(id);
+        if(el){
+          el.onchange=(e)=>{
+            if(e.target){
+            this.syncSlctEls(this.slctIdArrFullForm,e.target.value||"");
+            }
+          }
+        }
+      }
+    }
+
+    /*----------------------------------
     pre:
     post:
     
@@ -281,11 +300,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     adds event hooks to elements that need it
     ----------------------------------*/
     hookEl(){
-      //open/close left modal
       document.getElementById("apptAddBtn").onclick=(e)=>{
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
+      this.hookElSlctFullForm();
     }
 
     /*-----------------------------------------------
@@ -504,7 +523,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=[...customers];
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
-    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
     this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
