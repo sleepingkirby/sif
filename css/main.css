@@ -120,6 +120,47 @@ input[type="number"]::placeholder{
 color:rgba(255, 255, 255, 0.8);
 }
 
+label{
+background-color: transparent;
+border: 1px solid white;
+color: white;
+border-radius: 6px;
+font-family: var(--font-family);
+padding: 4px 6px;
+margin: 0px 0px;
+font-size:larger;
+width: fit-content;
+display: flex;
+}
+
+.lblTggl{
+display: none;
+}
+
+.lblTggl:checked + label.lblTgglLbl{
+color: var(--default-blue);
+background-color: white;
+border-color: var(--default-blue);
+} 
+
+.lblTggl ~ div.lblTgglLblHd{
+overflow: hidden;
+max-height: 0px;
+padding-top: 0px;
+padding-left: 12px;
+padding-bottom: 0px;
+padding-right: 12px;
+transition-property: max-height, padding-top, padding-bottom;
+transition-duration: 0.45s;
+transition-timing-function: ease-in-out;
+}
+
+.lblTggl:checked ~ div.lblTgglLblHd{
+max-height: 600px;
+padding-top: 6px;
+padding-bottom: 6px;
+}
+
 textarea{
 border-width: 0px 0px 1px 0px;
 border-color: white;

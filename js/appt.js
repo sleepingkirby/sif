@@ -10,6 +10,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.pageVars.appt={};
       }
     state.pageVars.appt.id=apptId;
+    let dt=toInptValFrmt();
     this.tmpl={};
     this.tmpl["mainEl"]=[];
 /* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,phone,cellphone,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,create_date,on_date,done_date,duration) */
@@ -44,12 +45,31 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     `;
     this.tmpl.invntSrvListEls[1]=`
     `;
+    this.tmpl.rghtModForm=[];
+    this.tmpl.rghtModForm[0]=`
+    <div id="apptNewApptFormFull">
+      <div class="lbl">Add new appointment</div>
+      <div id="apptNewApptFormFullUser">
+        <div id="apptNewApptFormFullUserToggle">
+          <input id="apptNewApptFormFullUserCheck" class="lblTggl" name="apptNewApptFormFullUserCheck" type="checkbox" />
+          <label id="apptNewApptFormFullUserCheckToggle" class="lblTgglLbl" for="apptNewApptFormFullUserCheck">New User</label>
+          <div class="userForm lblTgglLblHd">
+            <div class="apptNewApptFormFullUserFormFields">
+            tst
+            </div>
+            <div class="apptNewApptFormFullUserFormBtns">
+              <input id="apptNewApptFormFullUserFormBtnCreateUser" type="submit" value="Create User" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
-    let dt=toInptValFrmt();
     this.lftModForm=`
     <div id="apptNewApptForm">
-      <div class="lbl">Add new appointment</div>
+      <div class="lbl">Quick add new appointment</div>
       <div id="apptNewApptFormUser">
         <div id="apptNewApptFormUserSlct">
           <select id="apptNewApptFormUserLastName" name="contactSelect[surName]">
@@ -62,7 +82,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
         </div>
         <div id="apptNewApptFormUserNew">
-          <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled>
+          <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled />
         </div>
       </div>
       <div id="apptNewApptFormUserInfo">
@@ -248,7 +268,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     hookEl(){
       //open/close left modal
       document.getElementById("apptAddBtn").onclick=(e)=>{
-      let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
     }
@@ -264,11 +284,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*-----------------------------------------------
-    pre: none
+    pre: this.appts
     post: none
+    generates the HTML table for the mainEl()
     -----------------------------------------------*/
-    genAppts(){
-    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
+    drawMainEl(){
     let rtrn='';
     let cntnt='';
       for(const appt of this.appts){
@@ -295,6 +315,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     return rtrn;
     }
 
+    /*-----------------------------------------------
+    pre: selectViewEventUser(), drawMainEl(), getEvalIcon()
+    post: html updated with appt
+    set mainEl with appointments
+    -----------------------------------------------*/
+    genAppts(){
+    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
+    return this.drawMainEl();
+    }
 
     /*----------------------------------------------
     pre: sqlObj
@@ -460,6 +489,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=[...customers];
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
     this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
@@ -482,8 +512,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     run(){
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
     this.genLftMod();
-    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML='';
     this.hookEl();
     }
   }

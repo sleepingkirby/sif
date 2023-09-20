@@ -128,6 +128,26 @@ justify-content: flex-start;
 flex-wrap: wrap;
 }
 
+#apptNewApptFormFull{
+display: flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+padding:0px 12px 0px 12px;
+}
+
+#apptNewApptFormFull .lbl{
+font-weight: 600;
+margin-bottom: 26px;
+}
+
+#apptNewApptFormFullUserCheck{
+}
+
+#apptNewApptFormFullUserToggle > .userForm{
+margin-top: 12px;
+}
+
 .invntSrvListItem{
 display:flex;
 flex-direction:row;
