@@ -1,4 +1,9 @@
 if(typeof appt==='undefined'){
+/*-------------------------------------------
+pre: global mainObj, sqlObj, state variable, eventsLib for event/appointment CRUD
+post: html changed, db updated
+class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
+-------------------------------------------*/
   class appt{
     constructor(apptId=null){
       if(state.pageVars&&!state.pageVars.appt){
@@ -107,6 +112,7 @@ if(typeof appt==='undefined'){
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     this.users=null;
     this.customers=null;
+    this.appts=null;
     this.newUserBtnId="apptNewApptFormUserNewUser";
     this.userInfoFrmId="apptNewApptFormUserInfo";
     this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
@@ -214,11 +220,16 @@ if(typeof appt==='undefined'){
       //function createEvent(forUser, byUser, onDt, dur=30, type="service", invntSrvs, users=null){
         if(cust&&byUser&&cust.value&&byUser.value){
         createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr);
+        mainObj.setFloatMsg("Quick Appointment Created");
         let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
           if(el){
           mainObj.modPrcClsCall(el);
           }
         }
+        if(state.pos=="appt"){
+        document.getElementById('mainEl').innerHTML=this.genAppts();
+        }
+       
       }
 
       //add service to new appointment form
@@ -257,12 +268,10 @@ if(typeof appt==='undefined'){
     post: none
     -----------------------------------------------*/
     genAppts(){
-//function selectViewEventUser(param, val, ord, ascDesc, status=null){
-    let appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
+    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
     let rtrn='';
-    /* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,on_date) */;
     let cntnt='';
-      for(const appt of appts){
+      for(const appt of this.appts){
       let doneDate=appt.done_date||'';
       cntnt+=`
       <tr>
@@ -462,7 +471,7 @@ if(typeof appt==='undefined'){
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormApptInfoByUserType').innerHTML=state.user.type;
     this.hookElUserInfoBox();
-    this.hookNewUserBtn(); //a
+    this.hookNewUserBtn();
     }
 
 

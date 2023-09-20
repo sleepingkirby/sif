@@ -10,6 +10,8 @@ class sif{
   this.scrpt.id='modScript';
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
+  this.cssFadeOut="fadeOut";
+  this.msgFloatId="msgFloat";
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
 
   this.hookEl();
@@ -68,7 +70,7 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptObj.genLftMod();" title="Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptObj.genLftMod();" title="Quick Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
     for(const el of els){
     el.innerHTML=html;
@@ -184,6 +186,34 @@ class sif{
     }
   }
 
+  /*-------------------------------------------------------
+  pre: msgFloat Element. class fadeout "this.cssFadeOut"
+  post: sets the innerHTML and add this.cssFadeOut from msgFloat element
+  sets the innerHTML/message
+  -------------------------------------------------------*/
+  setFloatMsg(text){
+    if(!text||text==""){
+    return null;
+    }
+  let el=document.getElementById(this.msgFloatId);
+    if(el&&el.classList&&!el.classList.contains(this.cssFadeOut)){
+    el.innerText=text;
+    el.classList.add(this.cssFadeOut);
+    }
+  }
+
+  /*-------------------------------------------------------
+  pre: msgFloat Element. class fadeout "this.cssFadeOut"
+  post: removes this.cssFadeOut from msgFloat element
+  removes this.cssFadOut from the msgFloat element
+  -------------------------------------------------------*/
+  closeFloatMsg(){
+  let el=document.getElementById(this.msgFloatId);
+    if(el&&el.classList&&el.classList.contains(this.cssFadeOut)){
+    el.classList.remove(this.cssFadeOut);
+    }
+  }
+
   /*---------------------------------------
   pre: setState(), global state
   post: element elId onchange is set
@@ -192,12 +222,24 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   hookEl(){
-  var el=document.getElementById(this.dbPgId);
+  let el=document.getElementById(this.dbPgId);
     if(el){
       el.onchange=(e)=>{
       this.setState('dbFile', e.target.files[0]);
       el.value="";
       };
+    }
+  //message floating element. Removes class on self
+  let floatMsg=document.getElementById(this.msgFloatId);
+    if(floatMsg){
+      floatMsg.onanimationend=(e)=>{
+        if(e.target.classList.contains(this.cssFadeOut)){
+        e.target.classList.remove(this.cssFadeOut);
+        }
+      }
+      floatMsg.onclick=()=>{
+      this.closeFloatMsg();
+      }
     }
   }
 
@@ -221,7 +263,6 @@ class sif{
       }
     }
   }
-
 
   /*-------------------------------------------------------
   pre: rghtMod element exists, modPrcClsCall()
