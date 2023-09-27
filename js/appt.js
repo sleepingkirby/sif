@@ -76,6 +76,41 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             </select>
             <select id="apptNewApptFormFullUserPhone" name="contactSelect[cellphone]">
             </select>
+            <input id="apptNewApptFormFullUserAddUser" type="submit" value="Add"/>
+        </div>
+        <div class="row apptFormMutliBox" style="margin-bottom:24px;">
+          <div id="apptNewApptFormFullApptInfoUsrLstLbl" class="row apptFormMultiBoxLbl" title="Users For Service">
+          Users
+          </div>
+          <div id="apptNewApptFormFullApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Users List">
+          </div>
+        </div>
+        <div id="apptNewApptFormFullByUserSlct">
+            <input id="apptNewApptFormFullApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
+            <select id="apptNewApptFormFullApptInfoByUser" name="event[byUser_id]">
+              <option>By User</option>
+            </select>
+            <div id="apptNewApptFormFullApptInfoByUserType">stylist</div>
+        </div>
+        <div id="apptNewApptFormFullApptInfoSrvSlct" class="row" style="justify-content:flex-end;">
+          <select id="apptNewApptFormFullApptInfoSrv" name="event[invntSrv]">
+            <option>service</option>
+          </select>
+          <input id="apptNewApptFormFullApptInfoAddSrv" type="submit" value="Add Service"/>
+        </div>
+        <div class="row apptFormMutliBox">
+          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
+          Services to be added
+          </div>
+          <div id="apptNewApptFormApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Services Added">
+          </div>
+        </div>
+        <div id="apptNewApptFormApptInfoSrvTtlDur">
+          <label for="apptNewApptFormApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
+          <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
+        </div>
+        <div class="row" style="margin-bottom:24px;">
+          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
     </div>
@@ -121,7 +156,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <div id="apptNewApptFormApptInfoByUserType">&nbsp;</div>
           </div>
           <div class="row">
-            <label for="apptNewApptFormApptInfoDur" title="in minutes" style="margin-right:8px;">Duration:</label>
+            <label for="apptNewApptFormApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
             <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
           </div>
         </div>
@@ -131,11 +166,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 	        </select>
           <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Service"/>
         </div>
-        <div class="row" style="justify-content:flex-start; align-items:stretch; flex-direction:column; margin-top:18px;">
-          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row" title="Services Added" style="justify-content:flex-start; margin-bottom:6px;">
+        <div class="row apptFormMutliBox">
+          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
           Services to be added
           </div>
-          <div id="apptNewApptFormApptInfoSrvLst" class="row" title="Services Added">
+          <div id="apptNewApptFormApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Services Added">
           </div>
         </div>
         <div class="row" style="margin-bottom:24px;">

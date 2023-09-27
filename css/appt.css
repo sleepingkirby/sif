@@ -103,15 +103,9 @@ width:55pt;
 }
 
 #apptNewApptFormApptInfoSrvLst{
-border-radius:6px;
-border:1px solid white;
-padding:8px;
-justify-content:flex-start;
-flex-wrap:wrap;
 }
 
 #apptNewApptFormApptInfoSrvLstLbl{
-font-weight: 900;
 }
 
 #apptNewApptFormApptInfoDateUser{
@@ -137,24 +131,99 @@ margin-bottom: 26px;
 width: 100%;
 }
 
+#apptNewApptFormFullUser div#apptNewApptFormFullApptInfoByUserType{
+opacity: 0.75;
+display:flex;
+align-self:flex-end;
+margin: 4px 4px 8px 4px;
+font-size: small;
+font-weight: bolder;
+color: var(--default-blue);
+background-color: white;
+padding:2px 3px;
+border-radius: 3px;
+}
+
+#apptNewApptFormFullApptInfoByUser{
+margin-right:12px;
+}
+
 #apptNewApptFormFullUserCheck{
 }
 
+#apptNewApptFormFullUserToggle{
+display: flex;
+flex-direction:column;
+align-items:flex-end;
+justify-content: flex-start;
+}
+
 #apptNewApptFormFullUserToggle > .userForm{
-width: 100%;
+width:100%;
 display:flex;
 flex-direction:column;
 justify-content:flex-start;
 align-items:stretch;
 border-radius: 6px;
 background-color:rgba(255,255,255,0.15);
-box-sizing: border-box;
-margin-top: 12px;
-margin-bottom: 12px;
+box-sizing:border-box;
+margin-top:12px;
+margin-bottom:12px;
+}
+
+#apptNewApptFormFullByUserSlct{
+display:flex;
+margin-bottom:24px;
+}
+
+#apptNewApptFormFullApptInfoByUserType{
+
+}
+
+#apptNewApptFormFullUserAddUser{
+margin-left: 24px;
 }
 
 .apptNewApptFormFullUserFormBtns{
 margin-top:12px;
+}
+
+#apptNewApptFormFullApptInfoSrvSlct div{
+display:flex;
+}
+
+#apptNewApptFormFullApptInfoSrv{
+margin-right: 12px;
+}
+
+#apptNewApptFormApptInfoSrvTtlDur{
+display:flex;
+justify-content: flex-end;
+align-items: flex-start;
+margin-bottom:24px;
+}
+
+
+.apptFormMutliBox{
+justify-content:flex-start;
+align-items:stretch;
+flex-direction:column;
+margin-top:18px;
+}
+
+.apptFormMutliBox > div.apptFormMultiBoxLbl{
+justify-content:flex-start;
+margin-bottom:6px;
+font-weight: 900;
+}
+
+
+.apptFormMutliBox > div.apptFormMultiBoxBox{
+border-radius:6px;
+border:1px solid white;
+padding:8px;
+justify-content:flex-start;
+flex-wrap:wrap;
 }
 
 .invntSrvListItem{
