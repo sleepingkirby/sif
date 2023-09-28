@@ -35,3 +35,28 @@ function getSubs(str, head="contact"){
   }
 return "";
 }
+
+/*----------------------------------
+pre: none
+post: none
+takes an array of hashs and makes a hash of hashes index by indx
+indx HAS to exist in all hashs inside array
+----------------------------------*/
+function arrOfHshToHshHsh(indx, arr){
+  if(!indx){
+  return null;
+  }
+  if(!arr&&arr.length<=0){
+  return null;
+  }
+
+  let hsh={};
+  for(let ind in arr){
+    if(!arr[ind].hasOwnProperty(indx)){
+    return null;
+    }
+    hsh[arr[ind][indx]]={...arr[ind],'indx':ind};
+  }
+
+return {...hsh};
+}

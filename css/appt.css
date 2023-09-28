@@ -184,6 +184,13 @@ margin-bottom:24px;
 margin-left: 24px;
 }
 
+#apptNewApptFormFullUserSlct{
+display:flex;
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+}
+
 .apptNewApptFormFullUserFormBtns{
 margin-top:12px;
 }
@@ -204,21 +211,21 @@ margin-bottom:24px;
 }
 
 
-.apptFormMutliBox{
+.apptFormMultiBox{
 justify-content:flex-start;
 align-items:stretch;
 flex-direction:column;
 margin-top:18px;
 }
 
-.apptFormMutliBox > div.apptFormMultiBoxLbl{
+.apptFormMultiBox > div.apptFormMultiBoxLbl{
 justify-content:flex-start;
 margin-bottom:6px;
 font-weight: 900;
 }
 
 
-.apptFormMutliBox > div.apptFormMultiBoxBox{
+.apptFormMultiBox > div.apptFormMultiBoxBox{
 border-radius:6px;
 border:1px solid white;
 padding:8px;
@@ -226,11 +233,11 @@ justify-content:flex-start;
 flex-wrap:wrap;
 }
 
-.invntSrvListItem{
+.multiBoxListItem{
 display:flex;
 flex-direction:row;
 justify-content:space-between;
-align-items:center;
+align-items:flex-start;
 border-radius: 8px;
 border:1px solid white;
 color:white;
@@ -242,11 +249,18 @@ margin-right: 8px;
 margin-bottom: 8px;
 }
 
-.invntSrvListItem > div{
+.multiBoxListItem > div{
 display:flex;
 }
 
-.invntSrvListItem > div:last-child{
+.multiBoxListItem div.multiBoxListItemInfo{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:flex-start;
+}
+
+.multiBoxListItem > div.multiBoxListItemDel{
 margin-left:8px;
 }
 

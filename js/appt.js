@@ -68,21 +68,25 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </div>
         </div>
         <div id="apptNewApptFormFullUserSlct">
-            <select id="apptNewApptFormFullUserLastName" name="contactSelect[surName]">
-            </select>
-            <select id="apptNewApptFormFullUserFirstName" name="contactSelect[fName]">
-            </select>
-            <select id="apptNewApptFormFullUserEmail" name="contactSelect[email]">
-            </select>
-            <select id="apptNewApptFormFullUserPhone" name="contactSelect[cellphone]">
-            </select>
-            <input id="apptNewApptFormFullUserAddUser" type="submit" value="Add"/>
+            <div>
+              <select id="apptNewApptFormFullUserLastName" name="contactSelect[surName]">
+              </select>
+              <select id="apptNewApptFormFullUserFirstName" name="contactSelect[fName]">
+              </select>
+              <select id="apptNewApptFormFullUserEmail" name="contactSelect[email]">
+              </select>
+              <select id="apptNewApptFormFullUserPhone" name="contactSelect[cellphone]">
+              </select>
+            </div>
+            <div>
+              <input id="apptNewApptFormFullUserAddUser" type="submit" value="Add"/>
+            </div>
         </div>
-        <div class="row apptFormMutliBox" style="margin-bottom:24px;">
+        <div class="row apptFormMultiBox" style="margin-bottom:24px;">
           <div id="apptNewApptFormFullApptInfoUsrLstLbl" class="row apptFormMultiBoxLbl" title="Users For Service">
           Users
           </div>
-          <div id="apptNewApptFormFullApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Users List">
+          <div id="apptNewApptFormFullApptInfoUsrLst" class="row apptFormMultiBoxBox" title="Users List">
           </div>
         </div>
         <div id="apptNewApptFormFullByUserSlct">
@@ -98,7 +102,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
           <input id="apptNewApptFormFullApptInfoAddSrv" type="submit" value="Add Service"/>
         </div>
-        <div class="row apptFormMutliBox">
+        <div class="row apptFormMultiBox">
           <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
           Services to be added
           </div>
@@ -115,6 +119,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       </div>
     </div>
     `;
+    this.usrAddedArr=[];
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
     this.lftModForm=`
@@ -166,7 +171,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 	        </select>
           <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Service"/>
         </div>
-        <div class="row apptFormMutliBox">
+        <div class="row apptFormMultiBox">
           <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
           Services to be added
           </div>
@@ -183,11 +188,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.slctIdArrFullForm=["apptNewApptFormFullUserLastName","apptNewApptFormFullUserFirstName","apptNewApptFormFullUserEmail","apptNewApptFormFullUserPhone"];
     this.users=null;
     this.customers=null;
+    this.custHsh=null;
     this.appts=null;
     this.newUserBtnId="apptNewApptFormUserNewUser";
     this.userInfoFrmId="apptNewApptFormUserInfo";
     this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormApptInfoAddBtn";
+    this.fullApptAddUser="apptNewApptFormFullUserAddUser"
     }
 
     testFunc(e){
@@ -217,7 +224,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     fills out "apptNewApptFormUserInfo"
     ----------------------------------*/
     syncUserInfo(val){
-    const cust=this.customers.find(c=>c.uuid==val);
+    const cust=this.custHsh[val];
     const els=document.querySelectorAll(this.userInfoFrmSlct);
       if(cust){
         for(let ta of els){
@@ -263,6 +270,53 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     }
 
+
+    /*----------------------------------
+    pre: this.customers, this.custHsh, arrOfHshToHshHsh()
+    post: user list redrawn
+    delete from this.customers and this.custHsh
+    ----------------------------------*/
+    delFromUsrLst(uuid){
+      if(!uuid){
+      return null;
+      }
+    let i=this.usrAddedArr.findIndex(e=>e==uuid);
+      console.log(`delFromUsr===> ${i}`);
+      console.log(this.usrAddedArr);
+      this.usrAddedArr.splice(i,1);
+      console.log(this.usrAddedArr);
+    }
+
+
+    /*----------------------------------
+    pre: elementId "apptNewApptFormFullApptInfoUsrLst" 
+    post: HTML redrawn
+    draws the user into the box with elementId
+    ----------------------------------*/
+    genUsrLstEls(){
+    let html="";
+    let hsh={};
+    let el=document.getElementById("apptNewApptFormFullApptInfoUsrLst");
+      if(el&&this.usrAddedArr){
+        for(const uuid of this.usrAddedArr){
+        let cust=this.custHsh[uuid];
+        console.log(cust);
+        let fname=cust.fName.length>=10?cust.fName.substr(0,10)+'...':cust.fName;
+        let sname=cust.surName.length>1?cust.surName.substr(0,1)+'.':cust.surName;
+        html+=`
+        <div class="multiBoxListItem" title="${cust.surName}, ${cust.fName} ${cust.mName} - ${cust.email} - ${cust.phone}">
+          <div class="multiBoxListItemInfo">
+            <div class="multiBoxListItemName">${sname}</div>
+            <div class="multiBoxListItemName">${fname}</div>
+          </div>
+          <div class="multiBoxListItemDel" onclick='apptObj.delFromUsrLst("${uuid}");apptObj.genUsrLstEls();'>x</div>
+        </div>
+        `;
+        }
+      el.innerHTML=html;
+      }
+    }
+
     /*----------------------------------
     pre: select elements 
     post: sets event hooks
@@ -282,9 +336,25 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: this.usrAddedArr, this.genUsrLst
+    post:
+    ----------------------------------*/
+    hookElAddUserToUserLst(){
+    let el=document.getElementById(this.fullApptAddUser);
+      if(el){
+        el.onclick=(e)=>{
+        let slct=document.getElementById(this.slctIdArrFullForm[0]);
+          if(slct&&slct.value){
+          this.usrAddedArr.push(slct.value);
+          this.genUsrLstEls();  
+          }
+        };
+      }
+    }
+
+    /*----------------------------------
     pre:
     post:
-    
     ----------------------------------*/
     hookElUserInfoBox(){
     let el=document.getElementById(this.userInfoFrmId);
@@ -340,6 +410,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       mainObj.modPrcClsCall(el);
       };
       this.hookElSlctFullForm();
+      this.hookElAddUserToUserLst();
     }
 
     /*-----------------------------------------------
@@ -463,9 +534,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(this.invntSrvList&&this.invntSrvAddedArr){
         for(const uuid of this.invntSrvAddedArr){
         html+=`
-        <div class="invntSrvListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");apptObj.genInvntSrvListEls();'>
-          <div class="invntSrvListItemName">${this.invntSrvList[uuid].name}</div>
-          <div class="invntSrvListItemDel">x</div>
+        <div class="multiBoxListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");apptObj.genInvntSrvListEls();'>
+          <div class="multiBoxListItemName">${this.invntSrvList[uuid].name}</div>
+          <div class="multiBoxListItemDel">x</div>
         </div>
         `;
         total+=this.invntSrvList[uuid]&&Number.isFinite(this.invntSrvList[uuid].srv_durtn)?this.invntSrvList[uuid].srv_durtn:0;
@@ -517,7 +588,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     add hook to the new user button
     -----------------------------------------------*/
     hookNewUserBtn(){
-    let el=document.getElementById("apptNewApptFormUserNewUser");
+    let el=document.getElementById(this.newUserBtnId);
       el.onclick=(e)=>{
       let els=document.querySelectorAll(this.userInfoFrmSlct);
       let hsh={};
@@ -533,6 +604,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           this.users=getUsers();
           const {customer:customers, '':users}=spltUsr(this.users);
           this.customers=[...customers];
+          this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
           //refresh select menus
           document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
           document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
@@ -557,6 +629,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.users=getUsers();
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=[...customers];
+    this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
     document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
     this.hookElLftMod();
     document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
