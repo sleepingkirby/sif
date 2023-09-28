@@ -476,11 +476,17 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     generates right modal content
     -----------------------------------------------*/
     genRghtMod(){
+    const {customer:customers, '':users}=spltUsr(this.users);
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
     document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
     document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
     document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
     document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'cellphone','Cell Phone');
+    document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
+    document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    this.hookUsrTyp();
+    document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
+
     }
 
     /*-----------------------------------------------
@@ -491,6 +497,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
     this.users=getUsers();
+    this.invntSrvList=getInvntSrv();
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=[...customers];
     this.custHsh=arrOfHshToHshHsh('uuid',this.customers);

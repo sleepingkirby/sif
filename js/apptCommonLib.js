@@ -37,3 +37,27 @@ function genUsrSlct(users,prop,dfltVal='none',slctdPrp=null,slctdVl=null){
   }
 return html;
 }
+
+
+/*-----------------------------------------------
+pre: this.invntSrvList filled
+post: none
+-----------------------------------------------*/
+function genInvntSrvListEls(){
+let html="";
+let total=0;
+  if(this.invntSrvList&&this.invntSrvAddedArr){
+    for(const uuid of this.invntSrvAddedArr){
+    html+=`
+    <div class="multiBoxListItem">
+      <div class="multiBoxListItemName">${this.invntSrvList[uuid].name}</div>
+      <div class="multiBoxListItemDel" onclick='apptQckObj.delFromInvntSrvAddedArr("${uuid}");apptQckObj.genInvntSrvListEls();'>x</div>
+    </div>
+    `;
+    total+=this.invntSrvList[uuid]&&Number.isFinite(this.invntSrvList[uuid].srv_durtn)?this.invntSrvList[uuid].srv_durtn:0;
+    }
+  document.getElementById("apptNewApptFormApptInfoSrvLst").innerHTML=html;
+  document.getElementById("apptNewApptFormApptInfoDur").value=total;
+  }
+}
+
