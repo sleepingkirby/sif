@@ -35,16 +35,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         </table>
       </div>
     `;
-    this.tmpl.usersSelect=[];
-    this.tmpl.usersSelect[0]=`<option value="`;
-    this.tmpl.usersSelect[1]=`"`
-    this.tmpl.usersSelect[2]=`>`;
-    this.tmpl.usersSelect[3]=`</option>`;
     this.tmpl["invntSrvListEls"]=[];
-    this.tmpl.invntSrvListEls[0]=`
-    `;
-    this.tmpl.invntSrvListEls[1]=`
-    `;
     this.tmpl.rghtModForm=[];
     this.tmpl.rghtModForm[0]=`
     <div id="apptNewApptFormFull">
@@ -281,10 +272,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       return null;
       }
     let i=this.usrAddedArr.findIndex(e=>e==uuid);
-      console.log(`delFromUsr===> ${i}`);
-      console.log(this.usrAddedArr);
       this.usrAddedArr.splice(i,1);
       console.log(this.usrAddedArr);
+      this.genUsrLstEls();
     }
 
 
@@ -297,10 +287,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let html="";
     let hsh={};
     let el=document.getElementById("apptNewApptFormFullApptInfoUsrLst");
+    console.log(this.usrAddedArr);
       if(el&&this.usrAddedArr){
         for(const uuid of this.usrAddedArr){
         let cust=this.custHsh[uuid];
-        console.log(cust);
         let fname=cust.fName.length>=10?cust.fName.substr(0,10)+'...':cust.fName;
         let sname=cust.surName.length>1?cust.surName.substr(0,1)+'.':cust.surName;
         html+=`
@@ -309,7 +299,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <div class="multiBoxListItemName">${sname}</div>
             <div class="multiBoxListItemName">${fname}</div>
           </div>
-          <div class="multiBoxListItemDel" onclick='apptObj.delFromUsrLst("${uuid}");apptObj.genUsrLstEls();'>x</div>
+          <div class="multiBoxListItemDel" onclick='apptObj.delFromUsrLst("${uuid}");'>x</div>
         </div>
         `;
         }
@@ -376,7 +366,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let onDt=document.getElementById("apptNewApptFormApptInfoOnDate");
       let byUser=document.getElementById("apptNewApptFormApptInfoByUser");
       let dur=document.getElementById("apptNewApptFormApptInfoDur");
-      //function createEvent(forUser, byUser, onDt, dur=30, type="service", invntSrvs, users=null){
         if(cust&&byUser&&cust.value&&byUser.value){
         createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr);
         mainObj.setFloatMsg("Quick Appointment Created");
@@ -465,38 +454,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     return this.drawMainEl();
     }
 
-    /*----------------------------------------------
-    pre: sqlObj
-    post: none
-    gets all the invntSrv records 
-    ----------------------------------------------*/
-    getInvntSrv(username=null, excldNull=false){
-    let whereUsr=' where username is null or username=$username';
-      if(excldNull){
-      whereUsr=' where username=$username';
-      }
-    const q=`select invntSrv.uuid, invntSrv.name, type_uuid, type.name as type, invntSrv.create_date, invntSrv.mod_date, invntSrv.status, users.username as username, invntSrv.srv_durtn, invntSrv.sku, invntSrv.amnt, invntSrv.buy, invntSrv.sell, invntSrv.notes from invntSrv left join type on invntSrv.type_uuid=type.uuid left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid left join users on invntSrv_users.users_id=users.uuid${whereUsr}`;
-    let invntSrv=sqlObj.runQuery(q,{$email:username});
-    let invntSrvObj={};
-      for(const r of invntSrv){
-        if(!invntSrvObj.hasOwnProperty(r.uuid)){
-        invntSrvObj[r.uuid]={...r};
-        delete invntSrvObj[r.uuid].username;
-        invntSrvObj[r.uuid].users=[r.username];
-        }
-        else{
-        invntSrvObj[r.uuid].users.push(r.username);
-        }
-      }
-    return invntSrvObj;
-    }
-
     /*-----------------------------------------------
     pre: getInvntSrv() and everything it requires
     post: none
     -----------------------------------------------*/
     genInvntSrv(username, selectedUUID){
-    let invntSrv=this.getInvntSrv(username);
+    let invntSrv=getInvntSrv(username);
     this.invntSrvList={...invntSrv};
     let keys=Object.keys(invntSrv);
     let html='';
@@ -521,7 +484,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let i=this.invntSrvAddedArr.findIndex(el=>el===val);
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
+      this.genInvntSrvListEls();
       }
+    
     }
  
     /*-----------------------------------------------
@@ -534,7 +499,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(this.invntSrvList&&this.invntSrvAddedArr){
         for(const uuid of this.invntSrvAddedArr){
         html+=`
-        <div class="multiBoxListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");apptObj.genInvntSrvListEls();'>
+        <div class="multiBoxListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");'>
           <div class="multiBoxListItemName">${this.invntSrvList[uuid].name}</div>
           <div class="multiBoxListItemDel">x</div>
         </div>
@@ -545,27 +510,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       document.getElementById("apptNewApptFormApptInfoDur").value=total;
       }
     }
-
-    /*-----------------------------------------------
-    pre: none
-    post: none
-    params: users= array of users, prop=property to display, dfltVal=default value, slsctdPrp=which property to match slctdVl against, slctdVl= the value to choose to select
-    generates <option/> for select elements for users
-    -----------------------------------------------*/
-    genUsrSlct(users,prop,dfltVal='none',slctdPrp=null,slctdVl=null){
-      let html="";
-      html+=this.tmpl.usersSelect[0]+this.tmpl.usersSelect[1]+this.tmpl.usersSelect[2]+dfltVal+this.tmpl.usersSelect[3];
-      for(const usr of users){
-        if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
-        html+=this.tmpl.usersSelect[0]+usr.uuid+this.tmpl.usersSelect[1]+" selected"+this.tmpl.usersSelect[2]+usr[prop]+this.tmpl.usersSelect[3];
-        }
-        else{
-        html+=this.tmpl.usersSelect[0]+usr.uuid+this.tmpl.usersSelect[1]+this.tmpl.usersSelect[2]+usr[prop]+this.tmpl.usersSelect[3];
-        }
-      }
-    return html;
-    }
-
 
     /*-----------------------------------------------
     -----------------------------------------------*/
@@ -606,10 +550,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           this.customers=[...customers];
           this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
           //refresh select menus
-          document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
-          document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
-          document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'cEmail', 'E-Mail');
-          document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone','Cell Phone');
+          document.getElementById('apptNewApptFormUserLastName').innerHTML=genUsrSlct(customers,'surName','Last Name');
+          document.getElementById('apptNewApptFormUserFirstName').innerHTML=genUsrSlct(customers,'fName','First Name');
+          document.getElementById('apptNewApptFormUserEmail').innerHTML=genUsrSlct(customers,'cEmail', 'E-Mail');
+          document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'cellphone','Cell Phone');
           //sync the select menu
           this.syncSlctEls(this.slctIdArr,val||"");
           let btn=document.getElementById(this.newUserBtnId)
@@ -622,40 +566,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
     /*-----------------------------------------------
     pre: this class
-    post: left modal filled
-    generates left modal content
-    -----------------------------------------------*/
-    genLftMod(){
-    this.users=getUsers();
-    const {customer:customers, '':users}=spltUsr(this.users);
-    this.customers=[...customers];
-    this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
-    document.getElementById('lftMod').getElementsByClassName("content")[0].innerHTML=this.lftModForm;
-    this.hookElLftMod();
-    document.getElementById('apptNewApptFormUserLastName').innerHTML=this.genUsrSlct(customers,'surName','Last Name');
-    document.getElementById('apptNewApptFormUserFirstName').innerHTML=this.genUsrSlct(customers,'fName','First Name');
-    document.getElementById('apptNewApptFormUserEmail').innerHTML=this.genUsrSlct(customers,'cEmail', 'E-Mail');
-    document.getElementById('apptNewApptFormUserPhone').innerHTML=this.genUsrSlct(customers,'cellphone','Cell Phone');
-    this.hookElSlct();
-    document.getElementById('apptNewApptFormApptInfoSrv').innerHTML=this.genInvntSrv();
-    document.getElementById('apptNewApptFormApptInfoByUser').innerHTML=this.genUsrSlct(users,'username','Username','uuid',state.user.uuid);
-    this.hookUsrTyp();
-    document.getElementById('apptNewApptFormApptInfoByUserType').innerHTML=state.user.type;
-    this.hookElUserInfoBox();
-    this.hookNewUserBtn();
-    }
-
-    /*-----------------------------------------------
-    pre: this class
     post: right modal filled
     generates right modal content
     -----------------------------------------------*/
     genRghtMod(){
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm[0];
-    document.getElementById('apptNewApptFormFullUserLastName').innerHTML=this.genUsrSlct(this.customers,'surName','Last Name');
-    document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=this.genUsrSlct(this.customers,'fName','First Name');
-    document.getElementById('apptNewApptFormFullUserEmail').innerHTML=this.genUsrSlct(this.customers,'cEmail', 'E-Mail');
-    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=this.genUsrSlct(this.customers,'cellphone','Cell Phone');
+    document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
+    document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
+    document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
+    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'cellphone','Cell Phone');
     }
 
     /*-----------------------------------------------
@@ -665,7 +584,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     run(){
     document.getElementById('mainEl').innerHTML=this.genAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
-    this.genLftMod();
+    this.users=getUsers();
+    const {customer:customers, '':users}=spltUsr(this.users);
+    this.customers=[...customers];
+    this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
     this.genRghtMod();
     this.hookEl();
     }

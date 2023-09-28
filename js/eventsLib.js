@@ -1,7 +1,7 @@
 /*-----------------------------------------------
 pre: sqlObj
 post: none
-common library for getting setting the events/invntSrv
+common library for getting setting the events
 -----------------------------------------------*/
 
 

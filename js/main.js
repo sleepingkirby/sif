@@ -6,8 +6,7 @@ class sif{
 
   constructor(modObj, menuLftObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
-  this.scrpt=document.createElement('script'); //element that holds the script
-  this.scrpt.id='modScript';
+  this.dfltScrptId='modScript';
   this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.cssFadeOut="fadeOut";
@@ -36,31 +35,44 @@ class sif{
   }
 
   /*-------------------------------------
-  pre: this.mod
+  pre: this.mod, state.depModuleObjs
   post: module added to page.
   adds the module to the page.
   huh... lesson learned. You can't reuse the same instantiated script element to get the code within the script to run
   you have to create a new script element and then add for it to run the code
   -------------------------------------*/
   addModule(str, id, run=true, func=null){
-    var el=document.getElementById(id);
-    this.scrpt=document.createElement('script');
-    this.scrpt.src=this.mod[str].path;
-    this.scrpt.id=id;
-    this.scrpt.setAttribute("defer", true);
-    this.scrpt.setAttribute('type',"text/javascript");
-      this.scrpt.onload = () => {
-        if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
-        eval(this.mod[str].eval);
-        }
-        if(run&&state.depModuleObjs[str]){
-        state.depModuleObjs[str].run();
-        }
-        if(typeof func=='function'&&func){
-        func();
-        }
-      };
-    document.head.append(this.scrpt);
+  //if script element exists in document, remove from page and state.depModuleObjs
+  let scrpt=document.getElementById(id);
+    if(scrpt){
+    document.head.removeChild(scrpt);
+
+    //remove previous module from depMdulesObjs
+    let moduleNm=scrpt.getAttribute('module');
+      if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
+      delete state.depModuleObjs[scrpt.getAttribute('module')];
+      }
+    }
+
+  state.depModuleObjs[str]=true;
+  scrpt=document.createElement('script');
+  scrpt.src=this.mod[str].path;
+  scrpt.id=id;
+  scrpt.setAttribute("defer", true);
+  scrpt.setAttribute('type',"text/javascript");
+  scrpt.setAttribute('module',str);
+    scrpt.onload = () => {
+      if(this.mod[str].hasOwnProperty('eval')&&this.mod[str].eval!=''){
+      eval(this.mod[str].eval);
+      }
+      if(run&&state.depModuleObjs[str]){
+      state.depModuleObjs[str].run();
+      }
+      if(typeof func=='function'&&func){
+      func();
+      }
+    };
+  document.head.append(scrpt);
   }
 
 
@@ -70,7 +82,7 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptObj.genLftMod();" title="Quick Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptQckObj.genLftMod();" title="Quick Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
     for(const el of els){
     el.innerHTML=html;
@@ -103,12 +115,7 @@ class sif{
     return false;
     }
 
-    //if script exists in document, remove.
-    if(document.getElementById(this.scrpt.id)){
-    document.head.removeChild(this.scrpt);
-    }
-
-  this.addModule(str, "modScript");
+  this.addModule(str, this.dfltScrptId);
   }
 
   /*--------- setState --------------
@@ -167,8 +174,7 @@ class sif{
           menuLftObj.setMenu();
 
           //setting up module appt module to set up left modal
-          this.addModule("appt", "modScript", false);
-
+          this.addModule("apptQck", "lftModalScript");
           this.draw(state.pos);
 
           /*reminder for later if needed
