@@ -113,68 +113,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.usrAddedArr=[];
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
-    this.lftModForm=`
-    <div id="apptNewApptForm">
-      <div class="lbl">Quick add new appointment</div>
-      <div id="apptNewApptFormUser">
-        <div id="apptNewApptFormUserSlct">
-          <select id="apptNewApptFormUserLastName" name="contactSelect[surName]">
-          </select>
-          <select id="apptNewApptFormUserFirstName" name="contactSelect[fName]">
-          </select>
-          <select id="apptNewApptFormUserEmail" name="contactSelect[email]">
-          </select>
-          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]">
-          </select>
-        </div>
-        <div id="apptNewApptFormUserNew">
-          <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled />
-        </div>
-      </div>
-      <div id="apptNewApptFormUserInfo">
-        <div class="row">
-          <textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea>
-          <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea>
-          <textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea>
-        </div>
-        <div class="row" style="margin-bottom: 6px;">
-          <textarea name="contact[cellphone]" type="text" placeholder="cellphone"></textarea>
-          <textarea name="contact[email]" type="text" style="margin-left:40px;flex-grow:100;" placeholder="email address"></textarea>
-        </div>
-      </div
-      <div id="apptNewApptFormApptInfo">
-        <div class="row" style="justify-content:space-between;">
-          <div class="row" id="apptNewApptFormApptInfoDateUser">
-            <input id="apptNewApptFormApptInfoOnDate" name="event[on_date]" type="datetime-local" value="${dt}"/>
-	          <select id="apptNewApptFormApptInfoByUser" name="event[byUser_id]">
-	            <option>by user</option>
-            </select>
-            <div id="apptNewApptFormApptInfoByUserType">&nbsp;</div>
-          </div>
-          <div class="row">
-            <label for="apptNewApptFormApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
-            <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
-          </div>
-        </div>
-        <div class="row" style="justify-content:flex-start;">
-          <select id="apptNewApptFormApptInfoSrv" name="event[invntSrv]">
-            <option>service</option>
-	        </select>
-          <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Service"/>
-        </div>
-        <div class="row apptFormMultiBox">
-          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
-          Services to be added
-          </div>
-          <div id="apptNewApptFormApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Services Added">
-          </div>
-        </div>
-        <div class="row" style="margin-bottom:24px;">
-          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
-        </div>
-      </div>
-    </div>
-    `;
     this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     this.slctIdArrFullForm=["apptNewApptFormFullUserLastName","apptNewApptFormFullUserFirstName","apptNewApptFormFullUserEmail","apptNewApptFormFullUserPhone"];
     this.users=null;
@@ -355,40 +293,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
-    pre: left modal elements 
-    post: sets event hooks
-    sets the event hooks for the left modal
-    ----------------------------------*/
-    hookElLftMod(){
-      //add new appointment
-      document.getElementById(this.addApptBtnId).onclick=(e)=>{
-      let cust=document.getElementById("apptNewApptFormUserLastName");
-      let onDt=document.getElementById("apptNewApptFormApptInfoOnDate");
-      let byUser=document.getElementById("apptNewApptFormApptInfoByUser");
-      let dur=document.getElementById("apptNewApptFormApptInfoDur");
-        if(cust&&byUser&&cust.value&&byUser.value){
-        createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr);
-        mainObj.setFloatMsg("Quick Appointment Created");
-        let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
-          if(el){
-          mainObj.modPrcClsCall(el);
-          }
-        }
-        if(state.pos=="appt"){
-        document.getElementById('mainEl').innerHTML=this.genAppts();
-        }
-       
-      }
-
-      //add service to new appointment form
-      document.getElementById("apptNewApptFormApptInfoAddSrv").onclick=(e)=>{
-      let el=document.getElementById("apptNewApptFormApptInfoSrv");
-      this.invntSrvAddedArr.push(el.value);
-      this.genInvntSrvListEls();
-      }
-    }
-
-    /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
     adds event hooks to elements that need it
@@ -453,6 +357,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
     return this.drawMainEl();
     }
+
+    
 
     /*-----------------------------------------------
     pre: getInvntSrv() and everything it requires

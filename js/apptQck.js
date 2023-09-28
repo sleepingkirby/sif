@@ -183,10 +183,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           if(el){
           mainObj.modPrcClsCall(el);
           }
-          this.invntSrvAddedArr=[];
         }
+        this.invntSrvAddedArr=[];
         if(state.pos=="appt"){
-        document.getElementById('mainEl').innerHTML=state.depModuleObjs[state.pos].genAppts();
+        state.depModuleObjs[state.pos].run();
         }
        
       }
