@@ -420,8 +420,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     /*-----------------------------------------------
     -----------------------------------------------*/
     hookUsrTyp(){
-      document.getElementById('apptNewApptFormApptInfoByUser').onchange=(e)=>{
-      let el=document.getElementById('apptNewApptFormApptInfoByUserType');
+      document.getElementById('apptNewApptFormFullApptInfoByUser').onchange=(e)=>{
+      let el=document.getElementById('apptNewApptFormFullApptInfoByUserType');
       let user=this.users.find(u=>u.uuid==e.target.value);
         if(user){
         el.innerHTML=user.type;
