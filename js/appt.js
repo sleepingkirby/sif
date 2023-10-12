@@ -113,15 +113,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.usrAddedArr=[];
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
-    this.slctIdArr=["apptNewApptFormUserLastName","apptNewApptFormUserFirstName","apptNewApptFormUserEmail","apptNewApptFormUserPhone"];
     this.slctIdArrFullForm=["apptNewApptFormFullUserLastName","apptNewApptFormFullUserFirstName","apptNewApptFormFullUserEmail","apptNewApptFormFullUserPhone"];
     this.users=null;
     this.customers=null;
     this.custHsh=null;
     this.appts=null;
-    this.newUserBtnId="apptNewApptFormUserNewUser";
-    this.userInfoFrmId="apptNewApptFormUserInfo";
-    this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
     this.addApptSrvBtnId="apptNewApptFormFullApptInfoAddSrv";
     this.fullApptAddUser="apptNewApptFormFullUserAddUser"
@@ -143,32 +139,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       const el=document.getElementById(id);
         if(el){
         el.value=val||"";
-        }
-      }
-    }
-
-    /*----------------------------------
-    pre: select elements 
-    post: sets event hooks
-    sets the event hooks for select
-    ----------------------------------*/
-    hookElSlct(){
-      //set select elements on change
-      for(const id of this.slctIdArr){
-      const el=document.getElementById(id);
-        if(el){
-          el.onchange=(e)=>{
-            if(e.target){
-            this.syncSlctEls(this.slctIdArr,e.target.value||"");
-            this.syncUserInfo(e.target.value||"");
-            let btn=document.getElementById(this.newUserBtnId);
-            btn.disabled=true;
-            const addAppt=document.getElementById(this.addApptBtnId);
-              if(addAppt){
-              addAppt.disabled=e.target.value?false:true;
-              }
-            }
-          }
         }
       }
     }
@@ -268,24 +238,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           if(slct&&slct.value){
           this.usrAddedArr.push(slct.value);
           this.genUsrLstEls();
-           
+          this.enblAddApptBtn();
           }
         };
       }
     }
-
-    /*----------------------------------
-    pre:
-    post:
-    ----------------------------------*/
-    hookElUserInfoBox(){
-    let el=document.getElementById(this.userInfoFrmId);
-      el.onkeydown=(e)=>{
-      let btn=document.getElementById(this.newUserBtnId)
-      btn.disabled=false;
-      }
-    }
-
 
     /*----------------------------------
     pre: everything this class requires
