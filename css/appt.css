@@ -210,6 +210,12 @@ align-items: flex-start;
 margin-bottom:24px;
 }
 
+#apptNewApptFormFullApptInfoSrvTtlDur{
+display:flex;
+justify-content: flex-end;
+align-items: flex-start;
+margin-bottom:24px;
+}
 
 .apptFormMultiBox{
 justify-content:flex-start;

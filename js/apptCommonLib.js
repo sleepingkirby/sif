@@ -43,21 +43,23 @@ return html;
 pre: this.invntSrvList filled
 post: none
 -----------------------------------------------*/
-function genInvntSrvListEls(){
+function genInvntSrvListEls(invntSrvList,invntSrvAddedArr){
 let html="";
 let total=0;
-  if(this.invntSrvList&&this.invntSrvAddedArr){
-    for(const uuid of this.invntSrvAddedArr){
+let rtrn={'html':'','total':0};
+  if(invntSrvList&&invntSrvAddedArr){
+    for(const uuid of invntSrvAddedArr){
     html+=`
     <div class="multiBoxListItem">
-      <div class="multiBoxListItemName">${this.invntSrvList[uuid].name}</div>
+      <div class="multiBoxListItemName">${invntSrvList[uuid].name}</div>
       <div class="multiBoxListItemDel" onclick='apptQckObj.delFromInvntSrvAddedArr("${uuid}");apptQckObj.genInvntSrvListEls();'>x</div>
     </div>
     `;
-    total+=this.invntSrvList[uuid]&&Number.isFinite(this.invntSrvList[uuid].srv_durtn)?this.invntSrvList[uuid].srv_durtn:0;
+    total+=invntSrvList[uuid]&&Number.isFinite(invntSrvList[uuid].srv_durtn)?invntSrvList[uuid].srv_durtn:0;
     }
-  document.getElementById("apptNewApptFormApptInfoSrvLst").innerHTML=html;
-  document.getElementById("apptNewApptFormApptInfoDur").value=total;
+  rtrn['html']=html;
+  rtrn['total']=total;
   }
+return rtrn;
 }
 

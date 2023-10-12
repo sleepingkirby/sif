@@ -94,18 +94,18 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <input id="apptNewApptFormFullApptInfoAddSrv" type="submit" value="Add Service"/>
         </div>
         <div class="row apptFormMultiBox">
-          <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
+          <div id="apptNewApptFormFullApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
           Services to be added
           </div>
-          <div id="apptNewApptFormApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Services Added">
+          <div id="apptNewApptFormFullApptInfoSrvLst" class="row apptFormMultiBoxBox" title="Services Added">
           </div>
         </div>
-        <div id="apptNewApptFormApptInfoSrvTtlDur">
-          <label for="apptNewApptFormApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
-          <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
+        <div id="apptNewApptFormFullApptInfoSrvTtlDur">
+          <label for="apptNewApptFormFullApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
+          <input id="apptNewApptFormFullApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
         </div>
         <div class="row" style="margin-bottom:24px;">
-          <input id="apptNewApptFormApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
+          <input id="apptNewApptFormFullApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
     </div>
@@ -122,7 +122,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.newUserBtnId="apptNewApptFormUserNewUser";
     this.userInfoFrmId="apptNewApptFormUserInfo";
     this.userInfoFrmSlct='#apptNewApptFormUserInfo textarea[name^="contact["]';
-    this.addApptBtnId="apptNewApptFormApptInfoAddBtn";
+    this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
+    this.addApptSrvBtnId="apptNewApptFormFullApptInfoAddSrv";
     this.fullApptAddUser="apptNewApptFormFullUserAddUser"
     }
 
@@ -142,33 +143,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       const el=document.getElementById(id);
         if(el){
         el.value=val||"";
-        }
-      }
-    }
-
-
-    /*----------------------------------
-    pre:
-    post:
-    fills out "apptNewApptFormUserInfo"
-    ----------------------------------*/
-    syncUserInfo(val){
-    const cust=this.custHsh[val];
-    const els=document.querySelectorAll(this.userInfoFrmSlct);
-      if(cust){
-        for(let ta of els){
-        let subName=getSubs(ta.name);
-          if(subName&&cust[subName]){
-          ta.value=cust[subName];
-          }
-          else{
-          ta.value="";
-          }
-        }
-      }
-      else{
-        for(let ta of els){
-        ta.value="";
         }
       }
     }
@@ -199,6 +173,26 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     }
 
+    /*----------------------------------
+    pre: this.addApptBtnId
+    post: sets event hooks
+    add service button hook
+    ----------------------------------*/
+    hookAddSrvBtn(){
+    let addSrvBtn=document.getElementById(this.addApptSrvBtnId);
+      if(addSrvBtn){
+        addSrvBtn.onclick=(e)=>{
+        let el=document.getElementById("apptNewApptFormFullApptInfoSrv");
+        
+          if(el&&el.value){
+          this.invntSrvAddedArr.push(el.value);
+          }
+        this.genInvntSrvListEls();
+        this.enblAddApptBtn();
+        }
+      }
+    }
+
 
     /*----------------------------------
     pre: this.customers, this.custHsh, arrOfHshToHshHsh()
@@ -211,8 +205,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     let i=this.usrAddedArr.findIndex(e=>e==uuid);
       this.usrAddedArr.splice(i,1);
-      console.log(this.usrAddedArr);
       this.genUsrLstEls();
+      this.enblAddApptBtn();
     }
 
 
@@ -225,7 +219,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let html="";
     let hsh={};
     let el=document.getElementById("apptNewApptFormFullApptInfoUsrLst");
-    console.log(this.usrAddedArr);
       if(el&&this.usrAddedArr){
         for(const uuid of this.usrAddedArr){
         let cust=this.custHsh[uuid];
@@ -274,7 +267,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         let slct=document.getElementById(this.slctIdArrFullForm[0]);
           if(slct&&slct.value){
           this.usrAddedArr.push(slct.value);
-          this.genUsrLstEls();  
+          this.genUsrLstEls();
+           
           }
         };
       }
@@ -292,6 +286,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     }
 
+
     /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
@@ -302,6 +297,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
+      this.hookAddSrvBtn();
       this.hookElSlctFullForm();
       this.hookElAddUserToUserLst();
     }
@@ -358,27 +354,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     return this.drawMainEl();
     }
 
-    
-
-    /*-----------------------------------------------
-    pre: getInvntSrv() and everything it requires
-    post: none
-    -----------------------------------------------*/
-    genInvntSrv(username, selectedUUID){
-    let invntSrv=getInvntSrv(username);
-    this.invntSrvList={...invntSrv};
-    let keys=Object.keys(invntSrv);
-    let html='';
-      if(keys.length<=0){
-      return html;
-      }
-
-      for(const uuid of keys){
-        html+=`<option value="${uuid}"${selectedUUID==uuid?" selected":""}>${invntSrv[uuid].name}</option>`;
-      }
-    return html;
-    }
-   
     /*-----------------------------------------------
     pre: this.invntSrvList filled
     post: none
@@ -391,8 +366,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
       this.genInvntSrvListEls();
+      this.enblAddApptBtn();
       }
-    
     }
  
     /*-----------------------------------------------
@@ -400,21 +375,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: none
     -----------------------------------------------*/
     genInvntSrvListEls(){
-    let html="";
-    let total=0;
-      if(this.invntSrvList&&this.invntSrvAddedArr){
-        for(const uuid of this.invntSrvAddedArr){
-        html+=`
-        <div class="multiBoxListItem" onclick='apptObj.delFromInvntSrvAddedArr("${uuid}");'>
-          <div class="multiBoxListItemName">${this.invntSrvList[uuid].name}</div>
-          <div class="multiBoxListItemDel">x</div>
-        </div>
-        `;
-        total+=this.invntSrvList[uuid]&&Number.isFinite(this.invntSrvList[uuid].srv_durtn)?this.invntSrvList[uuid].srv_durtn:0;
-        }
-      document.getElementById("apptNewApptFormApptInfoSrvLst").innerHTML=html;
-      document.getElementById("apptNewApptFormApptInfoDur").value=total;
-      }
+      let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr)};
+      document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
+      document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
     }
 
     /*-----------------------------------------------
@@ -429,44 +392,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         else{
         el.innerHTML="N/A";
         }
-      }
-    }
-
-    /*-----------------------------------------------
-    pre: createCustUser()
-    post: database updated
-    add hook to the new user button
-    -----------------------------------------------*/
-    hookNewUserBtn(){
-    let el=document.getElementById(this.newUserBtnId);
-      el.onclick=(e)=>{
-      let els=document.querySelectorAll(this.userInfoFrmSlct);
-      let hsh={};
-        els.forEach((nd, i)=>{
-        let nm=nd.name.replace(/(contact\[|\])/g, "");
-        hsh[nm]=nd.value;
-        });
-
-      //this.userInfoFrmSlct
-        if(hsh){
-          createCustUser(hsh,(val)=>{
-          //refresh users and customers list.
-          this.users=getUsers();
-          const {customer:customers, '':users}=spltUsr(this.users);
-          this.customers=[...customers];
-          this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
-          //refresh select menus
-          document.getElementById('apptNewApptFormUserLastName').innerHTML=genUsrSlct(customers,'surName','Last Name');
-          document.getElementById('apptNewApptFormUserFirstName').innerHTML=genUsrSlct(customers,'fName','First Name');
-          document.getElementById('apptNewApptFormUserEmail').innerHTML=genUsrSlct(customers,'cEmail', 'E-Mail');
-          document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'cellphone','Cell Phone');
-          //sync the select menu
-          this.syncSlctEls(this.slctIdArr,val||"");
-          let btn=document.getElementById(this.newUserBtnId)
-          btn.disabled=true;
-          });
-        }
-
       }
     }
 
@@ -487,6 +412,23 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
 
+    }
+
+
+    /*-----------------------------------------------
+    pre: this.usrAddedArr, this.invntSrvAddedArr, apptNewApptFormFullApptInfoOnDate, apptNewApptFormFullApptInfoByUser
+    post:
+    enables the "add appointment" button
+    -----------------------------------------------*/
+    enblAddApptBtn(){
+    let apptDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+    let apptByUsr=document.getElementById("apptNewApptFormFullApptInfoByUser");
+    let addApptBtn=document.getElementById(this.addApptBtnId);
+      if(this.usrAddedArr.length>0&&this.invntSrvAddedArr.length>0&&apptDt&&apptDt.value&&apptByUsr&&apptByUsr.value){
+      addApptBtn.disabled=false;
+      return null;
+      }
+    addApptBtn.disabled=true;
     }
 
     /*-----------------------------------------------
