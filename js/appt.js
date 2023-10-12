@@ -349,6 +349,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         else{
         el.innerHTML="N/A";
         }
+      this.enblAddApptBtn();
       }
     }
 
