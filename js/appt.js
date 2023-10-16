@@ -54,7 +54,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
               <div class="row" style="margin-bottom: 26px;"><textarea name="contact[country]" type="text" style="flex-grow: 100;" placeholder="country"></textarea></div>
               <div class="row"><textarea name="contact[phone]" type="text" placeholder="primary phone"></textarea></div>
               <div class="row" style="margin-bottom: 40px;"><textarea name="contact[cellphone]" type="text" placeholder="cell phone"></textarea></div>
-              <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Create User" /></div>
+              <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Create User" disabled/></div>
             </div>
           </div>
         </div>
@@ -298,9 +298,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       if(els&&els.length>0){
       let el=els[0];
-        el.onkeydown=(e)=>{
+        el.onkeyup=(e)=>{
           if(e&&e.target&&e.target.name){
           let nm=e.target.name.replace(this.cntctPatt,'');
+          let phn=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[phone]');
+          let email=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[email]');
+          let fname=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[fName]');
+          let crtUsrBtn=document.getElementById(this.creatUserBtnId);
+            if(crtUsrBtn&&phn&&phn.length>0&&phn[0].value&&email&&email.length>0&&email[0].value&&fname&&fname.length>0&&fname[0].value){
+            crtUsrBtn.disabled=false;
+            }
+            else{
+            crtUsrBtn.disabled=true;
+            }
           }
         }
       }
