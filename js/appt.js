@@ -16,7 +16,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 /* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,phone,cellphone,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,create_date,on_date,done_date,duration) */
     this.tmpl.mainEl[0]=`
       <div id="apptAdd">
-        <div id="apptAddBtn">⨁</div>
+        <div id="apptAddBtn" title="Add New Appointment">⨁</div>
       </div>
       <div id="apptMain">
         <table id="apptList">
@@ -54,7 +54,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
               <div class="row" style="margin-bottom: 26px;"><textarea name="contact[country]" type="text" style="flex-grow: 100;" placeholder="country"></textarea></div>
               <div class="row"><textarea name="contact[phone]" type="text" placeholder="primary phone"></textarea></div>
               <div class="row" style="margin-bottom: 40px;"><textarea name="contact[cellphone]" type="text" placeholder="cell phone"></textarea></div>
-              <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Create User" disabled/></div>
+              <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Create User" /></div>
             </div>
           </div>
         </div>
@@ -118,9 +118,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.customers=null;
     this.custHsh=null;
     this.appts=null;
+    this.userInfoFrmID='apptNewApptFormFullUserFormFields';
+    this.userInfoFrmTA='.apptNewApptFormFullUserFormFields textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
     this.addApptSrvBtnId="apptNewApptFormFullApptInfoAddSrv";
     this.fullApptAddUser="apptNewApptFormFullUserAddUser"
+    this.creatUserBtnId="contactsUserFormAddBtn";
+
+    this.cntctPatt=new RegExp(/(contact\[|\])/,"g");
     }
 
     testFunc(e){
@@ -245,6 +250,63 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: button exists, createCustUser()
+    post: db updated, cust user select udpated
+    set event to Create User Button
+    ----------------------------------*/
+    hookElCreateUser(){
+    let el=document.getElementById(this.creatUserBtnId);
+      if(el){
+        el.onclick=(e)=>{
+        let els=document.querySelectorAll(this.userInfoFrmTA);
+        let hsh={};
+          els.forEach((nd, i)=>{
+          let nm=nd.name.replace(/(contact\[|\])/g, "");
+          hsh[nm]=nd.value;
+          });
+
+          if(Object.keys(hsh).length>0){
+            createCustUser(hsh,(val)=>{
+            //refresh users and customers list.
+            this.users=getUsers();
+            const {customer:customers, '':users}=spltUsr(this.users);
+            this.customers=[...customers];
+            this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
+            //refresh select menus
+            document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
+            document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
+            document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
+            document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'cellphone','Cell Phone');
+            //sync the select menu
+            this.syncSlctEls(this.slctIdArrFullForm,val||"");
+            el.disabled=true;
+            });
+          }
+        }
+      }
+      else{
+      console.log(`Cannot find element with ID ${this.creatUserBtnId}.`);
+      } 
+    }
+
+    /*----------------------------------
+    pre: form exists.
+    post: set event
+    ----------------------------------*/
+    hookUserInfoFrm(){
+    let els=document.getElementsByClassName(this.userInfoFrmID);
+
+      if(els&&els.length>0){
+      let el=els[0];
+        el.onkeydown=(e)=>{
+          if(e&&e.target&&e.target.name){
+          let nm=e.target.name.replace(this.cntctPatt,'');
+          }
+        }
+      }
+    }
+
+    /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
     adds event hooks to elements that need it
@@ -257,6 +319,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.hookAddSrvBtn();
       this.hookElSlctFullForm();
       this.hookElAddUserToUserLst();
+      this.hookElCreateUser();
+      this.hookUserInfoFrm();
     }
 
     /*-----------------------------------------------
