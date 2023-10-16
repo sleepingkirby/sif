@@ -337,6 +337,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           }
         }
       this.invntSrvAddedArr=[];
+      this.usrAddedArr=[];
+      this.genInvntSrvListEls();
+      this.genUsrLstEls();
+      this.enblAddApptBtn();
+
       document.getElementById('mainEl').innerHTML=this.genAppts();
       this.hookNewApptBtn();
       }

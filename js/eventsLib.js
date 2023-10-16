@@ -16,8 +16,8 @@ CREATE TABLE events(uuid text not null primary key, forUser_id text not null, by
 */
 function createEvent(forUser, byUser, onDt, dur=30, type=null, invntSrvs=[], users=[]){
 let evnt_uuid=createUUID();
-let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, (select uuid from status where name="active"), datetime("now"), datetime($on_date), $dur)';
-let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $on_date:onDt, $dur:dur};
+let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, (select uuid from status where name="active"), datetime($now_date), datetime($on_date), $dur)';
+let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $dur:dur};
   sqlObj.runQuery(query,obj);
   /*
   try{
