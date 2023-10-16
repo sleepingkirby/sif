@@ -43,7 +43,7 @@ return html;
 pre: this.invntSrvList filled
 post: none
 -----------------------------------------------*/
-function genInvntSrvListEls(invntSrvList,invntSrvAddedArr){
+function genInvntSrvListEls(invntSrvList,invntSrvAddedArr,objNm='apptQckObj'){
 let html="";
 let total=0;
 let rtrn={'html':'','total':0};
@@ -52,7 +52,7 @@ let rtrn={'html':'','total':0};
     html+=`
     <div class="multiBoxListItem">
       <div class="multiBoxListItemName">${invntSrvList[uuid].name}</div>
-      <div class="multiBoxListItemDel" onclick='apptQckObj.delFromInvntSrvAddedArr("${uuid}");apptQckObj.genInvntSrvListEls();'>x</div>
+      <div class="multiBoxListItemDel" onclick='${objNm}.delFromInvntSrvAddedArr("${uuid}");${objNm}.genInvntSrvListEls();'>x</div>
     </div>
     `;
     total+=invntSrvList[uuid]&&Number.isFinite(invntSrvList[uuid].srv_durtn)?invntSrvList[uuid].srv_durtn:0;

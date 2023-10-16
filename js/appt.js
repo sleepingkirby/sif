@@ -66,7 +66,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
               </select>
               <select id="apptNewApptFormFullUserEmail" name="contactSelect[email]">
               </select>
-              <select id="apptNewApptFormFullUserPhone" name="contactSelect[cellphone]">
+              <select id="apptNewApptFormFullUserPhone" name="contactSelect[phone]">
               </select>
             </div>
             <div>
@@ -276,7 +276,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
             document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
             document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
-            document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'cellphone','Cell Phone');
+            document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
             //sync the select menu
             this.syncSlctEls(this.slctIdArrFullForm,val||"");
             el.disabled=true;
@@ -317,20 +317,56 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: form exists.
+    post: set event
+    ----------------------------------*/
+    hookAddApptBtn(){
+    //this.addApptBtnId=
+    let btn=document.getElementById(this.addApptBtnId);
+      btn.onclick=(e)=>{
+      //get data
+      let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+      let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
+      let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
+        if(byUser&&byUser.value&&this.usrAddedArr.length>0){
+        createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr,this.usrAddedArr);
+        mainObj.setFloatMsg("Quick Appointment Created");
+        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+          if(el){
+          mainObj.modPrcClsCall(el);
+          }
+        }
+      this.invntSrvAddedArr=[];
+      document.getElementById('mainEl').innerHTML=this.genAppts();
+      this.hookNewApptBtn();
+      }
+    }
+
+    /*----------------------------------
+    pre: apptAddBtn element exists, mainObj.modPrcClsCall()
+    post: event hook added
+    addes event hook to apptAddBtn element
+    ----------------------------------*/
+    hookNewApptBtn(){
+      document.getElementById("apptAddBtn").onclick=(e)=>{
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      };
+    }
+
+    /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
     adds event hooks to elements that need it
     ----------------------------------*/
     hookEl(){
-      document.getElementById("apptAddBtn").onclick=(e)=>{
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
-      };
-      this.hookAddSrvBtn();
-      this.hookElSlctFullForm();
-      this.hookElAddUserToUserLst();
-      this.hookElCreateUser();
-      this.hookUserInfoFrm();
+    this.hookNewApptBtn();
+    this.hookAddSrvBtn();
+    this.hookElSlctFullForm();
+    this.hookElAddUserToUserLst();
+    this.hookElCreateUser();
+    this.hookUserInfoFrm();
+    this.hookAddApptBtn();
     }
 
     /*-----------------------------------------------
@@ -396,7 +432,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let i=this.invntSrvAddedArr.findIndex(el=>el===val);
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
-      this.genInvntSrvListEls();
       this.enblAddApptBtn();
       }
     }
@@ -406,7 +441,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: none
     -----------------------------------------------*/
     genInvntSrvListEls(){
-      let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr)};
+      let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'apptObj')};
       document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
       document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
     }
@@ -438,12 +473,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
     document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
     document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
-    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'cellphone','Cell Phone');
+    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
     document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
     document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
-
     }
 
 

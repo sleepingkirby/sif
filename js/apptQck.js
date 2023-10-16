@@ -24,7 +24,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
           <select id="apptNewApptFormUserEmail" name="contactSelect[email]">
           </select>
-          <select id="apptNewApptFormUserPhone" name="contactSelect[cellphone]">
+          <select id="apptNewApptFormUserPhone" name="contactSelect[phone]">
           </select>
         </div>
         <div id="apptNewApptFormUserNew">
@@ -38,7 +38,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea>
         </div>
         <div class="row" style="margin-bottom: 6px;">
-          <textarea name="contact[cellphone]" type="text" placeholder="cellphone"></textarea>
+          <textarea name="contact[phone]" type="text" placeholder="phone"></textarea>
           <textarea name="contact[email]" type="text" style="margin-left:40px;flex-grow:100;" placeholder="email address"></textarea>
         </div>
       </div
@@ -278,7 +278,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           document.getElementById('apptNewApptFormUserLastName').innerHTML=genUsrSlct(customers,'surName','Last Name');
           document.getElementById('apptNewApptFormUserFirstName').innerHTML=genUsrSlct(customers,'fName','First Name');
           document.getElementById('apptNewApptFormUserEmail').innerHTML=genUsrSlct(customers,'cEmail', 'E-Mail');
-          document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'cellphone','Cell Phone');
+          document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'phone','Phone');
           //sync the select menu
           this.syncSlctEls(this.slctIdArr,val||"");
           let btn=document.getElementById(this.newUserBtnId)
@@ -305,7 +305,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormUserLastName').innerHTML=genUsrSlct(customers,'surName','Last Name');
     document.getElementById('apptNewApptFormUserFirstName').innerHTML=genUsrSlct(customers,'fName','First Name');
     document.getElementById('apptNewApptFormUserEmail').innerHTML=genUsrSlct(customers,'cEmail', 'E-Mail');
-    document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'cellphone','Cell Phone');
+    document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'phone','Phone');
     this.hookElSlct();
     document.getElementById('apptNewApptFormApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
     document.getElementById('apptNewApptFormApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
