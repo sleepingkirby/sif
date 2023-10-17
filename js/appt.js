@@ -329,7 +329,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
       let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
-        createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr,this.usrAddedArr);
+        createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,'active',this.invntSrvAddedArr,this.usrAddedArr);
         mainObj.setFloatMsg("Quick Appointment Created");
         let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
           if(el){

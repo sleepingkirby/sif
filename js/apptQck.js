@@ -177,7 +177,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let byUser=document.getElementById("apptNewApptFormApptInfoByUser");
       let dur=document.getElementById("apptNewApptFormApptInfoDur");
         if(cust&&byUser&&cust.value&&byUser.value){
-        createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,this.invntSrvAddedArr);
+        createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,'active',this.invntSrvAddedArr);
         mainObj.setFloatMsg("Quick Appointment Created");
         let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
           if(el){
