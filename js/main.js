@@ -19,10 +19,12 @@ class sif{
 
   this.tmpl={};
   this.tmpl['rightNav']=[];
-  this.tmpl['rightNav'][0]=`<div class="rightNavActns"><div class="menuIcon" title="Settings">`;
-  this.tmpl['rightNav'][1]=`</div>`;
-  this.tmpl['rightNav'][2]=`<div id="logout" class="menuIcon" title="Logout and save database.">`;
-  this.tmpl['rightNav'][3]=`</div></div></div>`;
+  this.tmpl['rightNav'].push(`<div class="rightNavActns"><div class="menuIcon" title="Settings">`);
+  this.tmpl['rightNav'].push(`</div>`);
+  this.tmpl['rightNav'].push(`<div id="saveDB" class="menuIcon" title="Save">`);
+  this.tmpl['rightNav'].push(`</div>`);
+  this.tmpl['rightNav'].push(`<div id="logout" class="menuIcon" title="Logout and save database.">`);
+  this.tmpl['rightNav'].push(`</div></div>`);
 
     window.onbeforeunload=(e)=>{
       if(state.dbModded){
@@ -99,7 +101,8 @@ class sif{
   genRightNav(){
   var rtrn='';
   rtrn+=this.tmpl['rightNav'][0]+getEvalIcon(iconSets, state.user.config.iconSet, 'settings')+this.tmpl['rightNav'][1];
-  rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.config.iconSet, 'logout')+this.tmpl['rightNav'][3];
+  rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.config.iconSet, 'save')+this.tmpl['rightNav'][3];
+  rtrn+=this.tmpl['rightNav'][4]+getEvalIcon(iconSets, state.user.config.iconSet, 'logout')+this.tmpl['rightNav'][5];
   return rtrn;
   }
 
@@ -168,6 +171,7 @@ class sif{
             }
           document.getElementById('rightNav').innerHTML=this.genRightNav();
           this.afterHookEl();
+          this.saveHookEl();
           this.drawBottomEls();
 
           //setting left menu
@@ -266,6 +270,21 @@ class sif{
         }
       state.dbModded=false;
       this.setState('dbFile',"");
+      }
+    }
+  }
+
+  /*---------------------------------------
+  pre: setState(), global state
+  post: element elId onchange is set
+  sets up onchange to elId
+  ---------------------------------------*/
+  saveHookEl(){
+  var el=document.getElementById("saveDB");
+    if(el){
+      el.onclick=(e)=>{
+      const fn='sif-'+dtFlNm()+'.db';
+      this.sqlObj.writeDb(fn);
       }
     }
   }
