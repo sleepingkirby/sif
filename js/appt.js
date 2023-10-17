@@ -104,6 +104,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <label for="apptNewApptFormFullApptInfoDur" title="Total Duration of All Services (in minutes)" style="margin-right:8px; border-width:0px;">Duration:</label>
           <input id="apptNewApptFormFullApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
         </div>
+        <div id="apptNewApptFormFullApptStatusRow" class="row">
+          <select id="apptNewApptFormFullApptStatus" name="event[status]">
+            <option>status</option>
+          </select>
+        </div>
         <div class="row" style="margin-bottom:24px;">
           <input id="apptNewApptFormFullApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
         </div>
@@ -483,6 +488,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
+    document.getElementById('apptNewApptFormFullApptStatus').innerHTML='';
     }
 
 

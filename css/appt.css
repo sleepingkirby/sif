@@ -214,6 +214,13 @@ margin-bottom:24px;
 display:flex;
 justify-content: flex-end;
 align-items: flex-start;
+margin-bottom:8px;
+}
+
+#apptNewApptFormFullApptStatusRow{
+display:flex;
+justify-content: flex-end;
+align-items: flex-start;
 margin-bottom:24px;
 }
 
