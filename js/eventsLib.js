@@ -136,12 +136,25 @@ let obj={};
     query+=' and status=$status';
     obj['$status']=status;
     }
-    if(ord){
-    query+=' order by $ord';
-    obj['$ord']=ord;
-    query+=asc?' asc':' desc';
-    }
-  return sqlObj.runQuery(query,obj);
+
+      switch(ord){
+      case 'on_date':
+      query+=' order by on_date';
+      query+=asc?' asc':' desc';
+      break;
+      case 'create_date':
+      query+=' order by create_date';
+      query+=asc?' asc':' desc';
+      break;
+      default:
+      break;
+      }
+  console.log(ord);
+  console.log(query);
+  console.log(obj);
+  let tmp=sqlObj.runQuery(query,obj);
+  console.log(tmp);
+  return tmp;
   }
 return null;
 }

@@ -421,8 +421,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: html updated with appt
     set mainEl with appointments
     -----------------------------------------------*/
-    genAppts(){
-    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date','desc','active');
+    genAppts(qStatus='active'){
+    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date',false,qStatus);
     return this.drawMainEl();
     }
 
