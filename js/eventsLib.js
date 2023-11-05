@@ -155,6 +155,38 @@ let obj={};
 return null;
 }
 
+/*-----------------------------------------------
+pre: sqlObj, events_users
+post: none 
+get users for event 
+CREATE TABLE events_users(uuid text not null primary key, events_id text not null, users_id text not null, foreign key(events_id) references events(uuid), foreign key(users_id) references users(uuid));
+-----------------------------------------------*/
+function selectEventUsers(uuid){
+  if(!uuid){
+  return [];
+  }
+let query='select uuid, events_id, users_id from events_users where events_id=$val';
+let obj={$val:uuid};
+let tmp=sqlObj.runQuery(query,obj);
+return tmp;
+}
+
+/*-----------------------------------------------
+pre: sqlObj, events_invntSrv
+post: none 
+get invntSrv for event 
+CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
+-----------------------------------------------*/
+function selectEventInvntSrv(uuid){
+  if(!uuid){
+  return [];
+  } 
+let query='select uuid, create_date, events_id, invntSrv_id from events_invntSrv where events_id=$val';
+let obj={$val:uuid};
+let tmp=sqlObj.runQuery(query,obj);
+return tmp;
+}
+
 
 function delEvent(uuid){
 console.log("<<+++++++++++++=============== delEvent() "+uuid);

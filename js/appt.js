@@ -426,7 +426,39 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.statuses=selectStatus();
     document.getElementById('apptNewApptFormFullApptStatus').innerHTML=genSttsSlct(this.statuses);
     */
+    /*
+byUserStatus_status_name:"active"
+byUser_email:"m@email.com"
+byUser_status_id:"79255733-6d34-4999-8ee0-b5e824269cc9"
+byUser_username:"me"
+byUser_uuid:"d5783f5b-6f53-450b-9079-480fd6182b62"
+create_date:"2023-11-05 19:19:00"
+cust_cellphone:"ddd"
+cust_email:"email@email.com"
+cust_phone:"primphone"
+cust_status_id:"79255733-6d34-4999-8ee0-b5e824269cc9"
+cust_status_name:"active"
+cust_username:null
+cust_uuid:"29807d18-54a7-4211-badf-0c6f6450c723"
+done_date:null
+duration:60
+event_id:"7570b26c-1f2f-47e9-b036-fedb4e24c494"
+indx:"0"
+on_date:"2023-11-21 19:14:00"
+status:"active"
+
+    this.usrAddedArr=[]; table --> events_users
+    this.invntSrvAddedArr=[]; table --> events_invntSrv
+    */
     //this.syncSlctEls(this.slctIdArrFullForm,);
+
+    let users=selectEventUsers(appt.event_id);
+    let invntSrv=selectEventInvntSrv(appt.event_id);
+
+    this.usrAddedArr=users.map(e=>e.users_id);
+    this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
+    console.log(this.usrAddedArr);
+    console.log(this.invntSrvAddedArr);
     }
 
     /*-----------------------------------------------
