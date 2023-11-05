@@ -149,11 +149,7 @@ let obj={};
       default:
       break;
       }
-  console.log(ord);
-  console.log(query);
-  console.log(obj);
   let tmp=sqlObj.runQuery(query,obj);
-  console.log(tmp);
   return tmp;
   }
 return null;
@@ -162,4 +158,10 @@ return null;
 
 function delEvent(uuid){
 console.log("<<+++++++++++++=============== delEvent() "+uuid);
+}
+
+
+function updateEvent(uuid, forUser, byUser, onDt, dur=30, type=null, stts='active', invntSrvs=[], users=[] ){
+
+
 }

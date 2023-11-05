@@ -110,7 +110,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
         </div>
         <div class="row" style="margin-bottom:24px;">
-          <input id="apptNewApptFormFullApptInfoAddBtn" type="submit" value="Add Appointment" disabled/>
+          <input id="apptNewApptFormFullApptInfoUpdtBtn" style="display:none;" type="submit" value="Update Appointment" disabled/>
+          <input id="apptNewApptFormFullApptInfoAddBtn" style="" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
     </div>
@@ -123,9 +124,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.customers=null;
     this.custHsh=null;
     this.appts=null;
+    this.apptsHsh=null;
+    this.statuses=null;
     this.userInfoFrmID='apptNewApptFormFullUserFormFields';
     this.userInfoFrmTA='.apptNewApptFormFullUserFormFields textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
+    this.updtApptBtnId="apptNewApptFormFullApptInfoUpdtBtn";
     this.addApptSrvBtnId="apptNewApptFormFullApptInfoAddSrv";
     this.fullApptAddUser="apptNewApptFormFullUserAddUser"
     this.creatUserBtnId="contactsUserFormAddBtn";
@@ -173,6 +177,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     }
 
+    /*----------------------------------
+    pre: this.addApptBtnId, this.updtApptBtnId
+    post: flip display updtApptBtn and addApptBtn
+    change display of element
+    ----------------------------------*/
+    addUptBtnFlip(updt=false){
+    let updtEl=document.getElementById(this.updtApptBtnId);
+    let addEl=document.getElementById(this.addApptBtnId);
+      if(updtEl&&addEl){
+        updtEl.style.display=updt?"flex":"none";
+        addEl.style.display=updt?"none":"flex";
+      }
+    }
 
     /*----------------------------------
     pre: this.customers, this.custHsh, arrOfHshToHshHsh()
@@ -359,6 +376,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     ----------------------------------*/
     hookNewApptBtn(){
       document.getElementById("apptAddBtn").onclick=(e)=>{
+      this.addUptBtnFlip();
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
@@ -390,6 +408,47 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*-----------------------------------------------
+    pre: this class
+    post: right modal filled
+    generates right modal content
+    -----------------------------------------------*/
+    fillRghtMod(appt){
+    console.log(appt);
+    /*
+    document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
+    document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
+    document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
+    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
+    document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
+    document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    this.hookUsrTyp();
+    document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
+    this.statuses=selectStatus();
+    document.getElementById('apptNewApptFormFullApptStatus').innerHTML=genSttsSlct(this.statuses);
+    */
+    //this.syncSlctEls(this.slctIdArrFullForm,);
+    }
+
+    /*-----------------------------------------------
+    pre: none
+    post: updates form
+     
+    -----------------------------------------------*/
+    updtApptRghtMod(uuid=null){
+      if(!uuid){
+      return null;
+      }
+      if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
+      this.apptsHsh[uuid];
+      //this.genRghtMod(this.apptsHsh[uuid]);
+      this.fillRghtMod(this.apptsHsh[uuid]);
+      this.addUptBtnFlip(true);
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      }
+    }
+
+    /*-----------------------------------------------
     pre: this.appts
     post: none
     generates the HTML table for the mainEl()
@@ -410,7 +469,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <td>`+appt.duration+`</td>
         <td>
           <div class="apptCellActns">
-          <div name="apptEdit" class="menuIcon" onclick=console.log("test"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+          <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
           <div name="apptDel" class="menuIcon" onclick=delEvent("`+appt.event_id+`"); title="Delete Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
           </div>
         </td>
@@ -428,6 +487,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     -----------------------------------------------*/
     genAppts(qStatus='active'){
     this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date',false,qStatus);
+    this.apptsHsh=arrOfHshToHshHsh('event_id',this.appts);
     return this.drawMainEl();
     }
 
@@ -488,7 +548,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
-    document.getElementById('apptNewApptFormFullApptStatus').innerHTML='';
+    this.statuses=selectStatus();
+    document.getElementById('apptNewApptFormFullApptStatus').innerHTML=genSttsSlct(this.statuses);
     }
 
 
