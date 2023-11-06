@@ -110,7 +110,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
         </div>
         <div class="row" style="margin-bottom:24px;">
-          <input id="apptNewApptFormFullApptInfoUpdtBtn" style="display:none;" type="submit" value="Update Appointment" disabled/>
+          <input id="apptNewApptFormFullApptInfoUpdtBtn" style="display:none;" type="submit" value="Update Appointment"/>
           <input id="apptNewApptFormFullApptInfoAddBtn" style="" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
@@ -373,6 +373,32 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: 
+    post:
+    ----------------------------------*/
+    cleanRghtModForm(){
+    let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+      if(onDt){
+      onDt.value=toInptValFrmt();
+      }
+    let byUser=document.getElementById('apptNewApptFormFullApptInfoByUser');
+    let byUserType=document.getElementById('apptNewApptFormFullApptInfoByUserType');
+      if(byUser){
+      byUser.value=state.user.uuid;
+        if(byUserType){
+        byUserType.innerHTML=state.user.type;
+        }
+        else{
+        byUserType.innerHTML="N/A";
+        }
+      }
+    this.usrAddedArr=[];
+    this.invntSrvAddedArr=[];
+    this.genUsrLstEls();
+    this.genInvntSrvListEls();
+    }
+
+    /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modPrcClsCall()
     post: event hook added
     addes event hook to apptAddBtn element
@@ -380,11 +406,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     hookNewApptBtn(){
       document.getElementById("apptAddBtn").onclick=(e)=>{
       this.addUptBtnFlip();
+
+      this.cleanRghtModForm();
+
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      this.usrAddedArr=[];
-      this.invntSrvAddedArr=[];
-      this.genUsrLstEls();
-      this.genInvntSrvListEls();
       mainObj.modPrcClsCall(el);
       };
     }
