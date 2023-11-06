@@ -16,7 +16,7 @@ CREATE TABLE events(uuid text not null primary key, forUser_id text not null, by
 */
 function createEvent(forUser, byUser, onDt, dur=30, type=null, stts='active', invntSrvs=[], users=[]){
 let evnt_uuid=createUUID();
-let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, (select uuid from status where name=$stts), datetime($now_date), datetime($on_date), $dur)';
+let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, $stts, datetime($now_date), datetime($on_date), $dur)';
 let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $dur:dur, $stts:stts};
   sqlObj.runQuery(query,obj);
   /*
@@ -108,7 +108,7 @@ post: none
 get event_user
 -----------------------------------------------*/
 function selectViewEventUser(param, val, ord, asc=false, status=null){
-let query='select event_id, cust_uuid, cust_username, cust_status_id, cust_status_name, cust_email, cust_phone, cust_cellphone, byUser_uuid, byUser_username, byUser_status_id, byUserStatus_status_name, byUser_email, status, create_date, done_date, on_date, duration from view_events_user';
+let query='select event_id, cust_uuid, cust_username, cust_status_id, cust_status_name, cust_email, cust_phone, cust_cellphone, byUser_uuid, byUser_username, byUser_status_id, byUserStatus_status_name, byUser_email, status_id, status, create_date, done_date, on_date, duration from view_events_user';
 let and=' and ';
 let obj={};
   if(param){

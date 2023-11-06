@@ -121,6 +121,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.invntSrvList=null;
     this.slctIdArrFullForm=["apptNewApptFormFullUserLastName","apptNewApptFormFullUserFirstName","apptNewApptFormFullUserEmail","apptNewApptFormFullUserPhone"];
     this.users=null;
+    this.usrHsh=null;
     this.customers=null;
     this.custHsh=null;
     this.appts=null;
@@ -292,6 +293,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             //refresh users and customers list.
             this.users=getUsers();
             const {customer:customers, '':users}=spltUsr(this.users);
+            this.usrHsh=arrOfHshToHshHsh('uuid',users);
             this.customers=[...customers];
             this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
             //refresh select menus
@@ -350,8 +352,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
       let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
       let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
+      let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
-        createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,'active',this.invntSrvAddedArr,this.usrAddedArr);
+        createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
         mainObj.setFloatMsg("Quick Appointment Created");
         let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
           if(el){
@@ -378,6 +381,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       document.getElementById("apptAddBtn").onclick=(e)=>{
       this.addUptBtnFlip();
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      this.usrAddedArr=[];
+      this.invntSrvAddedArr=[];
+      this.genUsrLstEls();
+      this.genInvntSrvListEls();
       mainObj.modPrcClsCall(el);
       };
     }
@@ -415,18 +422,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     fillRghtMod(appt){
     console.log(appt);
     /*
-    document.getElementById('apptNewApptFormFullUserLastName').innerHTML=genUsrSlct(this.customers,'surName','Last Name');
-    document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
-    document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
-    document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
-    document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
-    document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
-    this.hookUsrTyp();
-    document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
-    this.statuses=selectStatus();
-    document.getElementById('apptNewApptFormFullApptStatus').innerHTML=genSttsSlct(this.statuses);
-    */
-    /*
 byUserStatus_status_name:"active"
 byUser_email:"m@email.com"
 byUser_status_id:"79255733-6d34-4999-8ee0-b5e824269cc9"
@@ -446,9 +441,6 @@ event_id:"7570b26c-1f2f-47e9-b036-fedb4e24c494"
 indx:"0"
 on_date:"2023-11-21 19:14:00"
 status:"active"
-
-    this.usrAddedArr=[]; table --> events_users
-    this.invntSrvAddedArr=[]; table --> events_invntSrv
     */
     //this.syncSlctEls(this.slctIdArrFullForm,);
 
@@ -457,8 +449,26 @@ status:"active"
 
     this.usrAddedArr=users.map(e=>e.users_id);
     this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
-    console.log(this.usrAddedArr);
-    console.log(this.invntSrvAddedArr);
+
+    this.genUsrLstEls();
+    this.genInvntSrvListEls();
+
+    let dt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+      if(dt){
+      dt.value=appt.on_date;
+      }
+    let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
+      if(byUser){
+      byUser.value=appt.byUser_uuid;
+      }
+    let byUserType=document.getElementById("apptNewApptFormFullApptInfoByUserType");
+      if(byUserType&&this.usrHsh.hasOwnProperty(appt.byUser_uuid)){
+      byUserType.innerHTML=this.usrHsh[appt.byUser_uuid].type;
+      }
+    let stts=document.getElementById("apptNewApptFormFullApptStatus");
+      if(stts){
+      stts.value=appt.status_id;
+      }
     }
 
     /*-----------------------------------------------
@@ -611,6 +621,7 @@ status:"active"
     this.users=getUsers();
     this.invntSrvList=getInvntSrv();
     const {customer:customers, '':users}=spltUsr(this.users);
+    this.usrHsh=arrOfHshToHshHsh('uuid',users);
     this.customers=[...customers];
     this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
     this.genRghtMod();
