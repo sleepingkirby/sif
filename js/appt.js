@@ -39,7 +39,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.tmpl.rghtModForm=[];
     this.tmpl.rghtModForm[0]=`
     <div id="apptNewApptFormFull">
-      <div class="lbl">Add new appointment</div>
+      <div class="lbl">Appointment</div>
+      <div id="apptNewApptFormFullApptUUID">
+        <input id="apptNewApptFormFullApptInfoUUID" type="hidden" />
+      </div>
       <div id="apptNewApptFormFullUser">
         <div id="apptNewApptFormFullUserToggle">
           <input id="apptNewApptFormFullUserCheck" class="lblTggl" name="apptNewApptFormFullUserCheck" type="checkbox" />
@@ -355,7 +358,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
         createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
-        mainObj.setFloatMsg("Quick Appointment Created");
+        mainObj.setFloatMsg("Appointment Created");
         let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
           if(el){
           mainObj.modPrcClsCall(el);
@@ -371,6 +374,39 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.hookNewApptBtn();
       }
     }
+
+    /*----------------------------------
+    pre: this.updtApptBtnId
+    post: sets event hooks
+    update service button hook
+    ----------------------------------*/
+    hookUpdtApptBtn(){
+    let btn=document.getElementById(this.updtApptBtnId);
+      btn.onclick=(e)=>{
+      let uuid=document.getElementById("apptNewApptFormFullApptInfoUUID");
+      let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+      let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
+      let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
+      let stts=document.getElementById("apptNewApptFormFullApptStatus");
+        if(uuid&&uuid.value&&byUser&&byUser.value&&this.usrAddedArr.length>0){
+
+        updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
+        mainObj.setFloatMsg("Appointment Updated");
+        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+          if(el){
+          mainObj.modPrcClsCall(el);
+          }
+        }
+      this.invntSrvAddedArr=[];
+      this.usrAddedArr=[];
+      this.genInvntSrvListEls();
+      this.genUsrLstEls();
+      this.enblAddApptBtn();
+
+      document.getElementById('mainEl').innerHTML=this.genAppts();
+      this.hookNewApptBtn();
+      }
+    } 
 
     /*----------------------------------
     pre: 
@@ -422,6 +458,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     hookEl(){
     this.hookNewApptBtn();
     this.hookAddSrvBtn();
+    this.hookUpdtApptBtn();
     this.hookElSlctFullForm();
     this.hookElAddUserToUserLst();
     this.hookElCreateUser();
@@ -445,39 +482,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     generates right modal content
     -----------------------------------------------*/
     fillRghtMod(appt){
-    console.log(appt);
-    /*
-byUserStatus_status_name:"active"
-byUser_email:"m@email.com"
-byUser_status_id:"79255733-6d34-4999-8ee0-b5e824269cc9"
-byUser_username:"me"
-byUser_uuid:"d5783f5b-6f53-450b-9079-480fd6182b62"
-create_date:"2023-11-05 19:19:00"
-cust_cellphone:"ddd"
-cust_email:"email@email.com"
-cust_phone:"primphone"
-cust_status_id:"79255733-6d34-4999-8ee0-b5e824269cc9"
-cust_status_name:"active"
-cust_username:null
-cust_uuid:"29807d18-54a7-4211-badf-0c6f6450c723"
-done_date:null
-duration:60
-event_id:"7570b26c-1f2f-47e9-b036-fedb4e24c494"
-indx:"0"
-on_date:"2023-11-21 19:14:00"
-status:"active"
-    */
-    //this.syncSlctEls(this.slctIdArrFullForm,);
-
     let users=selectEventUsers(appt.event_id);
     let invntSrv=selectEventInvntSrv(appt.event_id);
 
     this.usrAddedArr=users.map(e=>e.users_id);
+    this.usrAddedArr[0]=appt.cust_uuid;
     this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
 
     this.genUsrLstEls();
     this.genInvntSrvListEls();
-
+    let evntId=document.getElementById("apptNewApptFormFullApptInfoUUID");
+      if(evntId){
+      evntId.value=appt.event_id;
+      }
     let dt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
       if(dt){
       dt.value=appt.on_date;
@@ -507,7 +524,6 @@ status:"active"
       }
       if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
       this.apptsHsh[uuid];
-      //this.genRghtMod(this.apptsHsh[uuid]);
       this.fillRghtMod(this.apptsHsh[uuid]);
       this.addUptBtnFlip(true);
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];

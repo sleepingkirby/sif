@@ -14,10 +14,12 @@ create new event
 sqlite> .schema events
 CREATE TABLE events(uuid text not null primary key, forUser_id text not null, byUser_id text not null, create_date int not null, on_date int not null, done_date int null, duration int null, notes text, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid));
 */
-function createEvent(forUser, byUser, onDt, dur=30, type=null, stts='active', invntSrvs=[], users=[]){
+function createEvent(forUser, byUser, onDt, dur=30, type=null, stts=null, invntSrvs=[], users=[]){
 let evnt_uuid=createUUID();
-let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, $stts, datetime($now_date), datetime($on_date), $dur)';
-let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $dur:dur, $stts:stts};
+let nullStts=stts?'$stts':'(select uuid from status where name=$stts)';
+let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, '+nullStts+', datetime($now_date), datetime($on_date), $dur)';
+console.log(query);
+let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $dur:dur, $stts:stts||'active'};
   sqlObj.runQuery(query,obj);
   /*
   try{
@@ -37,7 +39,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
   if(type){
     let evntTyp_uuid=createUUID();
     query='insert into events_type(uuid, event_uuid, type_uuid) values($uuid, $event_uuid, (select uuid from type where categ="events" and name=$type))';
-    obj={$uuid:evntTyp_uuid, $event_uuid:evnt_uuid};
+    obj={$uuid:evntTyp_uuid, $event_uuid:evnt_uuid, $type:type};
     sqlObj.runQuery(query,obj);
 
     /*
@@ -56,10 +58,11 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
 CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, events_id text not null, invntSrv_id text not null, foreign key(events_id) references events(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
 */
   //set what services or products are involved in this event
+  let subQ='';
+  let subObj='';
+
   if(invntSrvs&&typeof invntSrvs=="object"&&invntSrvs.length>0){
     invntSrvs.forEach((invnt)=>{
-    let subQ='';
-    let subObj='';
     subQ='insert into events_invntSrv(uuid, create_date, events_id, invntSrv_id) values($uuid, datetime("now"), $evntId, $invntId)';
     subObj={$uuid:createUUID(), $evntId:evnt_uuid, $invntId:invnt};
     sqlObj.runQuery(subQ,subObj);
@@ -101,6 +104,63 @@ CREATE TABLE events_users(uuid text not null primary key, events_id text not nul
     });
   }
 }
+
+/*-----------------------------------------------
+pre: sqlObj
+post: update the new event
+update the event
+-----------------------------------------------*/
+function updateEvent(evnt_uuid=null, forUser, byUser, onDt, doneDt, dur=30, type=null, stts=null, invntSrvs=[], users=[]){
+  if(!evnt_uuid){
+  return null;
+  }
+let nullStts=stts?'$stts':'(select uuid from status where name=$stts)';
+let query='update events set uuid=$uuid, forUser_id=$forUser_id, byUser_id=$byUser_id, status_id='+nullStts+', on_date=datetime($on_date), done_date=datetime($done_date), duration=$dur where uuid=$uuid';
+console.log(query);
+
+let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $done_date:doneDt, $dur:dur, $stts:stts||'active'};
+  sqlObj.runQuery(query,obj);
+
+  //update type for event
+  if(type){
+    query='update events_type set type_uuid=(select uuid from type where categ="events" and name=$type) where event_uuid=$event_uuid';
+    obj={$event_uuid:evnt_uuid,$type:type};
+    sqlObj.runQuery(query,obj);
+  }
+  let delQ='';
+  let delQObj='';
+  let subQ='';
+  let subObj='';
+  //set what services or products are involved in this event
+  if(invntSrvs&&typeof invntSrvs=="object"&&invntSrvs.length>0){
+  //delete existing services
+  delQ='delete from events_invntSrv where events_id=$eventId';
+  delQObj={$eventId:evnt_uuid};
+  sqlObj.runQuery(delQ, delQObj);
+    
+    invntSrvs.forEach((invnt)=>{
+    subQ='';
+    subObj='';
+    subQ='insert into events_invntSrv(uuid, create_date, events_id, invntSrv_id) values($uuid, datetime("now"), $evntId, $invntId)';
+    subObj={$uuid:createUUID(), $evntId:evnt_uuid, $invntId:invnt};
+    sqlObj.runQuery(subQ,subObj);
+    });
+  }
+
+  //update users for event
+  if(users&&typeof users=="object"&&users.length>0){
+  delQ='delete from events_users where events_id=$eventId';
+  delQObj={$eventId:evnt_uuid};
+  sqlObj.runQuery(delQ, delQObj);
+
+    users.forEach((user)=>{
+    subQ='insert into events_users(uuid, events_id, users_id) values($uuid, $evntId, $user)';
+    subObj={$uuid:createUUID(), $evntId:evnt_uuid, $user:user};
+    sqlObj.runQuery(subQ,subObj);
+    });
+  }
+}
+
 
 /*-----------------------------------------------
 pre: sqlObj, view_events_user
@@ -192,8 +252,3 @@ function delEvent(uuid){
 console.log("<<+++++++++++++=============== delEvent() "+uuid);
 }
 
-
-function updateEvent(uuid, forUser, byUser, onDt, dur=30, type=null, stts='active', invntSrvs=[], users=[] ){
-
-
-}
