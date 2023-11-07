@@ -162,6 +162,22 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: select elements
+    post: change sync select elements
+    changes all select elements in array to select a value
+    ----------------------------------*/
+    updtEvntStts(uuid, stts){
+      if(!uuid||!stts){
+      return null;
+      }
+    updateEventStatus(uuid,stts);
+    mainObj.setFloatMsg(`Appointment Status Updated to "${stts}"`);
+    document.getElementById('mainEl').innerHTML=this.genAppts();
+    this.hookNewApptBtn();
+    }
+
+
+    /*----------------------------------
     pre: this.addApptBtnId
     post: sets event hooks
     add service button hook
@@ -552,8 +568,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <td>`+appt.duration+`</td>
         <td>
           <div class="apptCellActns">
-          <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-          <div name="apptDel" class="menuIcon" onclick=delEvent("`+appt.event_id+`"); title="Delete Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+            <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+            <div name="apptDone" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div name="apptCancel" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
+            <div name="apptDisable" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","disabled"); title="Disable Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>
         </td>
       </tr>

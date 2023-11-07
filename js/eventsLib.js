@@ -108,6 +108,24 @@ CREATE TABLE events_users(uuid text not null primary key, events_id text not nul
 /*-----------------------------------------------
 pre: sqlObj
 post: update the new event
+update the event status
+WARNING: This function DOES NOT CHECK THAT THE STATUS EXISTS IN STATUS TABLE
+-----------------------------------------------*/
+function updateEventStatus(evnt_uuid=null, stts=null){
+  if(!evnt_uuid||!stts){
+  return null;
+  }
+
+  let query='update events set status_id=(select uuid from status where name=$stts) where uuid=$uuid';
+  let obj={$uuid:evnt_uuid, $stts:stts};
+
+  sqlObj.runQuery(query,obj);
+}
+ 
+
+/*-----------------------------------------------
+pre: sqlObj
+post: update the new event
 update the event
 -----------------------------------------------*/
 function updateEvent(evnt_uuid=null, forUser, byUser, onDt, doneDt, dur=30, type=null, stts=null, invntSrvs=[], users=[]){
@@ -116,7 +134,6 @@ function updateEvent(evnt_uuid=null, forUser, byUser, onDt, doneDt, dur=30, type
   }
 let nullStts=stts?'$stts':'(select uuid from status where name=$stts)';
 let query='update events set uuid=$uuid, forUser_id=$forUser_id, byUser_id=$byUser_id, status_id='+nullStts+', on_date=datetime($on_date), done_date=datetime($done_date), duration=$dur where uuid=$uuid';
-console.log(query);
 
 let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $done_date:doneDt, $dur:dur, $stts:stts||'active'};
   sqlObj.runQuery(query,obj);
@@ -197,18 +214,18 @@ let obj={};
     obj['$status']=status;
     }
 
-      switch(ord){
-      case 'on_date':
-      query+=' order by on_date';
-      query+=asc?' asc':' desc';
-      break;
-      case 'create_date':
-      query+=' order by create_date';
-      query+=asc?' asc':' desc';
-      break;
-      default:
-      break;
-      }
+    switch(ord){
+    case 'on_date':
+    query+=' order by on_date';
+    query+=asc?' asc':' desc';
+    break;
+    case 'create_date':
+    query+=' order by create_date';
+    query+=asc?' asc':' desc';
+    break;
+    default:
+    break;
+    }
   let tmp=sqlObj.runQuery(query,obj);
   return tmp;
   }
