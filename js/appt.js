@@ -18,6 +18,20 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <div id="apptAdd">
         <div id="apptAddBtn" title="Add New Appointment">⨁</div>
       </div>
+      <div id="apptFltr" class="apptFltrRow">
+        <div class="apptFltrRowCell">
+          <div class="apptFltrRowCellLbl">
+          Filter Status:
+          </div>
+          <select id="apptFilterStatus" name="apptFilter[status]" class="apptFltrSlct">
+          <option>None</option>
+          <option>base asfasdf sdfa sdfas df</option>
+          </select>
+        </div>
+        <div>test</div>
+        <div>test</div>
+        <div>test</div>
+      </div>
       <div id="apptMain">
         <table id="apptList">
           <tr>
@@ -28,7 +42,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <th>create date</th>
           <th>done date</th>
           <th>duration</th>
-          <th>action</th>
+          <th>actions</th>
           </tr>
     `;
     this.tmpl.mainEl[1]=`

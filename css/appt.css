@@ -16,7 +16,7 @@ cursor: pointer;
 
 #apptMain{
 width: 100%;
-padding: 0px 10px 0px 10px;
+padding:var(--default-pad-size);
 box-sizing: border-box;
 }
 
@@ -234,7 +234,7 @@ margin-top:18px;
 .apptFormMultiBox > div.apptFormMultiBoxLbl{
 justify-content:flex-start;
 margin-bottom:6px;
-font-weight: 900;
+font-weight:900;
 }
 
 
@@ -244,6 +244,52 @@ border:1px solid white;
 padding:8px;
 justify-content:flex-start;
 flex-wrap:wrap;
+}
+
+.apptFltrRow{
+display:flex;
+width:100%;
+flex-direction:row;
+justify-content:flex-start;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:18px;
+padding:var(--default-pad-size);
+box-sizing:border-box;
+}
+
+.apptFltrRow > div{
+border-radius:6px;
+display:flex;
+flex-direction:row;
+border:2px solid var(--default-gray);
+}
+
+.apptFltrRow .apptFltrRowCellLbl{
+display:flex;
+justify-content:center;
+align-items:center;
+color:var(--default-gray);
+background-color:var(--default-light-gray);
+padding:4px 6px 4px 6px;
+border-radius:6px 0px 0px 6px;
+border-right: 2px solid var(--default-gray);
+font-size:large;
+}
+
+.apptFltrRow .apptFltrSlct{
+color:var(--default-gray);
+background-color:white;
+border-radius:0px 6px 6px 0px;
+font-size:large;
+}
+
+.apptFltrRow .apptFltrSlct > option{
+color:var(--default-gray);
+background-color:white;
+border-color:var(--default-gray);
+border-radius:0px 6px 6px 0px;
+border-width:2px;
 }
 
 .multiBoxListItem{

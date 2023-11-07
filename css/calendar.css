@@ -1,10 +1,9 @@
 #calendarEl{
-padding: 0px 10px 0px 10px;
+padding:var(--default-pad-size);
 color: #909090;
 border-collapse: separate;
 border-spacing: 0px;
 width: 100%;
-margin: 0px 10px 0px 10px;
 table-layout: fixed;
 }
 

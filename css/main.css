@@ -1,8 +1,11 @@
 :root{
 --default-blue: #71AEEC;
 --default-gray: #787878;
+--default-mid-gray: #c5c5c5;
+--default-light-gray: #f0f0f0;
 --faded-white: rgba(255,255,255,0.4);
 --font-family:"DejaVu Sans", Arial, sans-serif;
+--default-pad-size:0px 10px 0px 10px;
 }
 
 html, body{
@@ -14,7 +17,7 @@ min-width: 500px;
 
 table{
 padding: 0px;
-color: #787878;
+color: var(--default-gray);
 border-collapse: separate;
 border-spacing: 0px;
 width: 100%;
@@ -41,7 +44,7 @@ height:100%;
 }
 
 table tr:nth-child(odd){
-background-color: #f0f0f0;
+background-color: var(--default-light-gray);
 }
 
 table tr:first-child > th:first-child{
