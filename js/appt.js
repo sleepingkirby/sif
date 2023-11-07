@@ -18,19 +18,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <div id="apptAdd">
         <div id="apptAddBtn" title="Add New Appointment">⨁</div>
       </div>
-      <div id="apptFltr" class="apptFltrRow">
-        <div class="apptFltrRowCell">
-          <div class="apptFltrRowCellLbl">
-          Filter Status:
+      <div id="apptFltr" class="fltrRow">
+        <div class="fltrRowCell">
+          <input id="apptFltrInpt" name="apptFilter[input]" class="fltrInpt" type="text" placeholder="Customer Info Filter. Ex. Smith" title="Customer Info Filter"/>
+        </div>
+        <div class="fltrRowCell">
+          <div class="fltrRowCellLbl">
+          Status Filter:
           </div>
-          <select id="apptFilterStatus" name="apptFilter[status]" class="apptFltrSlct">
+          <select id="apptFilterStatus" name="apptFilter[status]" class="fltrSlct" title="Status Filter">
           <option>None</option>
           <option>base asfasdf sdfa sdfas df</option>
           </select>
         </div>
-        <div>test</div>
-        <div>test</div>
-        <div>test</div>
       </div>
       <div id="apptMain">
         <table id="apptList">

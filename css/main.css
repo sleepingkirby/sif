@@ -6,6 +6,7 @@
 --faded-white: rgba(255,255,255,0.4);
 --font-family:"DejaVu Sans", Arial, sans-serif;
 --default-pad-size:0px 10px 0px 10px;
+--default-snglLn-pad-size:4px 6px 4px 6px;
 }
 
 html, body{
@@ -442,6 +443,66 @@ display: flex;
 justify-content: flex-end;
 align-items: center;
 margin-bottom: 16px;
+}
+
+.fltrRow{
+display:flex;
+width:100%;
+flex-direction:row; 
+justify-content:flex-start;
+align-items:center;
+flex-wrap:wrap;
+margin-bottom:18px;
+padding:var(--default-pad-size);
+box-sizing:border-box;
+}
+
+.fltrRow > div{
+border-radius:6px;
+display:flex;
+flex-direction:row;
+border:1px solid var(--default-mid-gray);
+margin-right: 24px;
+overflow:hidden;
+}
+
+.fltrRow .fltrRowCellLbl{
+display:flex;
+justify-content:center; 
+align-items:center;
+color:var(--default-gray);
+background-color:var(--default-light-gray);
+padding:4px 6px 4px 6px;
+border-radius:6px 0px 0px 6px;
+border-right: 1px solid var(--default-mid-gray);
+font-size:large;
+}
+
+.fltrRow .fltrSlct{
+color:var(--default-gray);
+background-color:white;
+border-radius:0px 6px 6px 0px;
+font-size:large;
+}
+
+.fltrRow .fltrSlct > option{
+color:var(--default-gray);
+background-color:white;
+border-color:var(--default-gray);
+border-radius:0px 6px 6px 0px;
+border-width:2px;
+}
+
+.fltrRow .fltrInpt{
+font-size:large;
+padding:var(--default-snglLn-pad-size);
+color:var(--default-gray);
+border:none;
+border-radius:6px;
+}
+
+.fltrRow .fltrInpt::placeholder{
+color:var(--default-mid-gray);
 }
 
 @keyframes opac{
