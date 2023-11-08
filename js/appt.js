@@ -147,6 +147,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.sortCol=null;
     this.sortColDir=null;
     this.fltrStr=null;
+    /*
+        email
+        phone, cellphone
+        surName, firstName
+        username
+        nickName
+    */
+    this.fltrProps=['email','phone','cellphone','surName','firstName','username','nickName']; //filter properties
     this.userInfoFrmID='apptNewApptFormFullUserFormFields';
     this.userInfoFrmTA='.apptNewApptFormFullUserFormFields textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
@@ -200,20 +208,23 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     ----------------------------------*/
     fltrAppts(){
     let appts=[];
-
+    this.appts.forEach(e=>{console.log(e);});
       if(this.fltrStr){
       /*
-      go through each appointment, get uuid of customer
-      get customer obj from this.customers by uuid (appt.cust_uuid)
-      match against user info (this.custHsh[appt.cust_uuid])
+      go through each appointment,
+      filter against customer info
         email
         phone, cellphone
         surName, firstName
         username
+        nickName
       */
         for(let appt of this.appts){
-          if(appt.cust_uuid&&this.custHsh.hasOwnProperty(appt.cust_uuid)){
-          
+          for(let prop of this.fltrProps){
+            if(appt[prop]&&appt[prop].toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())){
+            appts.push={...appt};
+            break;
+            }
           }
         }
       }

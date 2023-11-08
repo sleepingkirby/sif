@@ -185,7 +185,37 @@ post: none
 get event_user
 -----------------------------------------------*/
 function selectViewEventUser(param, val, ord, asc=false, status=null){
-let query='select event_id, cust_uuid, cust_username, cust_status_id, cust_status_name, cust_email, cust_phone, cust_cellphone, byUser_uuid, byUser_username, byUser_status_id, byUserStatus_status_name, byUser_email, status_id, status, create_date, done_date, on_date, duration from view_events_user';
+let query=`select
+e.uuid as event_id,
+cust.uuid as cust_uuid,
+cust.username as cust_username,
+cust.status_id as cust_status_id,
+custStatus.name as cust_status_name,
+cust.email as cust_email,
+cntcts.phone as cust_phone,
+cntcts.cellphone as cust_cellphone,
+cntcts.fName as cust_fName,
+cntcts.surName as cust_surName,
+cntcts.nickName as cust_nickName,
+byUser.uuid as byUser_uuid,
+byUser.username as byUser_username,
+byUser.status_id as byUser_status_id,
+byUserStatus.name as byUserStatus_status_name,
+byUser.email as byUser_email,
+s.uuid as status_id,
+s.name as status,
+e.create_date as create_date,
+e.on_date as on_date,
+e.done_date as done_date,
+e.duration as duration
+from events as e
+left join status as s on e.status_id=s.uuid
+left join users as cust on e.forUser_id=cust.uuid
+left join users as byUser on e.byUser_id=byUser.uuid
+left join status as custStatus on cust.status_id=custStatus.uuid
+left join status as byUserStatus on byUser.status_id=byUserStatus.uuid
+left join contacts as cntcts on cntcts.user_id=cust.uuid
+`;
 let and=' and ';
 let obj={};
   if(param){
