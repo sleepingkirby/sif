@@ -22,7 +22,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <div class="fltrRowCell">
           <input id="apptFltrInpt" name="apptFilter[input]" class="fltrInpt" type="text" placeholder="Customer Info Filter. Ex. Smith" title="Customer Info Filter"/>
         </div>
-        <div class="fltrRowCell">
+        <div class="">
           <div class="fltrRowCellLbl">
           Status Filter:
           </div>
@@ -144,6 +144,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.appts=null;
     this.apptsHsh=null;
     this.statuses=null;
+    this.sortCol=null;
+    this.sortColDir=null;
+    this.fltrStr=null;
     this.userInfoFrmID='apptNewApptFormFullUserFormFields';
     this.userInfoFrmTA='.apptNewApptFormFullUserFormFields textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
@@ -176,6 +179,52 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre:tthis.sortCol,this.sortColDir
+    post:figure out sorting and sets variables
+    function to set proper variables
+    ----------------------------------*/
+    setColSrt(srt,dir){
+      if(this.sortCol!=srt){
+      this.sortCol=srt;
+      this.sortColDir="desc";
+      return null;
+      }
+
+      this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
+    }
+
+    /*----------------------------------
+    pre: this.sortColDir, this.sortCol, this.fltrStr, this.appts, this.customers
+    post:none.
+    takes this.appts and sort and/or filter appointments by this.sortColDir, this.sortCol and this.fltrStr
+    ----------------------------------*/
+    fltrAppts(){
+    let appts=[];
+
+      if(this.fltrStr){
+      /*
+      go through each appointment, get uuid of customer
+      get customer obj from this.customers by uuid (appt.cust_uuid)
+      match against user info (this.custHsh[appt.cust_uuid])
+        email
+        phone, cellphone
+        surName, firstName
+        username
+      */
+        for(let appt of this.appts){
+          if(appt.cust_uuid&&this.custHsh.hasOwnProperty(appt.cust_uuid)){
+          
+          }
+        }
+      }
+      else{
+      appts=[...this.appts];
+      }
+
+    return appts; 
+    }    
+
+    /*----------------------------------
     pre: select elements
     post: change sync select elements
     changes all select elements in array to select a value
@@ -186,8 +235,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     updateEventStatus(uuid,stts);
     mainObj.setFloatMsg(`Appointment Status Updated to "${stts}"`);
-    document.getElementById('mainEl').innerHTML=this.genAppts();
-    this.hookNewApptBtn();
+    this.reDrwAppts();
     }
 
 
@@ -400,8 +448,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.genUsrLstEls();
       this.enblAddApptBtn();
 
-      document.getElementById('mainEl').innerHTML=this.genAppts();
-      this.hookNewApptBtn();
+      this.reDrwAppts();
       }
     }
 
@@ -433,8 +480,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.genUsrLstEls();
       this.enblAddApptBtn();
 
-      document.getElementById('mainEl').innerHTML=this.genAppts();
-      this.hookNewApptBtn();
+      this.reDrwAppts();
       }
     } 
 
@@ -569,7 +615,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     drawMainEl(){
     let rtrn='';
     let cntnt='';
-      for(const appt of this.appts){
+    let appts=this.fltrAppts();
+      for(const appt of appts){
       let doneDate=appt.done_date||'';
       cntnt+=`
       <tr>
@@ -604,6 +651,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date',false,qStatus);
     this.apptsHsh=arrOfHshToHshHsh('event_id',this.appts);
     return this.drawMainEl();
+    }
+
+    /*-----------------------------------------------
+    pre: mainEl, genAppts(), hookNewApptBtn();
+    post: html updated with apt
+    wrapper to do genAppts() then the hook as it's getting done mulitple places
+    -----------------------------------------------*/
+    reDrwAppts(qStatus='active'){
+    document.getElementById('mainEl').innerHTML=this.genAppts(qStatus);
+    this.hookNewApptBtn();
     }
 
     /*-----------------------------------------------
@@ -689,14 +746,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: write the html to the page
     -----------------------------------------------*/
     run(){
-    document.getElementById('mainEl').innerHTML=this.genAppts();
-    document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
     this.users=getUsers();
     this.invntSrvList=getInvntSrv();
     const {customer:customers, '':users}=spltUsr(this.users);
     this.usrHsh=arrOfHshToHshHsh('uuid',users);
     this.customers=[...customers];
     this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
+    document.getElementById('mainEl').innerHTML=this.genAppts();
+    document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
     this.genRghtMod();
     this.hookEl();
     }

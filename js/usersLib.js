@@ -40,7 +40,7 @@ function getUsers(type=null){
   from users as u
   left join contacts as c on u.uuid=c.user_id
   left join status as s on u.status_id=s.uuid
-  left join  users_type as ut on ut.user_uuid=u.uuid
+  left join users_type as ut on ut.user_uuid=u.uuid
   left join type as t on t.uuid=ut.type_uuid
   ${where}`,whereVals);
   } 
