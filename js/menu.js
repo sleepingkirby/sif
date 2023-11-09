@@ -15,7 +15,7 @@ class menuLft {
     if(state.user&&state.user.config){
       for(const modNm of modsLst){
         if(mod[modNm].hasOwnProperty('menu')&&mod[modNm].menu.hasOwnProperty('enabled')&&mod[modNm].menu.enabled){
-        menu+=`<div class="menuLftItm menuIcon" onclick=mainObj.setState("pos","`+modNm+`") title="`+mod[modNm].name+`">`+getEvalIcon(iconSets, state.user.config.iconSet, mod[modNm].menu.icon)+`</div>
+        menu+=`<div class="menuLftItm menuIcon" onclick=mainObj.setState("pos","`+modNm+`") title="`+mod[modNm].name+`" tabindex=0>`+getEvalIcon(iconSets, state.user.config.iconSet, mod[modNm].menu.icon)+`</div>
 `;
         }
       }

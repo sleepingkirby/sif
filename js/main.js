@@ -19,11 +19,11 @@ class sif{
 
   this.tmpl={};
   this.tmpl['rightNav']=[];
-  this.tmpl['rightNav'].push(`<div class="rightNavActns"><div class="menuIcon" title="Settings">`);
+  this.tmpl['rightNav'].push(`<div class="rightNavActns"><div class="menuIcon" title="Settings" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);
-  this.tmpl['rightNav'].push(`<div id="saveDB" class="menuIcon" title="Save">`);
+  this.tmpl['rightNav'].push(`<div id="saveDB" class="menuIcon" title="Save" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);
-  this.tmpl['rightNav'].push(`<div id="logout" class="menuIcon" title="Logout and save database.">`);
+  this.tmpl['rightNav'].push(`<div id="logout" class="menuIcon" title="Logout and save database." tabindex=0>`);
   this.tmpl['rightNav'].push(`</div></div>`);
 
     window.onbeforeunload=(e)=>{
@@ -84,7 +84,7 @@ class sif{
   draws the bottom elements
   -------------------------------------*/
   drawBottomEls(){
-  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptQckObj.genLftMod();" title="Quick Add Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
+  const html=`<div id="mainBttmElsNewAppntment" class="menuIcon" onclick="mainObj.modLftOpenClose();apptQckObj.genLftMod();" title="Quick Add Appointment" tabindex=0>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addAppointment')+`</div>`;
   const els=document.getElementsByClassName('bttmElsActns');
     for(const el of els){
     el.innerHTML=html;
