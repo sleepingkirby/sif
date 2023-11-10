@@ -43,8 +43,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.tmpl.apptTblHdCll[1]=`
           </th>
     `;
+    //<div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(event)">
     this.tmpl.apptTblHdCllIcn=`
-            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##">
+            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(this)">
               <div>##hdrTtl##</div>
               <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
             </div>
@@ -198,11 +199,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
-    pre:tthis.sortCol,this.sortColDir
+    pre:this.sortCol,this.sortColDir
     post:figure out sorting and sets variables
     function to set proper variables
     ----------------------------------*/
-    setColSrt(srt,dir){
+    setColSrt(srt){
       if(this.sortCol!=srt){
       this.sortCol=srt;
       this.sortColDir="desc";
@@ -210,6 +211,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
 
       this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
+    }
+
+    /*----------------------------------
+    pre:this.setColSrt()
+    post:none
+    function to set to hook for table header sort
+    ----------------------------------*/
+    setColSrtHookFunc(e){
+    let nm=e.getAttribute("name");
+      if(nm){
+      this.setColSrt(nm);
+      }
+    this.reDrwAppts();
     }
 
     /*----------------------------------
@@ -687,7 +701,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       //function sortTblHdrTmplng(tmpl, obj, sortDir, srtClss='tblHdSrtPnt')
       hdrs+=this.tmpl.apptTblHdCll[0]+sortTblHdrTmplng(this.tmpl.apptTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.apptTblHdCll[1];
       }
-    //rtrn+=this.tmpl.apptTblHd[0]+hdrs+this.tmpl.apptTblHd[1]+cntnt+this.tmpl.apptTblEnd;
     rtrn+=this.tmpl.apptTblStrt+hdrs+this.tmpl.apptTblHdEnd+cntnt+this.tmpl.apptTblEnd;
     return rtrn;
     }
