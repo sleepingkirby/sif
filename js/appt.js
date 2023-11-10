@@ -145,11 +145,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.appts=null;
     this.apptsHsh=null;
     this.statuses=null;
+    this.sttsHsh=null;
     this.sortCol=null;
     this.sortColDir=null;
     this.fltrStr=null;
     this.fltrProps=['cust_email','cust_phone','cust_cellphone','cust_surName','cus_firstName','cust_username','cust_nickName']; //filter properties
-    this.fltrStts='active';
+    this.fltrStts=null;
     this.userInfoFrmID='apptNewApptFormFullUserFormFields';
     this.userInfoFrmTA='.apptNewApptFormFullUserFormFields textarea[name^="contact["]';
     this.addApptBtnId="apptNewApptFormFullApptInfoAddBtn";
@@ -527,18 +528,29 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
-    pre: 
+    pre: apptFltrInptWrap element
     post: event hook added
-    addes event hook to apptAddBtn element
+    addes event hook to apptFltrInptWrap element
     ----------------------------------*/
     hookFltrInpt(){
       //why the wrapper and not the input itself? Keyup/down/press is fired BEFORE the input value is set by the key press. The event bubbles up AFTER the input value is pressed
       document.getElementById("apptFltrInptWrap").onkeyup=(e)=>{
-      console.log(e);
-      console.log(e.target.value);
       this.fltrStr=e.target.value;
       this.reDrwAppts(); 
       };
+    }
+
+    /*----------------------------------
+    pre: apptFilterStatus element
+    post: event hook added
+    addes event hook to apptFilterStatus element
+    ----------------------------------*/
+    hookFltrStts(){
+      document.getElementById("apptFilterStatus").onchange=(e)=>{
+      this.fltrStts=e.target.value;
+      console.log(this.fltrStts);
+      this.reDrwAppts(); 
+      }
     }
 
     /*----------------------------------
@@ -555,6 +567,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.hookElCreateUser();
     this.hookUserInfoFrm();
     this.hookFltrInpt();
+    this.hookFltrStts();
     this.hookAddApptBtn();
     }
 
@@ -628,7 +641,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: none
     generates the HTML table for the mainEl()
     -----------------------------------------------*/
-    drawMainEl(){
+    drawApptMainEl(){
     let rtrn='';
     let cntnt='';
     let appts=this.fltrAppts();
@@ -659,14 +672,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*-----------------------------------------------
-    pre: selectViewEventUser(), drawMainEl(), getEvalIcon()
+    pre: selectViewEventUser(), drawApptMainEl(), getEvalIcon()
     post: html updated with appt
     set mainEl with appointments
     -----------------------------------------------*/
-    genAppts(qStatus='active'){
-    this.appts=selectViewEventUser('byUser_uuid',state.user.uuid,'on_date',false,qStatus);
+    genAppts(){
+    let pObj={'byUser_uuid':state.user.uuid};
+    console.log(this.fltrStts);
+      if(this.fltrStts!=='null'){
+      pObj['status_uuid']=this.fltrStts;
+      }
+    this.appts=selectViewEventUser(pObj,'on_date',true);
     this.apptsHsh=arrOfHshToHshHsh('event_id',this.appts);
-    return this.drawMainEl();
+    return this.drawApptMainEl();
     }
 
     /*-----------------------------------------------
@@ -675,8 +693,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     set mainEl with appointments
     -----------------------------------------------*/
     genFltrSttsSlct(){
-    let html=[];
-    return genSttsSlct(this.statuses);
+    let html="<option value=null>all</option>"+genSttsSlct(this.statuses);
+    return html;
     }
 
 
@@ -685,8 +703,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: html updated with apt
     wrapper to do genAppts() then the hook as it's getting done mulitple places
     -----------------------------------------------*/
-    reDrwAppts(qStatus='active'){
-    document.getElementById('apptMain').innerHTML=this.genAppts(qStatus);
+    reDrwAppts(){
+    document.getElementById('apptMain').innerHTML=this.genAppts();
     }
 
     /*-----------------------------------------------
@@ -778,6 +796,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.customers=[...customers];
     this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
     this.statuses=selectStatus();
+    this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
+    this.fltrStts=this.sttsHsh.hasOwnProperty('active')?this.sttsHsh['active'].uuid:null;
     document.getElementById('mainEl').innerHTML=this.tmpl.headers;
     document.getElementById('apptFilterStatus').innerHTML=this.genFltrSttsSlct();
     document.getElementById('apptMain').innerHTML=this.genAppts();

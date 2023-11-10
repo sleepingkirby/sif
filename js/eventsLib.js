@@ -184,7 +184,7 @@ pre: sqlObj, view_events_user
 post: none
 get event_user
 -----------------------------------------------*/
-function selectViewEventUser(param, val, ord, asc=false, status=null){
+function selectViewEventUser(paramObj, ord, desc=false, limit=null, offset=null){
 let query=`select
 e.uuid as event_id,
 cust.uuid as cust_uuid,
@@ -202,7 +202,7 @@ byUser.username as byUser_username,
 byUser.status_id as byUser_status_id,
 byUserStatus.name as byUserStatus_status_name,
 byUser.email as byUser_email,
-s.uuid as status_id,
+s.uuid as status_uuid,
 s.name as status,
 e.create_date as create_date,
 e.on_date as on_date,
@@ -216,50 +216,50 @@ left join status as custStatus on cust.status_id=custStatus.uuid
 left join status as byUserStatus on byUser.status_id=byUserStatus.uuid
 left join contacts as cntcts on cntcts.user_id=cust.uuid
 `;
-let and=' and ';
+let and='';
+let tmp=null;
 let obj={};
-  if(param){
-    switch(param){
-    case 'byUser_uuid':
-    query+=' where byUser_uuid=$val';
-    obj['$val']=val;
-    break;
-    case 'byUser_username':
-    query+=' where byUser_username=$val';
-    obj['$val']=val;
-    break;
-    case 'cust_uuid':
-    query+=' where cust_uuid=$val';
-    obj['$val']=val;
-    break;
-    case 'cust_username':
-    query+=' where cust_username=$val';
-    obj['$val']=val;
-    break;
-    default:
-    break;
-    }
-    if(status){
-    query+=' and status=$status';
-    obj['$status']=status;
-    }
 
-    switch(ord){
-    case 'on_date':
-    query+=' order by on_date';
-    query+=asc?' asc':' desc';
-    break;
-    case 'create_date':
-    query+=' order by create_date';
-    query+=asc?' asc':' desc';
-    break;
-    default:
-    break;
+  if(paramObj){
+  query+='where';
+    for(let param of Object.keys(paramObj)){
+      if(paramObj[param]){
+      query+=`${and} ${param}=\$${param}`;
+      obj[`\$${param}`]=paramObj[param];
+      and=' and';
+      }
     }
-  let tmp=sqlObj.runQuery(query,obj);
-  return tmp;
   }
-return null;
+
+  console.log(query);
+  console.log(obj);
+
+  switch(ord){
+  case 'on_date':
+  query+=' order by on_date';
+  query+=desc?' desc':' asc';
+  break;
+  case 'create_date':
+  query+=' order by create_date';
+  query+=desc?' desc':' asc';
+  break;
+  default:
+  break;
+  }
+
+
+  if(!isNaN(parseInt(limit))){
+  query+=' limit $limit';
+  obj['$limit']=limit;
+  }
+
+  if(!isNaN(parseInt(offset))){
+  query+=' offset $offset';
+  obj['$offset']=offset;
+  }
+
+tmp=sqlObj.runQuery(query,obj);
+return tmp;
 }
 
 /*-----------------------------------------------
