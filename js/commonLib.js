@@ -118,8 +118,28 @@ return html;
 }
 
 
+/*----------------------------------
+pre: css style .statusActive and .statusNotActive
+post:none
+returns styled text depending on status/text
+----------------------------------*/
+function statusColor(str){
+  let clrHsh={
+  'active':'statusActive',
+  'disabled':'statusNotActive',
+  'cancelled':'statusNotActive',
+  'done':'statusActive'
+  };
 
-
+let html='';
+  if(clrHsh.hasOwnProperty(str)){
+  html=`<div class="${clrHsh[str]}">${str}</div>`;
+  }
+  else{
+  html=`<div>${str}</div>`;
+  }
+return html;
+}
 
 
 

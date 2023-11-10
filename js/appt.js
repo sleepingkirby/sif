@@ -678,9 +678,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       cntnt+=`
       <tr>
         <td>`+appt.on_date+`</td>
-        <td>`+appt.status+`</td>
+        <td>`+statusColor(appt.status)+`</td>
         <td>`+appt.cust_fName+` `+appt.cust_surName+`<br><br>`+appt.cust_email+`<br>`+appt.cust_phone+`<br>`+appt.cust_cellphone+`</td>
-        <td>`+appt.byUserStatus_status_name+`</td>
+        <td>`+statusColor(appt.cust_status_name)+`</td>
         <td>`+appt.create_date+`</td>
         <td>`+doneDate+`</td>
         <td>`+appt.duration+`</td>
