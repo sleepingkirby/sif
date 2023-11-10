@@ -240,6 +240,22 @@ let obj={};
   query+=' order by create_date';
   query+=desc?' desc':' asc';
   break;
+  case 'status':
+  query+=' order by status';
+  query+=desc?' desc':' asc';
+  break;
+  case 'done_date':
+  query+=' order by done_date';
+  query+=desc?' desc':' asc';
+  break;
+  case 'duration':
+  query+=' order by duration';
+  query+=desc?' desc':' asc';
+  break;
+  case 'cust_status_name':
+  query+=' order by cust_status_name';
+  query+=desc?' desc':' asc';
+  break;
   default:
   break;
   }
@@ -254,7 +270,8 @@ let obj={};
   query+=' offset $offset';
   obj['$offset']=offset;
   }
-
+console.log(query);
+console.log(obj);
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }

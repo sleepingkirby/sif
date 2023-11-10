@@ -60,7 +60,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     {'name':'on_date','title':'on date', 'sort':true},
     {'name':'status','title':'status', 'sort':true},
     {'name':'cust_info','title':'cust. info', 'sort':false},
-    {'name':'cust_status_name','title':'cust. status', 'sort':false},
+    {'name':'cust_status_name','title':'cust. status', 'sort':true},
     {'name':'create_date','title':'create date', 'sort':true},
     {'name':'done_date','title':'done date', 'sort':true},
     {'name':'duration','title':'duration', 'sort':true},
@@ -715,7 +715,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(this.fltrStts!=='null'){
       pObj['status_uuid']=this.fltrStts;
       }
-    this.appts=selectViewEventUser(pObj,'on_date',true);
+//function selectViewEventUser(paramObj, ord, desc=false, limit=null, offset=null){
+    this.appts=selectViewEventUser(pObj,this.sortCol,this.sortColDir=='desc');
     this.apptsHsh=arrOfHshToHshHsh('event_id',this.appts);
     return this.drawApptMainEl();
     }
