@@ -231,9 +231,6 @@ let obj={};
     }
   }
 
-  console.log(query);
-  console.log(obj);
-
   switch(ord){
   case 'on_date':
   query+=' order by on_date';

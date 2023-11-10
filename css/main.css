@@ -61,6 +61,35 @@ table tr:last-child > td:last-child{
 border-bottom-right-radius: 4px;
 }
 
+table tr > th > .tblHdSrt{
+width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+table tr > th > .tblHdSrtPnt{
+cursor:pointer;
+}
+
+table tr > th > .tblHdSrt div{
+display:flex;
+}
+
+table tr > th > .tblHdSrt > .tblHdSrtArrw {
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:30px;
+}
+
+table tr > th > .tblHdSrt > .tblHdSrtArrw svg{
+width:30px;
+fill:var(--default-gray);
+}
+
+
 div,select,option{
 font-family: var(--font-family);
 }

@@ -12,8 +12,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     state.pageVars.appt.id=apptId;
     let dt=toInptValFrmt();
     this.tmpl={};
-    this.tmpl["mainEl"]=[];
-/* view_events_user(event_id,cust_uuid,cust_username,cust_status_id,cust_status_name,cust_email,phone,cellphone,byUser_uuid,byUser_username,byUser_status_id,byUserStatus_status_name,byUser_email,create_date,on_date,done_date,duration) */
     this.tmpl.headers=`
       <div id="apptAdd">
         <div id="apptAddBtn" title="Add New Appointment" tabindex=0>⨁</div>
@@ -34,22 +32,39 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <div id="apptMain">
       </div>
     `;
-    this.tmpl.mainEl[0]=`
+    this.tmpl.apptTblStrt=`
         <table id="apptList">
           <tr>
-          <th>on date</th>
-          <th>status</th>
-          <th>cust. contact</th>
-          <th>cust. status</th>
-          <th>create date</th>
-          <th>done date</th>
-          <th>duration</th>
-          <th>actions</th>
+    `;
+    this.tmpl.apptTblHdCll=[];
+    this.tmpl.apptTblHdCll[0]=`
+          <th>
+    `;
+    this.tmpl.apptTblHdCll[1]=`
+          </th>
+    `;
+    this.tmpl.apptTblHdCllIcn=`
+            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##">
+              <div>##hdrTtl##</div>
+              <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
+            </div>
+    `;
+    this.tmpl.apptTblHdEnd=`
           </tr>
     `;
-    this.tmpl.mainEl[1]=`
+    this.tmpl.apptTblEnd=`
         </table>
     `;
+    this.tmpl.apptTblHdArr=[
+    {'name':'on_date','title':'on date', 'sort':true},
+    {'name':'status','title':'status', 'sort':true},
+    {'name':'cust_info','title':'cust. info', 'sort':false},
+    {'name':'cust_status_name','title':'cust. status', 'sort':false},
+    {'name':'create_date','title':'create date', 'sort':true},
+    {'name':'done_date','title':'done date', 'sort':true},
+    {'name':'duration','title':'duration', 'sort':true},
+    {'name':'actions','title':'actions', 'sort':false}
+    ];
     this.tmpl["invntSrvListEls"]=[];
     this.tmpl.rghtModForm=[];
     this.tmpl.rghtModForm[0]=`
@@ -146,8 +161,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.apptsHsh=null;
     this.statuses=null;
     this.sttsHsh=null;
-    this.sortCol=null;
-    this.sortColDir=null;
+    this.sortCol='on_date';
+    this.sortColDir='desc';
     this.fltrStr=null;
     this.fltrProps=['cust_email','cust_phone','cust_cellphone','cust_surName','cus_firstName','cust_username','cust_nickName']; //filter properties
     this.fltrStts=null;
@@ -548,7 +563,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     hookFltrStts(){
       document.getElementById("apptFilterStatus").onchange=(e)=>{
       this.fltrStts=e.target.value;
-      console.log(this.fltrStts);
       this.reDrwAppts(); 
       }
     }
@@ -651,7 +665,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <tr>
         <td>`+appt.on_date+`</td>
         <td>`+appt.status+`</td>
-        <td>`+appt.cust_email+`<br>`+appt.cust_phone+`<br>`+appt.cust_cellphone+`</td>
+        <td>`+appt.cust_fName+` `+appt.cust_surName+`<br><br>`+appt.cust_email+`<br>`+appt.cust_phone+`<br>`+appt.cust_cellphone+`</td>
         <td>`+appt.byUserStatus_status_name+`</td>
         <td>`+appt.create_date+`</td>
         <td>`+doneDate+`</td>
@@ -667,7 +681,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       </tr>
       `;
       }
-    rtrn+=this.tmpl.mainEl[0]+cntnt+this.tmpl.mainEl[1];
+
+    let hdrs='';
+      for(let hdr of this.tmpl.apptTblHdArr){
+      //function sortTblHdrTmplng(tmpl, obj, sortDir, srtClss='tblHdSrtPnt')
+      hdrs+=this.tmpl.apptTblHdCll[0]+sortTblHdrTmplng(this.tmpl.apptTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.apptTblHdCll[1];
+      }
+    //rtrn+=this.tmpl.apptTblHd[0]+hdrs+this.tmpl.apptTblHd[1]+cntnt+this.tmpl.apptTblEnd;
+    rtrn+=this.tmpl.apptTblStrt+hdrs+this.tmpl.apptTblHdEnd+cntnt+this.tmpl.apptTblEnd;
     return rtrn;
     }
 
@@ -678,7 +699,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     -----------------------------------------------*/
     genAppts(){
     let pObj={'byUser_uuid':state.user.uuid};
-    console.log(this.fltrStts);
       if(this.fltrStts!=='null'){
       pObj['status_uuid']=this.fltrStts;
       }
@@ -693,7 +713,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     set mainEl with appointments
     -----------------------------------------------*/
     genFltrSttsSlct(){
-    let html="<option value=null>all</option>"+genSttsSlct(this.statuses);
+    let tmpStts=[...this.statuses];
+    tmpStts.unshift({'uuid':'null','name':'all'});
+    let html=genSttsSlct(tmpStts);
     return html;
     }
 

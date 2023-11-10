@@ -60,3 +60,76 @@ function arrOfHshToHshHsh(indx, arr){
 
 return {...hsh};
 }
+
+/*----------------------------------
+pre: getEvalIcon(), iconSets['sortDwn'], iconSets['sortUp'], state.user.config.iconSet
+post: none
+generates the icon for sort down and sort up for table headers
+----------------------------------*/
+function sortArrowIcon(dir='asc'){
+  if(dir=='asc'){
+  return getEvalIcon(iconSets, state.user.config.iconSet, 'sortUp');
+  }
+  if(dir=='desc'){
+  return getEvalIcon(iconSets, state.user.config.iconSet, 'sortDwn');
+  }
+  if(dir===null){
+  return getEvalIcon(iconSets, state.user.config.iconSet, 'sortUp')+getEvalIcon(iconSets, state.user.config.iconSet, 'sortDwn');
+  }
+return '';
+}
+
+/*----------------------------------
+pre: sortArrowIcon()
+post: none
+does a .replaceAll() and returns it
+    obj: {'name':'on_date','title':'on date', 'sort':true},
+    tmpl: `
+            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##">
+              <div>##hdrTtl##</div>
+              <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
+            </div>
+    `;
+----------------------------------*/
+function sortTblHdrTmplng(tmpl, obj, sortDir, srtClss='tblHdSrtPnt'){
+  if(!obj||typeof obj!='object'){
+  return tmpl;
+  }
+
+let html=tmpl;
+  if(obj.hasOwnProperty('name')&&obj.name){
+  html=html.replaceAll('##hdrNm##',obj.name);
+  }
+
+  if(obj.hasOwnProperty('title')&&obj.title){
+  html=html.replaceAll('##hdrTtl##',obj.title);
+  }
+
+  if(obj.hasOwnProperty('sort')&&obj.sort){
+  html=html.replaceAll('##pntClass##',srtClss);
+  html=html.replaceAll('##icon##',sortArrowIcon(sortDir));
+  }
+  else{
+  html=html.replaceAll('##pntClass##','');
+  html=html.replaceAll('##icon##','');
+  }
+
+return html;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
