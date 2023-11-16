@@ -270,8 +270,6 @@ let obj={};
   query+=' offset $offset';
   obj['$offset']=offset;
   }
-console.log(query);
-console.log(obj);
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
