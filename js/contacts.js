@@ -22,7 +22,7 @@ if(typeof contacts==='undefined'){
       </div>
       `;
       this.mainElHtml=[];
-      this.mainElHtml[1]=`
+      this.mainElHtml[0]=`
       <div id="contactsAdd">
         <div id="contactsAddBtn">⨁</div>
       </div>
@@ -31,7 +31,11 @@ if(typeof contacts==='undefined'){
           <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="Customer Info Filter. Ex. Smith" title="Customer Info Filter"/>
         </div>
       </div>
+
       <div id="contactsMain">
+      </div>
+      `;
+      this.mainElHtml[1]=`
         <table id="contactsList">
           <tr>
           <th>status</th>
@@ -46,8 +50,7 @@ if(typeof contacts==='undefined'){
           </tr>
       `;
       this.mainElHtml[2]=`
-        </table>
-      </div>
+       </table>
       `;
     }
 
@@ -151,14 +154,13 @@ if(typeof contacts==='undefined'){
     }
 
 
-    /*----------------------------------
-    pre: this class' properties
-    post: none
-    generates mainEl content
+    /*---------------------------------
+    pre: none
+    post: redraw html
+    draw the contact table
     ----------------------------------*/
-    mainEl(){
-      let html=this.mainElHtml[0]+this.mainElHtml[1];
-      //make rows
+    drawTbl(){
+    let html='';
       if(state.dbObj&&state.dbObj!=null){
       let {customer:hsh, '':users}=spltUsr(getUsers());
         hsh.forEach((rcrd, i)=>{
@@ -185,10 +187,29 @@ if(typeof contacts==='undefined'){
           </tr>
           `;
         });
-
       }
-      html+=this.mainElHtml[2];
+    html+=this.mainElHtml[2];
+    return html;
+    }
 
+
+    /*----------------------------------
+    pre: drawTbl(), element contactsmain
+    post: draws the table to the html
+    generates contacts table
+    ----------------------------------*/
+    draw(){
+    document.getElementById('contactsMain').innerHTML=this.drawTbl();
+    }
+
+    /*----------------------------------
+    pre: this class' properties
+    post: none
+    generates mainEl content
+    ----------------------------------*/
+    mainEl(){
+    let html=this.mainElHtml[0];
+    html+=this.drawTbl();
     return html;
     }
    
@@ -199,20 +220,12 @@ if(typeof contacts==='undefined'){
     -------------------------------------*/ 
     run(){
     document.getElementById('mainEl').innerHTML=this.mainEl();
+    this.draw();
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.rghtMod();
     document.getElementById('leftNavMod').innerHTML="Contacts";
     this.hookEl();
     }
 
-    /*-------------------------------------
-    pre: this class, mainEl(), rghtMod(), hookEl()
-    post: html page changed
-    redraws the main page the mainEl
-    -------------------------------------*/  
-    draw(){
-    document.getElementById('mainEl').innerHTML=this.mainEl();
-    this.hookEl();//when elements are redrawn/generated, event listeners will need to be reattached. consider global listeners.
-    }
   }
 
 var cntctsObj=new contacts(mainObj, sqlObj);
