@@ -28,7 +28,7 @@ if(typeof contacts==='undefined'){
       </div>
       <div id="apptFltr" class="fltrRow">
         <div id="contactsFltrInptWrap" class="fltrRowCell">
-          <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="Customer Info Filter. Ex. Smith" title="Customer Info Filter"/>
+          <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="User filter. Ex. Smith" title="User Filter. Filters on lastname, firstname, email and/or phones"/>
         </div>
       </div>
 
@@ -52,8 +52,22 @@ if(typeof contacts==='undefined'){
       this.mainElHtml[2]=`
        </table>
       `;
+    this.fltrStr='';
+    this.fltrProps=['fName','surName','email','cEmail','phone','cellphone','username'];
     }
 
+
+    /*----------------------------------
+    pre: everything this class requires
+    post: events added to elements.
+    adds event hooks to elements that need it
+    ----------------------------------*/
+    hookElFltr(){
+      document.getElementById("contactsFltrInpt").onkeyup=(e)=>{
+      this.fltrStr=e.target.value;
+      this.draw();
+      }
+    }
 
     /*----------------------------------
     pre: everything this class requires
@@ -66,7 +80,8 @@ if(typeof contacts==='undefined'){
       mainObj.modPrcClsCall(el);
       };
 
-    
+    this.hookElFltr();   
+ 
       document.getElementById("contactsUserFormAddBtn").onclick=(e)=>{
       let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
       let hsh={};
@@ -76,6 +91,8 @@ if(typeof contacts==='undefined'){
         });
 
       createCustUser(hsh);
+
+      mainObj.setFloatMsg(`New User Added`);
 
       //closes modal
       // let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
@@ -153,6 +170,32 @@ if(typeof contacts==='undefined'){
       }
     }
 
+    /*----------------------------------
+    pre: this.sortColDir, this.sortCol, this.fltrStr, this.appts, this.customers
+    post:none.
+    takes this.appts and sort and/or filter appointments by this.sortColDir, this.sortCol and this.fltrStr
+    ----------------------------------*/
+    fltrUsers(users){
+    let rtrn=[];
+      if(this.fltrStr){
+        for(let user of users){
+          if(user.status==this.fltrStts){
+          rtrn.push({...user});
+          break;
+          }
+          for(let prop of this.fltrProps){
+            if(user[prop]&&user[prop].toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
+            rtrn.push({...user});
+            break;
+            }
+          }
+        }
+      }
+      else{
+      rtrn=[...users];
+      }
+    return rtrn;
+    } 
 
     /*---------------------------------
     pre: none
@@ -163,33 +206,33 @@ if(typeof contacts==='undefined'){
     let html='';
       if(state.dbObj&&state.dbObj!=null){
       let {customer:hsh, '':users}=spltUsr(getUsers());
-        hsh.forEach((rcrd, i)=>{
+      let custFltrd=this.fltrUsers(hsh);
+        for(let rcrd of custFltrd){
         let cpz=""; //city prov, zip
-        if(rcrd.city!=""||rcrd.prov!=""||rcrd.zip!=""){
-        cpz=rcrd.city+' '+rcrd.prov+', '+rcrd.zip+'<br>';
-        }
-          html+=`
-          <tr>
-          <td>`+rcrd.status+`</td>
-          <td>`+rcrd.fName+`</td>
-          <td>`+rcrd.surName+`</td>
-          <td>`+rcrd.mName+`</td>
-          <td>`+rcrd.email+`</td>
-          <td>`+rcrd.phone+`</td>
-          <td>`+rcrd.cellphone+`</td>
-          <td>`+rcrd.addr+`<br>`+rcrd.addr2+`<br>`+cpz+rcrd.country+`</td>
-          <td>
-            <div class="contactsCellActns">
-            <div name="contactEditUser" class="menuIcon" onclick=console.log("test"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-            <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.delUser("`+rcrd.uuid+`"); title="Delete User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
-            </div>
-          </td>
-          </tr>
-          `;
-        });
+          if(rcrd.city!=""||rcrd.prov!=""||rcrd.zip!=""){
+          cpz=rcrd.city+' '+rcrd.prov+', '+rcrd.zip+'<br>';
+          }
+        html+=`
+        <tr>
+        <td>`+rcrd.status+`</td>
+        <td>`+rcrd.fName+`</td>
+        <td>`+rcrd.surName+`</td>
+        <td>`+rcrd.mName+`</td>
+        <td>`+rcrd.email+`</td>
+        <td>`+rcrd.phone+`</td>
+        <td>`+rcrd.cellphone+`</td>
+        <td>`+rcrd.addr+`<br>`+rcrd.addr2+`<br>`+cpz+rcrd.country+`</td>
+        <td>
+          <div class="contactsCellActns">
+          <div name="contactEditUser" class="menuIcon" onclick=console.log("test"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+          <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.delUser("`+rcrd.uuid+`"); title="Delete User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+          </div>
+        </td>
+        </tr>
+        `;
+        };
       }
-    html+=this.mainElHtml[2];
-    return html;
+    return this.mainElHtml[1]+html+this.mainElHtml[2];
     }
 
 
@@ -209,7 +252,6 @@ if(typeof contacts==='undefined'){
     ----------------------------------*/
     mainEl(){
     let html=this.mainElHtml[0];
-    html+=this.drawTbl();
     return html;
     }
    
