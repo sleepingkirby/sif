@@ -54,6 +54,43 @@ if(typeof contacts==='undefined'){
       `;
     this.fltrStr='';
     this.fltrProps=['fName','surName','email','cEmail','phone','cellphone','username'];
+
+    this.tmpl={};
+    this.tmpl.cntctsTblStrt=`
+        <table id="cntctsList">
+          <tr>
+    `;
+    this.tmpl.cntctsTblHdCll=[];
+    this.tmpl.cntctsTblHdCll[0]=`
+          <th>
+    `;
+    this.tmpl.cntctsTblHdCll[1]=`
+          </th>
+    `;
+    //<div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(event)">
+    this.tmpl.cntctsTblHdCllIcn=`
+            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="cntctsObj.setColSrtHookFunc(this)">
+              <div>##hdrTtl##</div>
+              <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
+            </div>
+    `;
+    this.tmpl.cntctsTblHdEnd=`
+          </tr>
+    `;
+    this.tmpl.cntctsTblEnd=`
+        </table>
+    `;
+
+      this.tmpl.cntctsTblHdArr=[
+      {'name':'on_date','title':'on date', 'sort':true},
+      {'name':'status','title':'status', 'sort':true},
+      {'name':'cust_info','title':'cust. info', 'sort':false},
+      {'name':'cust_status_name','title':'cust. status', 'sort':true},
+      {'name':'create_date','title':'create date', 'sort':true},
+      {'name':'done_date','title':'done date', 'sort':true},
+      {'name':'duration','title':'duration', 'sort':true},
+      {'name':'actions','title':'actions', 'sort':false}
+      ];
     }
 
 
