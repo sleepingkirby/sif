@@ -22,9 +22,14 @@ if(typeof contacts==='undefined'){
       </div>
       `;
       this.mainElHtml=[];
-      this.mainElHtml[0]=`
+      this.mainElHtml[1]=`
       <div id="contactsAdd">
         <div id="contactsAddBtn">⨁</div>
+      </div>
+      <div id="apptFltr" class="fltrRow">
+        <div id="contactsFltrInptWrap" class="fltrRowCell">
+          <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="Customer Info Filter. Ex. Smith" title="Customer Info Filter"/>
+        </div>
       </div>
       <div id="contactsMain">
         <table id="contactsList">
@@ -40,7 +45,7 @@ if(typeof contacts==='undefined'){
           <th>action</th>
           </tr>
       `;
-      this.mainElHtml[1]=`
+      this.mainElHtml[2]=`
         </table>
       </div>
       `;
@@ -152,7 +157,7 @@ if(typeof contacts==='undefined'){
     generates mainEl content
     ----------------------------------*/
     mainEl(){
-      let html=this.mainElHtml[0];
+      let html=this.mainElHtml[0]+this.mainElHtml[1];
       //make rows
       if(state.dbObj&&state.dbObj!=null){
       let {customer:hsh, '':users}=spltUsr(getUsers());
@@ -182,7 +187,7 @@ if(typeof contacts==='undefined'){
         });
 
       }
-      html+=this.mainElHtml[1];
+      html+=this.mainElHtml[2];
 
     return html;
     }
