@@ -34,9 +34,12 @@ if(typeof contacts==='undefined'){
       <div id="contactsAdd">
         <div id="contactsAddBtn">⨁</div>
       </div>
-      <div id="apptFltr" class="fltrRow">
+      <div id="contactFltr" class="fltrRow" style="justify-content: space-between;">
         <div id="contactsFltrInptWrap" class="fltrRowCell">
           <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="User filter. Ex. Smith" title="User Filter. Filters on lastname, firstname, email and/or phones"/>
+        </div>
+        <div id="contactDelCnfrmWrap">
+          <input id="contactDelCnfrm" name="contact" type="checkbox" />
         </div>
       </div>
 
@@ -105,6 +108,7 @@ if(typeof contacts==='undefined'){
     this.custHsh=null;
     this.updtCntctBtnId='contactsUserFormUpdtBtn';
     this.addCntctBtnId='contactsUserFormAddBtn';
+    this.delCntctCnfrm=false;
     }
 
     /*-----------------------------------------
@@ -264,7 +268,12 @@ if(typeof contacts==='undefined'){
       return null;
       }
       try{
-      sqlObj.runQuery("delete from users where uuid=$uuid",{$uuid:uuid});
+        if(this.delCntctCnfrm){
+        delCustUser(uuid);
+        }
+        else{
+        mainObj.setFloatMsg(`Deletion is permanent. Check "Delete User Confirmation" to proceed`);
+        }
       }
       catch(e){
       console.log(e);
