@@ -54,10 +54,11 @@ if(typeof contacts==='undefined'){
       `;
     this.fltrStr='';
     this.fltrProps=['fName','surName','email','cEmail','phone','cellphone','username'];
-
+    this.sortCol='fName';
+    this.sortColDir='desc';
     this.tmpl={};
     this.tmpl.cntctsTblStrt=`
-        <table id="cntctsList">
+        <table id="contactsList">
           <tr>
     `;
     this.tmpl.cntctsTblHdCll=[];
@@ -82,13 +83,14 @@ if(typeof contacts==='undefined'){
     `;
 
       this.tmpl.cntctsTblHdArr=[
-      {'name':'on_date','title':'on date', 'sort':true},
       {'name':'status','title':'status', 'sort':true},
-      {'name':'cust_info','title':'cust. info', 'sort':false},
-      {'name':'cust_status_name','title':'cust. status', 'sort':true},
-      {'name':'create_date','title':'create date', 'sort':true},
-      {'name':'done_date','title':'done date', 'sort':true},
-      {'name':'duration','title':'duration', 'sort':true},
+      {'name':'fName','title':'first name', 'sort':true},
+      {'name':'surName','title':'surname', 'sort':true},
+      {'name':'mName','title':'midName', 'sort':true},
+      {'name':'email','title':'email', 'sort':true},
+      {'name':'phone','title':'phone', 'sort':true},
+      {'name':'cellphone','title':'cell', 'sort':true},
+      {'name':'addr','title':'address', 'sort':false},
       {'name':'actions','title':'actions', 'sort':false}
       ];
     }
@@ -234,6 +236,34 @@ if(typeof contacts==='undefined'){
     return rtrn;
     } 
 
+    /*----------------------------------
+    pre:this.sortCol,this.sortColDir
+    post:figure out sorting and sets variables
+    function to set proper variables
+    ----------------------------------*/
+    setColSrt(srt){
+      if(this.sortCol!=srt){
+      this.sortCol=srt;
+      this.sortColDir="desc";
+      return null;
+      }
+
+      this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
+    }
+
+    /*----------------------------------
+    pre:this.setColSrt()
+    post:none
+    function to set to hook for table header sort
+    ----------------------------------*/
+    setColSrtHookFunc(e){
+    let nm=e.getAttribute("name");
+      if(nm){
+      this.setColSrt(nm);
+      }
+    this.draw();
+    }
+
     /*---------------------------------
     pre: none
     post: redraw html
@@ -241,8 +271,9 @@ if(typeof contacts==='undefined'){
     ----------------------------------*/
     drawTbl(){
     let html='';
+    let pObj={};
       if(state.dbObj&&state.dbObj!=null){
-      let {customer:hsh, '':users}=spltUsr(getUsers());
+      let {customer:hsh, '':users}=spltUsr(getUsers(null,this.sortCol,this.sortColDir=='desc'));
       let custFltrd=this.fltrUsers(hsh);
         for(let rcrd of custFltrd){
         let cpz=""; //city prov, zip
@@ -269,7 +300,12 @@ if(typeof contacts==='undefined'){
         `;
         };
       }
-    return this.mainElHtml[1]+html+this.mainElHtml[2];
+      let hdrs='';
+        for(let hdr of this.tmpl.cntctsTblHdArr){
+        //function sortTblHdrTmplng(tmpl, obj, sortDir, srtClss='tblHdSrtPnt')
+        hdrs+=this.tmpl.cntctsTblHdCll[0]+sortTblHdrTmplng(this.tmpl.cntctsTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.cntctsTblHdCll[1];
+        }
+    return this.tmpl.cntctsTblStrt+hdrs+this.tmpl.cntctsTblHdEnd+html+this.tmpl.cntctsTblEnd;
     }
 
 

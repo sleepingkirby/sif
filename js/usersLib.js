@@ -8,45 +8,97 @@ common library for getting users
 pre: this class
 post: none
 -----------------------------------------------*/
-function getUsers(type=null){
-  try{
-  let where="";
-  let whereVals={};
-    if(type){
-    where=" where type=$type";
-    whereVals={$type:type};
-    }
+function getUsers(paramObj,ord,desc=false,limit=null,offset=null){
+let query=`
+select
+u.uuid as uuid,
+u.username as username,
+c.fName as fName,
+c.surName as surName,
+c.mName as mName,
+s.name as status,
+t.name as type,
+u.email as email,
+c.email as cEmail,
+s.name as status,
+c.phone as phone,
+c.cellphone as cellphone,
+c.addr as addr,
+c.addr2 as addr2,
+c.city as city,
+c.prov as prov,
+c.zip as zip,
+c.country as country 
+from users as u
+left join contacts as c on u.uuid=c.user_id
+left join status as s on u.status_id=s.uuid
+left join users_type as ut on ut.user_uuid=u.uuid
+left join type as t on t.uuid=ut.type_uuid
+`;
 
-  return sqlObj.runQuery(`
-  select
-  u.uuid as uuid,
-  u.username as username,
-  c.fName as fName,
-  c.surName as surName,
-  c.mName as mName,
-  s.name as status,
-  t.name as type,
-  u.email as email,
-  c.email as cEmail,
-  s.name as status,
-  c.phone as phone,
-  c.cellphone as cellphone,
-  c.addr as addr,
-  c.addr2 as addr2,
-  c.city as city,
-  c.prov as prov,
-  c.zip as zip,
-  c.country as country 
-  from users as u
-  left join contacts as c on u.uuid=c.user_id
-  left join status as s on u.status_id=s.uuid
-  left join users_type as ut on ut.user_uuid=u.uuid
-  left join type as t on t.uuid=ut.type_uuid
-  ${where}`,whereVals);
-  } 
-  catch(e){
-  console.log(e);
-  } 
+let and='';
+let tmp=null;
+let obj={};
+
+  if(paramObj){
+  query+='where';
+    for(let param of Object.keys(paramObj)){
+      if(paramObj[param]){
+      query+=`${and} ${param}=\$${param}`;
+      obj[`\$${param}`]=paramObj[param];
+      and=' and';
+      }
+    }
+  }
+  else{
+  query+='where t.name="customer"';
+  }
+
+  switch(ord){
+  case 'status':
+  query+=' order by status';
+  query+=desc?' desc':' asc';
+  break;
+  case 'fName':
+  query+=' order by fname';
+  query+=desc?' desc':' asc';
+  break;
+  case 'surName':
+  query+=' order by surName';
+  query+=desc?' desc':' asc';
+  break;
+  case 'mName':
+  query+=' order by mName';
+  query+=desc?' desc':' asc';
+  break;
+  case 'email':
+  query+=' order by email';
+  query+=desc?' desc':' asc';
+  break;
+  case 'phone':
+  query+=' order by phone';
+  query+=desc?' desc':' asc';
+  break;
+  case 'cellphone':
+  query+=' order by cellphone';
+  query+=desc?' desc':' asc';
+  break;
+  default:
+  break;
+  }
+
+  if(!isNaN(parseInt(limit))){
+  query+=' limit $limit';
+  obj['$limit']=limit;
+  }
+
+  if(!isNaN(parseInt(offset))){
+  query+=' offset $offset';
+  obj['$offset']=offset;
+  }
+
+tmp=sqlObj.runQuery(query,obj);
+return tmp;
 } 
 
 /*-----------------------------------------------
