@@ -294,7 +294,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: flip display updtApptBtn and addApptBtn
     change display of element
     ----------------------------------*/
-    addUptBtnFlip(updt=false){
+    addUpdtBtnFlip(updt=false){
     let updtEl=document.getElementById(this.updtApptBtnId);
     let addEl=document.getElementById(this.addApptBtnId);
       if(updtEl&&addEl){
@@ -547,7 +547,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     ----------------------------------*/
     hookNewApptBtn(){
       document.getElementById("apptAddBtn").onclick=(e)=>{
-      this.addUptBtnFlip();
+      this.addUpdtBtnFlip();
 
       this.cleanRghtModForm();
 
@@ -658,7 +658,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
       this.apptsHsh[uuid];
       this.fillRghtMod(this.apptsHsh[uuid]);
-      this.addUptBtnFlip(true);
+      this.addUpdtBtnFlip(true);
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       }

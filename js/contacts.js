@@ -9,8 +9,13 @@ if(typeof contacts==='undefined'){
     constructor(){
       this.rghtModForm=`
       <div id="contactsUserForm">
-        <div class="row" style="justify-content: flex-start; margin-bottom: 18px;"><div class="lbl">Add new user</div></div>
-        <div class="row" style="margin-bottom: 26px;"><textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea> <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea><textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea></div>
+        <div class="row" style="justify-content: flex-start; margin-bottom: 18px;"><div class="lbl">User</div></div>
+        <div class="row" style="margin-bottom: 26px;">
+          <input name="contact[uuid]" type="hidden" />
+          <textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea>
+          <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea>
+          <textarea name="contact[fName]" type="text" style="flex-grow: 100;" placeholder="First Name"></textarea>
+        </div>
         <div class="row" style="margin-bottom: 22px;"><textarea name="contact[email]" type="text" placeholder="email address"></textarea></div>
         <div class="row"><textarea name="contact[addr]" type="text" style="flex-grow: 100;" placeholder="ex. 123 main st."></textarea></div>
         <div class="row"><textarea name="contact[addr2]" type="text" style="flex-grow: 100;" placeholder="suite 123"></textarea></div>
@@ -18,7 +23,10 @@ if(typeof contacts==='undefined'){
         <div class="row" style="margin-bottom: 26px;"><textarea name="contact[country]" type="text" style="flex-grow: 100;" placeholder="country"></textarea></div>
         <div class="row"><textarea name="contact[phone]" type="text" placeholder="primary phone"></textarea></div>
         <div class="row" style="margin-bottom: 40px;"><textarea name="contact[cellphone]" type="text" placeholder="cell phone"></textarea></div>
-        <div class="row" style="justify-content: flex-end; align-items: center;"><input id="contactsUserFormAddBtn" type="submit" value="Add User"/></div>
+        <div class="row" style="justify-content: flex-end; align-items: center;">
+          <input id="contactsUserFormUpdtBtn" style="display:none;" type="submit" value="Update User" title="Update user info"/>
+          <input id="contactsUserFormAddBtn" type="submit" value="Add User" title="Create new user"/>
+        </div>
       </div>
       `;
       this.mainElHtml=[];
@@ -52,10 +60,6 @@ if(typeof contacts==='undefined'){
       this.mainElHtml[2]=`
        </table>
       `;
-    this.fltrStr='';
-    this.fltrProps=['fName','surName','email','cEmail','phone','cellphone','username'];
-    this.sortCol='fName';
-    this.sortColDir='desc';
     this.tmpl={};
     this.tmpl.cntctsTblStrt=`
         <table id="contactsList">
@@ -93,7 +97,81 @@ if(typeof contacts==='undefined'){
       {'name':'addr','title':'address', 'sort':false},
       {'name':'actions','title':'actions', 'sort':false}
       ];
+    this.fltrStr='';
+    this.fltrProps=['fName','surName','email','cEmail','phone','cellphone','username'];
+    this.sortCol='fName';
+    this.sortColDir='desc';
+    this.customers=null;
+    this.custHsh=null;
+    this.updtCntctBtnId='contactsUserFormUpdtBtn';
+    this.addCntctBtnId='contactsUserFormAddBtn';
     }
+
+    /*-----------------------------------------
+    pre: elements with id this.updtCntctBtnId and this.addCntctBtnId
+    post: elements hidden and not are changed
+    flips which button is displayed
+    -----------------------------------------*/
+    addUpdtBtnFlip(updt=false){
+    let updtEl=document.getElementById(this.updtCntctBtnId);
+    let addEl=document.getElementById(this.addCntctBtnId);
+      if(updtEl&&addEl){
+        updtEl.style.display=updt?"flex":"none";
+        addEl.style.display=updt?"none":"flex";
+      }
+    }
+
+    /*-----------------------------------------
+    pre: right modal exists
+    post: right modal cleared
+    clear right modal
+    -----------------------------------------*/
+    clearRghtMod(){
+    let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
+    let el_uuid=document.getElementById("contactsUserForm").querySelectorAll("input[name^=contact]");
+      if(el_uuid&&el_uuid[0]){
+      el_uuid[0].value="";
+      }
+      for(let el of els){
+      el.value="";
+      }
+    }
+
+    /*-----------------------------------------
+    pre: right modal exists
+    post: right modal filled
+    fill right modal with user info
+    -----------------------------------------*/
+    fillRghtMod(cust){
+    let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
+    let el_uuid=document.getElementById("contactsUserForm").querySelectorAll("input[name^=contact]");
+      if(el_uuid&&el_uuid[0]){
+      el_uuid[0].value=cust.uuid;
+      }
+      for(let el of els){
+      let nm=getSubs(el.name);
+        if(cust.hasOwnProperty(nm)){
+        el.value=cust[nm];
+        }  
+      }
+    }
+
+    /*-----------------------------------------
+    pre:
+    post:
+    fills out and opens right modal for updating user
+    -----------------------------------------*/
+    updtCntctsRghtMod(uuid=null){
+      if(!uuid){
+      return null;
+      }
+      if(this.custHsh.hasOwnProperty(uuid)&&this.custHsh[uuid]){
+      this.fillRghtMod(this.custHsh[uuid]);
+      this.addUpdtBtnFlip(true);
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      }
+    } 
 
 
     /*----------------------------------
@@ -115,17 +193,20 @@ if(typeof contacts==='undefined'){
     ----------------------------------*/
     hookEl(){
       document.getElementById("contactsAddBtn").onclick=(e)=>{
+      this.addUpdtBtnFlip(false);
+      this.clearRghtMod();
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       };
 
     this.hookElFltr();   
+
  
-      document.getElementById("contactsUserFormAddBtn").onclick=(e)=>{
+      document.getElementById(this.addCntctBtnId).onclick=(e)=>{
       let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
       let hsh={};
         els.forEach((nd, i)=>{
-        let nm=nd.name.replace(/(contact\[|\])/g, "");
+        let nm=getSubs(nd.name);
         hsh[nm]=nd.value;
         });
 
@@ -140,6 +221,24 @@ if(typeof contacts==='undefined'){
       //redraw mainEl
       this.draw();
       };
+
+
+      document.getElementById(this.updtCntctBtnId).onclick=(e)=>{
+      let el_uuid=document.getElementById("contactsUserForm").querySelectorAll("input[name^=contact]");
+      let els=document.getElementById("contactsUserForm").querySelectorAll("textarea[name^=contact]");
+      let hsh={};
+        for(const nd of els){
+        let nm=getSubs(nd.name);
+        hsh[nm]=nd.value;
+        };
+        if(el_uuid&&el_uuid[0]&&el_uuid[0].value){
+        updateCustUser(el_uuid[0].value,hsh);
+        mainObj.setFloatMsg(`User updated`);
+        this.draw();
+        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+        mainObj.modPrcClsCall(el);
+        }
+      }
     } 
 
 
@@ -274,6 +373,8 @@ if(typeof contacts==='undefined'){
     let pObj={};
       if(state.dbObj&&state.dbObj!=null){
       let {customer:hsh, '':users}=spltUsr(getUsers(null,this.sortCol,this.sortColDir=='desc'));
+      this.customers=[...hsh];
+      this.custHsh=arrOfHshToHshHsh('uuid',hsh);
       let custFltrd=this.fltrUsers(hsh);
         for(let rcrd of custFltrd){
         let cpz=""; //city prov, zip
@@ -292,7 +393,7 @@ if(typeof contacts==='undefined'){
         <td>`+rcrd.addr+`<br>`+rcrd.addr2+`<br>`+cpz+rcrd.country+`</td>
         <td>
           <div class="contactsCellActns">
-          <div name="contactEditUser" class="menuIcon" onclick=console.log("test"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+          <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.updtCntctsRghtMod("`+rcrd.uuid+`"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
           <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.delUser("`+rcrd.uuid+`"); title="Delete User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
           </div>
         </td>

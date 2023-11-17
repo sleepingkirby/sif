@@ -160,3 +160,112 @@ let user_uuid=createUUID();
   }
 }
 
+/*-----------------------------------------
+pre: sqlObj
+post: users deleted
+delete users.
+-----------------------------------------*/
+function delCustUser(uuid){
+  if(uuid){
+  return null;
+  }
+
+let query='delete from contacts where user_id=$uuid';
+sqlObj.runQuery(query,{$uuid:uuid});
+
+query='delete from users_type where user_uuid=$uuid';
+sqlObj.runQuery(query,{$uuid:uuid});
+
+query='delete from users where uuid=$uuid';
+sqlObj.runQuery(query,{$uuid:uuid});
+
+}
+
+/*-----------------------------------------
+pre: sqlObj
+post: user info updated.
+updates users.
+-----------------------------------------*/
+function updateCustUser(uuid=null, hsh, postFunc){
+  if(!uuid){
+  return null;
+  }
+
+let query='';
+let comma='';
+let obj={};
+
+  try{
+  query='delete from contacts where user_id=$uuid';
+  sqlObj.runQuery(query,{$uuid:uuid});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+  try{
+  query='delete from users_type where user_uuid=$uuid';
+  sqlObj.runQuery(query,{$uuid:uuid});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+
+
+//query='update users set status_id=$sttus, email=$email, role_id=$role_id, parent_user_id=$parent_user_id, mod_dt=datetime("now") where uuid=$uuid';
+query='update users set mod_dt=datetime("now") ';
+obj={};
+  if(hsh.hasOwnProperty('status_id')&&hsh.status_id){
+  query+=", status_id=$status";
+  obj['$status']=hsh.status_id;
+  }
+  if(hsh.hasOwnProperty('email')&&hsh.email){
+  query+=", email=$email";
+  obj['$email']=hsh.email;
+  }
+  if(hsh.hasOwnProperty('role_id')&&hsh.role_id){
+  query+=", role_id=$role_id";
+  obj['$role_id']=hsh.role_id;
+  }
+  if(hsh.hasOwnProperty('parent_user_id')&&hsh.parent_user_id){
+  query+=", parent_user_id=$parent_user_id";
+  obj['$parent_user_id']=hsh.parent_user_id;
+  }
+query+=" where uuid=$uuid";
+obj['$uuid']=uuid;
+
+
+  try{
+  sqlObj.runQuery(query,obj);
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+
+  try{
+  sqlObj.runQuery('insert into users_type(uuid, user_uuid, type_uuid) values($uuid, $user_uuid, (select uuid from type where categ="users" and name="customer"))',{$uuid:createUUID(), $user_uuid:uuid});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+//inserts into contacts
+  try{
+  sqlObj.runQuery('insert into contacts(uuid, user_id, fName, surName, mName, email, addr, addr2, city, prov, zip, country, phone, cellphone) values($uuid, $u_uuid, $fName, $surName, $mName, $email, $addr, $addr2, $city, $prov, $zip, $country, $phone, $cellphone)', {$uuid:createUUID(), $u_uuid:uuid, $fName:hsh.fName||"", $surName:hsh.surName||"", $mName:hsh.mName||"", $email:hsh.email||"", $addr:hsh.addr||"", $addr2:hsh.addr2||"", $city:hsh.city||"", $prov:hsh.prov||"", $zip:hsh.zip||"", $country:hsh.country||"", $phone:hsh.phone||"", $cellphone:hsh.cellphone||""});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+  if(postFunc){
+  postFunc(uuid);
+  }
+}
+
