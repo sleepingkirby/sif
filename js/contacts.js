@@ -38,9 +38,6 @@ if(typeof contacts==='undefined'){
         <div id="contactsFltrInptWrap" class="fltrRowCell">
           <input id="contactsFltrInpt" name="contactsFilter[input]" class="fltrInpt" type="text" placeholder="User filter. Ex. Smith" title="User Filter. Filters on lastname, firstname, email and/or phones"/>
         </div>
-        <div id="contactDelCnfrmWrap">
-          <input id="contactDelCnfrm" name="contact" type="checkbox" />
-        </div>
       </div>
 
       <div id="contactsMain">
@@ -263,22 +260,20 @@ if(typeof contacts==='undefined'){
     params: user uuid
     deletes the user
     ---------------------------------*/
-    delUser(uuid){
-      if(!uuid){
-      return null;
-      }
+    userUpdtStts(uuid, stts){
       try{
-        if(this.delCntctCnfrm){
-        delCustUser(uuid);
+        updateUserStatus(uuid, stts);
+        if(stts=="active"){
+        mainObj.setFloatMsg(`User has been activated`);
         }
-        else{
-        mainObj.setFloatMsg(`Deletion is permanent. Check "Delete User Confirmation" to proceed`);
+        if(stts=="disabled"){
+        mainObj.setFloatMsg(`User has been disabled`);
         }
+      this.draw();
       }
       catch(e){
       console.log(e);
       }
-      this.draw();
     }
 
     /*---------------------------------
@@ -390,9 +385,10 @@ if(typeof contacts==='undefined'){
           if(rcrd.city!=""||rcrd.prov!=""||rcrd.zip!=""){
           cpz=rcrd.city+' '+rcrd.prov+', '+rcrd.zip+'<br>';
           }
+        let icn=rcrd.status!="active"?`<div name="contactEditUser" class="menuIcon" onclick=cntctsObj.userUpdtStts("`+rcrd.uuid+`","active"); title="Active User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'checkBox')+`</div>`:`<div name="contactEditUser" class="menuIcon" onclick=cntctsObj.userUpdtStts("`+rcrd.uuid+`","disabled"); title="Disable User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>`;
         html+=`
         <tr>
-        <td>`+rcrd.status+`</td>
+        <td>`+statusColor(rcrd.status)+`</td>
         <td>`+rcrd.fName+`</td>
         <td>`+rcrd.surName+`</td>
         <td>`+rcrd.mName+`</td>
@@ -403,7 +399,7 @@ if(typeof contacts==='undefined'){
         <td>
           <div class="contactsCellActns">
           <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.updtCntctsRghtMod("`+rcrd.uuid+`"); title="Edit User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-          <div name="contactEditUser" class="menuIcon" onclick=cntctsObj.delUser("`+rcrd.uuid+`"); title="Delete User">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+          `+icn+`
           </div>
         </td>
         </tr>

@@ -269,3 +269,32 @@ obj['$uuid']=uuid;
   }
 }
 
+
+/*-----------------------------------------
+pre: mysqlObj, users table exists
+post: table record updated.
+updates the table
+-----------------------------------------*/
+function updateUserStatus(uuid=null, stts=null){
+  if(!uuid||!stts){
+  return null;
+  }
+
+query='update users set mod_dt=datetime("now") ';
+obj={};
+query+=", status_id=(select uuid from status where name=$stts)";
+obj['$stts']=stts;
+query+=" where uuid=$uuid";
+obj['$uuid']=uuid;
+
+
+  try{
+  sqlObj.runQuery(query,obj);
+  }
+  catch(e){
+  console.log(e);
+  throw e;
+  }
+
+return null;
+}
