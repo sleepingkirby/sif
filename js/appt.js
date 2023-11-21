@@ -642,7 +642,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
     let stts=document.getElementById("apptNewApptFormFullApptStatus");
       if(stts){
-      stts.value=appt.status_id;
+      stts.value=appt.status_uuid;
       }
     }
 

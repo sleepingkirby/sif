@@ -18,7 +18,6 @@ function createEvent(forUser, byUser, onDt, dur=30, type=null, stts=null, invntS
 let evnt_uuid=createUUID();
 let nullStts=stts?'$stts':'(select uuid from status where name=$stts)';
 let query='insert into events(uuid, forUser_id, byUser_id, status_id, create_date, on_date, duration) values($uuid, $forUser_id, $byUser_id, '+nullStts+', datetime($now_date), datetime($on_date), $dur)';
-console.log(query);
 let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toInptValFrmt(), $on_date:onDt, $dur:dur, $stts:stts||'active'};
   sqlObj.runQuery(query,obj);
   /*
@@ -116,10 +115,16 @@ function updateEventStatus(evnt_uuid=null, stts=null){
   return null;
   }
 
-  let query='update events set status_id=(select uuid from status where name=$stts) where uuid=$uuid';
-  let obj={$uuid:evnt_uuid, $stts:stts};
+let query='update events set status_id=(select uuid from status where name=$stts)';
+let obj={$uuid:evnt_uuid, $stts:stts};
 
-  sqlObj.runQuery(query,obj);
+  if(stts=="done"){
+  query+=', done_date=datetime($nowDate)';
+  obj['$nowDate']=toInptValFrmt(); 
+  }
+query+=' where uuid=$uuid';
+
+sqlObj.runQuery(query,obj);
 }
  
 
