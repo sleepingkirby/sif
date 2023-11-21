@@ -826,6 +826,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     -----------------------------------------------*/
     run(){
     this.users=getUsers();
+    
     this.invntSrvList=getInvntSrv();
     const {customer:customers, '':users}=spltUsr(this.users);
     this.usrHsh=arrOfHshToHshHsh('uuid',users);

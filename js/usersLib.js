@@ -50,9 +50,6 @@ let obj={};
       }
     }
   }
-  else{
-  query+='where t.name="customer"';
-  }
 
   switch(ord){
   case 'status':

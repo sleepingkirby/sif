@@ -56,7 +56,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <input id="apptNewApptFormApptInfoDur" title="in minutes" type="number" name="event[duration]" max="999" min="1" placeholder="0" style="margin-right:0px;"/>
           </div>
         </div>
-        <div class="row" style="justify-content:flex-start;">
+        <div class="row">
           <select id="apptNewApptFormApptInfoSrv" name="event[invntSrv]">
             <option>service</option>
 	        </select>
