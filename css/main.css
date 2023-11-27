@@ -475,6 +475,22 @@ align-items: center;
 margin-bottom: 16px;
 }
 
+.moduleAdd{
+display: flex;
+width:100%;
+justify-content: flex-end;
+padding:0px 6px 0px 6px;
+box-sizing: border-box;
+color: #808080;
+font-size: x-large;
+font-weight: 900;
+margin-bottom: 20px;
+}
+
+.moduleAdd .moduleAddBtn{
+cursor: pointer;
+}
+
 .fltrRow{
 display:flex;
 width:100%;
@@ -534,6 +550,30 @@ border-radius:6px;
 .fltrRow .fltrInpt::placeholder{
 color:var(--default-mid-gray);
 }
+
+.moduleTblMain{
+width: 100%;
+padding:var(--default-pad-size);
+box-sizing: border-box;
+}
+
+.moduleTblMain td:last-child > div.moduleTblCellActns{
+display:flex;
+justify-content: space-around;
+align-items:flex-start;
+width:100%;
+}
+
+.moduleTblMain td:last-child > div.moduleTblCellActns svg{
+fill:var(--default-gray);
+border-radius:6px;
+}
+
+.moduleTblMain td:last-child > div.moduleTblCellActns svg:hover{
+fill:white;
+background-color:var(--default-gray);
+}
+
 
 .statusActive{
 }

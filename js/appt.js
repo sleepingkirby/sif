@@ -13,8 +13,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let dt=toInptValFrmt();
     this.tmpl={};
     this.tmpl.headers=`
-      <div id="apptAdd">
-        <div id="apptAddBtn" title="Add New Appointment" tabindex=0>⨁</div>
+      <div id="apptAdd" class="moduleAdd">
+        <div id="apptAddBtn" class="moduleAddBtn" title="Add New Appointment" tabindex=0>⨁</div>
       </div>
       <div id="apptFltr" class="fltrRow">
         <div id="apptFltrInptWrap" class="fltrRowCell">
@@ -29,7 +29,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </select>
         </div>
       </div>
-      <div id="apptMain">
+      <div id="apptMain" class="moduleTblMain">
       </div>
     `;
     this.tmpl.apptTblStrt=`
@@ -235,7 +235,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let appts=[];
       if(this.fltrStr){
         for(let appt of this.appts){
-          console.log(appt);
           if(appt.status==this.fltrStts){
           appts.push({...appt});
           break;
@@ -685,7 +684,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <td>`+doneDate+`</td>
         <td>`+appt.duration+`</td>
         <td>
-          <div class="apptCellActns">
+          <div class="moduleTblCellActns">
             <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
             <div name="apptDone" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div name="apptCancel" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
