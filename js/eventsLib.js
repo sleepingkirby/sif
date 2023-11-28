@@ -261,6 +261,10 @@ let obj={};
   query+=' order by cust_status_name';
   query+=desc?' desc':' asc';
   break;
+  case 'username':
+  query+=' order by username';
+  query+=desc?' desc':' asc';
+  break;
   default:
   break;
   }
