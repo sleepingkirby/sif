@@ -141,15 +141,22 @@ let html='';
 return html;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+/*-----------------------------------------------
+pre: none
+post: none
+-----------------------------------------------*/
+function genSttsSlct(sttsArr,slctVl=null, dfltVl="active"){
+  let html="";
+  for(const stts of sttsArr){
+    if(slctVl&&stts.uuid==slctVl){
+    html+='<option value="'+stts.uuid+'" selected >'+stts.name+"</option>";
+    }
+    else if(stts.name==dfltVl){
+    html+='<option value="'+stts.uuid+'" selected >'+stts.name+"</option>";
+    }
+    else{
+    html+='<option value="'+stts.uuid+'"'+'>'+stts.name+"</option>";
+    }
+  }
+return html;
+}

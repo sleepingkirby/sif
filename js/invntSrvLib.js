@@ -18,11 +18,11 @@ const q=`
 select
 invntSrv.uuid,
 invntSrv.name,
-invntSrv.type_uuid,
+invntSrv.type_uuid as type_id,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
-invntSrv.status as statud_id,
+invntSrv.status as status_id,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
@@ -71,11 +71,11 @@ let query=`
 select
 invntSrv.uuid,
 invntSrv.name,
-invntSrv.type_uuid,
+invntSrv.type_uuid as type_id,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
-invntSrv.status as statud_id,
+invntSrv.status as status_id,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
@@ -102,7 +102,8 @@ let and='';
 let tmp=null;
 let obj={};
 
-  if(paramObj){
+
+  if(paramObj&&Object.keys(paramObj).length>0){
   query+='where';
     for(let param of Object.keys(paramObj)){
       if(paramObj[param]){
@@ -161,7 +162,38 @@ let obj={};
   obj['$offset']=offset;
   }
 tmp=sqlObj.runQuery(query,obj);
-console.log(tmp);
 return tmp;
+}
+
+
+/*----------------------------------------------
+pre: sqlObj
+post: none
+format buy/sell price from invntSrv
+----------------------------------------------*/
+function invntSrvPrcFormat(num, type){
+let price='';
+  if(num==''||num==null){
+  return '';
+  }
+
+  switch(type){
+  case 'percentage':
+  let tmpnum=num
+    if(tmpnum.match('0.')==0){
+    tmpnum=tmpnum.substr(2);
+    }
+  return tmpnum+'%';
+  break;
+  case 'static':
+  return '$'+num;
+  break;
+  case 'deferred':
+  return '';
+  break;
+  default:
+  return 'N/A';
+  break;
+  }
 }
 
