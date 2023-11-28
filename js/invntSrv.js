@@ -218,10 +218,8 @@ manage inventory and services
         <td>`+invntSrvPrcFormat(invntSrv.sell,invntSrv.price_type_name)+`</td>
         <td>
           <div class="moduleTblCellActns">
-            <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtApptRghtMod("`+invntSrv.uuid+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-            <div name="invntSrvDone" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
-            <div name="invntSrvCancel" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
-            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","disabled"); title="Disable Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+            <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtApptRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>
         </td>
       </tr>
