@@ -14,7 +14,7 @@ manage inventory and services
       </div>
       <div id="invntSrvFltr" class="fltrRow">
         <div id="invntSrvFltrInptWrap" class="fltrRowCell">
-          <input id="invntSrvFltrInpt" name="invntSrvFilter[input]" class="fltrInpt" type="text" placeholder="Inventory/Service Name Filter"/>
+          <input id="invntSrvFltrInpt" name="invntSrvFilter[input]" class="fltrInpt" type="text" placeholder="Filter by name, price, amnts, duration" title="Filter by name, price, amnts, duration"/>
         </div>
         <div class="">
           <div class="fltrRowCellLbl">
@@ -53,7 +53,7 @@ manage inventory and services
     {'name':'name','title':'name', 'sort':true},
     {'name':'type','title':'type', 'sort':true},
     {'name':'status_name','title':'status', 'sort':true},
-    {'name':'srv_duration','title':'duration', 'sort':true},
+    {'name':'srv_durtn','title':'duration', 'sort':true},
     {'name':'amnt','title':'amnt', 'sort':true},
     {'name':'buy','title':'buy price', 'sort':true},
     {'name':'sell','title':'sell price', 'sort':true},
@@ -74,6 +74,7 @@ manage inventory and services
     `;
 
     this.mainTblId="invntSrvMain";
+    this.fltrProps=['name','sell','buy','amnt','srv_durtn'];
     this.sortCol="name";
     this.sortColDir="asc";
     this.typeStr=null;
@@ -154,15 +155,19 @@ manage inventory and services
     }
 
     /*----------------------------------
-    pre:
-    post:
+    pre: this.fltrStr, this.invntSrvList
+    post: none
+    filters the inventory services
     ----------------------------------*/
     fltrInvntSrvs(){
     let invntSrvs=[];
       if(this.fltrStr){
         for(let invntSrv of this.invntSrvList){
-          if(invntSrv.name.toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
-          invntSrvs.push({...invntSrv});
+          for(let prop of this.fltrProps){
+            if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
+            invntSrvs.push({...invntSrv});
+            break;
+            }
           }
         }
       }
