@@ -8,9 +8,36 @@ manage inventory and services
     constructor(){
     this.tmpl={};
     this.invntSrvList=null;
+//CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
+
+    this.tmpl.rghtModForm=`
+      <div id="invntSrvNewForm">
+        <div class="lbl">Inventory/Service</div>
+        <div id="invntSrvNewFormUUID">
+          <input id="invntSrvNewFormInfoUUID" type="hidden" />
+        </div>
+        <div id="invntSrvNewFormInfo">
+          <div class="row mdRow" style="width:100%; display:flex; flex-direction:row; justify-content: space-between;">
+            <div>
+              <textarea name="invntSrv[name]" type="text" placeholder="Name"></textarea>
+              <textarea name="invntSrv[sku]" type="text" placeholder="Sku"></textarea>
+            </div>
+            <div>
+              <div style="margin-right:12px;">
+              Amount:
+              </div>
+              <div class="inptNumNumRszWrap">
+                <input class="inptNumRsz" type="number" name="invntSrv[amnt]" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+`;
+
     this.tmpl.headers=`
       <div id="invntSrvAdd" class="moduleAdd">
-        <div id="invntSrvAddBtn" class="moduleAddBtn" title="Add New Appointment" tabindex=0>⨁</div>
+        <div id="invntSrvAddBtn" class="moduleAddBtn" title="New Inventory/Service" tabindex=0>⨁</div>
       </div>
       <div id="invntSrvFltr" class="fltrRow">
         <div id="invntSrvFltrInptWrap" class="fltrRowCell">
@@ -118,6 +145,43 @@ manage inventory and services
     }
 
     /*----------------------------------
+    pre:this.sortCol,this.sortColDir
+    post:figure out sorting and sets variables
+    function to set proper variables
+    ----------------------------------*/
+    setColSrt(srt){
+      if(this.sortCol!=srt){
+      this.sortCol=srt;
+      this.sortColDir="desc";
+      return null;
+      }
+
+      this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
+    }
+
+    /*----------------------------------
+    pre:this.setColSrt()
+    post:none
+    function to set to hook for table header sort
+    ----------------------------------*/
+    setColSrtHookFunc(e){
+    let nm=e.getAttribute("name");
+      if(nm){
+      this.setColSrt(nm);
+      }
+    this.drawTbl();
+    }
+
+    /*-----------------------------------------------
+    pre: this class
+    post: right modal filled
+    generates right modal content
+    -----------------------------------------------*/
+    genRghtMod(){
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
+    }
+
+    /*----------------------------------
     pre: invntSrvFilterStatus element
     post: event hook added
     addes event hook to invntSrvFilterStatus element
@@ -153,6 +217,23 @@ manage inventory and services
       this.drawTbl();
       };
     }
+
+    /*----------------------------------
+    pre: apptAddBtn element exists, mainObj.modPrcClsCall()
+    post: event hook added
+    addes event hook to apptAddBtn element
+    ----------------------------------*/
+    hookNewInvntBtn(){
+      document.getElementById("invntSrvAddBtn").onclick=(e)=>{
+      //this.addUpdtBtnFlip();
+
+      //this.cleanRghtModForm();
+
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      };
+    }
+
 
     /*----------------------------------
     pre: this.fltrStr, this.invntSrvList
@@ -242,6 +323,7 @@ manage inventory and services
     this.hookFltrStts();
     this.hookFltrTyp();
     this.hookFltrInpt();
+    this.hookNewInvntBtn();
     }
 
     /*-----------------------------------------------
@@ -263,6 +345,7 @@ manage inventory and services
     this.types=selectType('invntSrv');
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
+    this.genRghtMod();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     document.getElementById('invntSrvFilterStatus').innerHTML=this.genFltrSttsSlct();
     document.getElementById('invntSrvFilterType').innerHTML=this.genFltrTypeSlct();

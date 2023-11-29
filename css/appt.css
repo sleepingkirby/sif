@@ -10,7 +10,7 @@ padding:0px 12px 0px 12px;
 display:flex;
 }
 
-#apptNewApptForm select,input[type="datetime-local"],input[type="number"]{
+#apptNewApptForm select,#apptNewApptForm input[type="datetime-local"],#apptNewApptForm input[type="number"]{
 margin-right: 12px;
 }
 

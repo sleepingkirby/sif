@@ -1,0 +1,14 @@
+#invntSrvNewForm{
+display: flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+padding:0px 12px 0px 12px;
+width: 100%;
+}
+
+#invntSrvNewForm .lbl{
+font-weight: 600;
+margin-bottom: 26px;
+}
+
