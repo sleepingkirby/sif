@@ -17,17 +17,39 @@ manage inventory and services
           <input id="invntSrvNewFormInfoUUID" type="hidden" />
         </div>
         <div id="invntSrvNewFormInfo">
-          <div class="row mdRow" style="width:100%; display:flex; flex-direction:row; justify-content: space-between;">
+          <div class="row mdRow">
             <div>
               <textarea name="invntSrv[name]" type="text" placeholder="Name"></textarea>
               <textarea name="invntSrv[sku]" type="text" placeholder="Sku"></textarea>
             </div>
-            <div>
-              <div style="margin-right:12px;">
+            <div style="margin-left:80px;">
+              <div class="inptLbl">
               Amount:
               </div>
-              <div class="inptNumNumRszWrap">
+              <div class="inptNumNumRszWrap" title="Amount of product [or service, if it applies] in stock.">
                 <input class="inptNumRsz" type="number" name="invntSrv[amnt]" />
+              </div>
+            </div>
+          </div>
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
+              Buy Price:
+              </div>
+              $
+              <div class="inptNumNumRszWrap inptNumPrc" title="Buy price">
+                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
+              </div>
+            </div>
+          </div>
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
+              Sell Price:
+              </div>
+              $
+              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
               </div>
             </div>
           </div>

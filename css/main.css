@@ -596,8 +596,8 @@ display:flex;
 align-items:center;
 }
 
-.mdRow > div.inptNumWdth{
-width: 100px;
+.inptNumWdth{
+width:100px;
 }
 
 .inptNumRsz{
@@ -608,7 +608,15 @@ width:100%;
 overflow:hidden;
 resize:horizontal;
 min-width:80px;
-width:80px;
+width:120px;
+}
+
+.inptNumPrc{
+margin-left:6px;
+}
+
+.inptLbl{
+margin-right:12px;
 }
 
 @keyframes opac{
