@@ -616,7 +616,8 @@ margin-left:6px;
 }
 
 .inptLbl{
-margin-right:12px;
+margin-right:8px;
+border-width:0px;
 }
 
 @keyframes opac{

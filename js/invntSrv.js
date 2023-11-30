@@ -16,36 +16,33 @@ manage inventory and services
         <div id="invntSrvNewFormUUID">
           <input id="invntSrvNewFormInfoUUID" type="hidden" />
         </div>
-        <div class="row">
-          <select id="invntSrvNewType" name="invntSrv[type_uuid]">
-            <option>type</option>
-          </select>
-        </div>
         <div id="invntSrvNewFormInfo">
           <div class="row mdRow">
             <div>
               <textarea name="invntSrv[name]" type="text" placeholder="Name"></textarea>
               <textarea name="invntSrv[sku]" type="text" placeholder="Sku"></textarea>
             </div>
-            <div style="margin-left:80px;">
-              <div class="inptLbl">
-              Amount:
-              </div>
-              <div class="inptNumNumRszWrap" title="Amount of product [or service, if it applies] in stock.">
-                <input class="inptNumRsz" type="number" name="invntSrv[amnt]" />
-              </div>
+            <div id="invntSrvAmntDrtn" style="margin-left:80px;">
+              <label class="inptLbl" for="invntSrvNewType" title="Product, service or discount">
+              Type:
+              </label>
+              <select id="invntSrvNewType" name="invntSrv[type_uuid]">
+                <option>type</option>
+              </select>
             </div>
           </div>
           <div class="row mdRow">
             <div>
-              <div class="inptLbl">
-              Buy Price:
-              </div>
-              $
-              <div class="inptNumNumRszWrap inptNumPrc" title="Buy price">
-                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
-              </div>
+              <label class="inptLbl" for="invntSrvNewType" title="Product, service or discount">
+              Price Type:
+              </label>
+              <select id="invntSrvPrcTypeId" name="invntSrv[price_type_id]">
+                <option>price type</option>
+              </select>
             </div>
+          </div>
+          <div id="invntSrvNewFormPrcs">
+            &nbsp;
           </div>
           <div class="row mdRow">
             <div>
@@ -61,6 +58,47 @@ manage inventory and services
         </div>
       </div>
 `;
+
+    this.tmpl.rghtModFormPrcType={
+    'static':`
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
+              Sell Price:
+              </div>
+              $
+              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
+              </div>
+            </div>
+          </div>
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
+              Buy Price:
+              </div>
+              $
+              <div class="inptNumNumRszWrap inptNumPrc" title="BUy price">
+                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
+              </div>
+            </div>
+          </div>
+    `,
+    'percentage':`
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
+              Price:
+              </div>
+              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".1"/>
+              </div>
+              %
+            </div>
+          </div>
+    `,
+    'deferred':``
+    };
 
     this.tmpl.headers=`
       <div id="invntSrvAdd" class="moduleAdd">
@@ -136,6 +174,8 @@ manage inventory and services
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
+    this.newInvntSrvTypesSlctId='invntSrvNewType';
+    this.newInvntSrvPrcTypesSlctId='invntSrvPrcTypeId';
     this.fltrStr=null;
     }
 
@@ -207,6 +247,25 @@ manage inventory and services
     -----------------------------------------------*/
     genRghtMod(){
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
+      if(this.typesHsh&&this.typesHsh.hasOwnProperty("invntSrv")&&this.typesHsh.invntSrv.hasOwnProperty('')){
+      let typesSlct=[];
+        for(let i of Object.keys(this.typesHsh.invntSrv[''])){
+        typesSlct.push({'uuid':this.typesHsh.invntSrv[''][i], 'name':i});
+        }
+      document.getElementById(this.newInvntSrvTypesSlctId).innerHTML=genSttsSlct(typesSlct,null,'product');
+      this.hookNewInvntSrvType();
+      }
+    }
+
+    /*----------------------------------
+    pre: this.newInvntSrvTypesSlctId filled and element exists
+    post: event hook added
+    addes event hook to this.newInvntSrvTypesSlctId element
+    ----------------------------------*/
+    hookNewInvntSrvType(){
+      document.getElementById(this.newInvntSrvTypesSlctId).onchange=(e)=>{
+      console.log(e.target.value);
+      }
     }
 
     /*----------------------------------
@@ -261,7 +320,6 @@ manage inventory and services
       mainObj.modPrcClsCall(el);
       };
     }
-
 
     /*----------------------------------
     pre: this.fltrStr, this.invntSrvList
@@ -371,7 +429,8 @@ manage inventory and services
     -----------------------------------------------*/
     run(){
     this.types=selectType('invntSrv');
-    console.log(sepTypesHsh(this.types));
+    this.typesHsh=sepTypesHsh(this.types);
+    console.log(this.typesHsh);
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
     this.genRghtMod();
