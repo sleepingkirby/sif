@@ -5,6 +5,30 @@ common library for getting types
 -----------------------------------------------*/
 
 /*-----------------------------------------------
+pre: array of types (from types table)
+post: none
+separates types record into an array
+-----------------------------------------------*/
+function sepTypesHsh(arr){
+  if(typeof arr!="object"){
+  return null;
+  }
+let obj={};
+  for(let row of arr){
+    if(row.hasOwnProperty('categ')&&row.hasOwnProperty('col')){
+      if(!obj.hasOwnProperty(row.categ)){
+      obj[row.categ]={};
+      }
+      if(!obj[row.categ].hasOwnProperty(row.col)){
+      obj[row.categ][row.col]={};
+      }
+      obj[row.categ][row.col][row.name]=row.uuid;
+    }
+  }
+return obj;
+}
+
+/*-----------------------------------------------
 pre: sqlObj, type table
 post: none
 get type

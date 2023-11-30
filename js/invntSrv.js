@@ -16,6 +16,11 @@ manage inventory and services
         <div id="invntSrvNewFormUUID">
           <input id="invntSrvNewFormInfoUUID" type="hidden" />
         </div>
+        <div class="row">
+          <select id="invntSrvNewType" name="invntSrv[type_uuid]">
+            <option>type</option>
+          </select>
+        </div>
         <div id="invntSrvNewFormInfo">
           <div class="row mdRow">
             <div>
@@ -130,6 +135,7 @@ manage inventory and services
     this.statusStr=null;
     this.statuses=null;
     this.types=null;
+    this.typesHsh=null;
     this.fltrStr=null;
     }
 
@@ -365,6 +371,7 @@ manage inventory and services
     -----------------------------------------------*/
     run(){
     this.types=selectType('invntSrv');
+    console.log(sepTypesHsh(this.types));
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
     this.genRghtMod();
