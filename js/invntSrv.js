@@ -254,6 +254,23 @@ manage inventory and services
         }
       document.getElementById(this.newInvntSrvTypesSlctId).innerHTML=genSttsSlct(typesSlct,null,'product');
       this.hookNewInvntSrvType();
+      let prcTypesSlct=[];
+        for(let i of Object.keys(this.typesHsh.invntSrv['price_type'])){
+        prcTypesSlct.push({'uuid':this.typesHsh.invntSrv['price_type'][i], 'name':i});
+        }
+      document.getElementById(this.newInvntSrvPrcTypesSlctId).innerHTML=genSttsSlct(prcTypesSlct,null,'static');
+      this.hookInvntSrvPrcType();
+      }
+    }
+
+    /*----------------------------------
+    pre: this.newInvntSrvPrcTypesSlctId filled and element exists
+    post: event hook added
+    addes event hook to this.newInvntSrvPrcTypesSlctId element
+    ----------------------------------*/
+    hookInvntSrvPrcType(){
+      document.getElementById(this.newInvntSrvPrcTypesSlctId).onchange=(e)=>{
+      console.log(e.target.value);
       }
     }
 
