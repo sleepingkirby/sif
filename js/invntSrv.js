@@ -8,6 +8,7 @@ manage inventory and services
     constructor(){
     this.tmpl={};
     this.invntSrvList=null;
+    this.invntSrvLnkList=null;
 //CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
 
     this.tmpl.rghtModForm=`
@@ -216,6 +217,19 @@ manage inventory and services
         </table>
     `;
 
+    this.tmpl.mdlInvntSrvTbl=[];
+    this.tmpl.mdlInvntSrvTbl.push(`
+      <table>
+        <tr>
+    `);
+
+    this.tmpl.mdlInvntSrvTbl.push(`
+        <tr>
+      </table>
+    `);
+
+
+
     this.mainTblId="invntSrvMain";
     this.fltrProps=['name','sell','buy','amnt','srv_durtn','sku'];
     this.sortCol="name";
@@ -312,6 +326,9 @@ manage inventory and services
         }
       document.getElementById(this.newInvntSrvPrcTypesSlctId).innerHTML=genSttsSlct(prcTypesSlct,null,'static');
       this.hookInvntSrvPrcType();
+
+      this.invntSrvLnkList=getInvntSrvLnkArr('545030ee-f0f8-4b1f-9f29-db6378bb5639');
+
       }
     }
 
@@ -440,7 +457,11 @@ manage inventory and services
     let cntnt='';
       for(let invntSrv of invntSrvList){
       let dur=invntSrv.srv_durtn||'0';
-      let buyType=invntSrv.type?'service':null;
+      //if the invntSrv is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
+      let buyType=null;
+        if(invntSrv.type=='product'){
+        buyType=invntSrv.price_type_name;
+        }
       cntnt+=`
       <tr>
         <td>`+invntSrv.create_date+`</td>

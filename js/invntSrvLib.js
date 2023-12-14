@@ -175,45 +175,42 @@ function getInvntSrvLnkArr(invntSrvId){
   return [];
   }
 
-/*
-sqlite> .schema invntSrv
-CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
-sqlite> .schema invntSrvLnk
-CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
-sqlite> 
-
-*/
 let query=`
 select
-invntSrv.uuid,
-invntSrv.name,
-invntSrv.type_uuid as type_id,
+isl.uuid,
+invSrv.uuid as invntSrvuuid,
+invSrv.name as name,
+invSrv.type_uuid as type_id,
 invntSrvTyp.name as type,
-invntSrv.create_date,
-invntSrv.mod_date,
-invntSrv.status as status_id,
+invSrv.create_date as create_date,
+invSrv.mod_date,
+invSrv.status as status_id,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
 c.surName as surName,
 c.mName as mName,
-invntSrv.srv_durtn,
-invntSrv.sku,
-invntSrv.amnt,
-invntSrv.buy,
-invntSrv.sell,
-invntSrv.price_type_id,
+invSrv.srv_durtn,
+invSrv.sku,
+invSrv.amnt,
+invSrv.buy,
+invSrv.sell,
+invSrv.price_type_id,
 prcTyp.name as price_type_name,
-invntSrv.notes
-from invntSrv
-left join type as invntSrvTyp on invntSrv.type_uuid=invntSrvTyp.uuid
-left join status on invntSrv.status=status.uuid
-left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
+invSrv.notes as notes
+from invntSrvLnk as isl
+left join invntSrv as invSrv on isl.invntSrvLnkItm=invSrv.uuid
+left join type as invntSrvTyp on invSrv.type_uuid=invntSrvTyp.uuid
+left join status on invSrv.status=status.uuid
+left join invntSrv_users on invSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
 left join contacts as c on users.uuid=c.user_id
-left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
+left join type as prcTyp on invSrv.price_type_id=prcTyp.uuid
+where isl.invntSrvLnkPrnt=$id
 `;
 
+let tmp=sqlObj.runQuery(query, {'$id':invntSrvId});
+return tmp;
 }
 
 /*----------------------------------------------
