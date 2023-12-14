@@ -94,7 +94,7 @@ manage inventory and services
                 </select>
               </div>
             </div>
-            <div class="row mdRow">
+            <div id="invntSrvNewFormInvntSrvLst" class="row mdRow">
               <table>
                 <tr>
                   <th>
@@ -203,6 +203,17 @@ manage inventory and services
     {'name':'sell','title':'sell price', 'sort':true},
     {'name':'actions','title':'actions', 'sort':false}
     ];
+    this.tmpl.invntSrvRghtMdlTblHdArr=[
+    {'name':'name','title':'name', 'sort':true},
+    {'name':'type','title':'type', 'sort':true},
+    {'name':'status_name','title':'status', 'sort':true},
+    {'name':'srv_durtn','title':'duration', 'sort':true},
+    {'name':'amnt','title':'amnt', 'sort':true},
+    {'name':'buy','title':'buy price', 'sort':true},
+    {'name':'sell','title':'sell price', 'sort':true},
+    {'name':'actions','title':'actions', 'sort':false}
+    ];
+
     //<div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(event)">
     this.tmpl.invntSrvTblHdCllIcn=`
             <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="invntSrvObj.setColSrtHookFunc(this)">
@@ -217,17 +228,23 @@ manage inventory and services
         </table>
     `;
 
-    this.tmpl.mdlInvntSrvTbl=[];
-    this.tmpl.mdlInvntSrvTbl.push(`
-      <table>
-        <tr>
-    `);
-
-    this.tmpl.mdlInvntSrvTbl.push(`
-        <tr>
-      </table>
-    `);
-
+    this.tmpl.invntSrvRghtMdlTblStrt=`
+        <table id="invntSrvNewFormInvntSrvLst">
+          <tr>
+    `;
+    this.tmpl.invntSrvRghtMdlTblHdCll=[];
+    this.tmpl.invntSrvRghtMdlTblHdCll[0]=`
+          <th>
+    `;
+    this.tmpl.invntSrvRghtMdlTblHdCll[1]=`
+          </th>
+    `;
+    this.tmpl.invntSrvRghtMdlTblHdEnd=`
+          </tr>
+    `;
+    this.tmpl.invntSrvRghtMdlTblEnd=`
+        </table>
+    `;
 
 
     this.mainTblId="invntSrvMain";
@@ -327,10 +344,30 @@ manage inventory and services
       document.getElementById(this.newInvntSrvPrcTypesSlctId).innerHTML=genSttsSlct(prcTypesSlct,null,'static');
       this.hookInvntSrvPrcType();
 
-      this.invntSrvLnkList=getInvntSrvLnkArr('545030ee-f0f8-4b1f-9f29-db6378bb5639');
-
+      this.drawRghtMdlTbl();
       }
     }
+
+    /*-----------------------------------------------
+    pre: none
+    post: updates rghtModal
+    update rghtModal 
+    -----------------------------------------------*/
+    updtInvntSrvRghtMod(uuid=null){
+      if(!uuid){
+      return null;
+      }
+      /*
+      if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
+      this.apptsHsh[uuid];
+      this.fillRghtMod(this.apptsHsh[uuid]);
+      this.addUpdtBtnFlip(true);
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      }
+      */
+    }
+
 
     /*----------------------------------
     pre: this.newInvntSrvPrcTypesSlctId filled and element exists
@@ -428,6 +465,25 @@ manage inventory and services
       invntSrvs=[...this.invntSrvList];
       }
     return invntSrvs;
+    }
+
+
+    /*-----------------------------------------------
+    pre: none
+    post: inventory
+    draws table
+    -----------------------------------------------*/
+    drawRghtMdlTbl(){
+    let rtrn='';
+    let hdrs='';
+    let el=document.getElementById(this.newInvntSrvInvntSrvLstId);
+      if(!el){
+      return null;
+      }
+      for(let hdr of this.tmpl.invntSrvRghtMdlTblHdArr){
+      hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
+      }
+    el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+this.tmpl.invntSrvRghtMdlTblEnd;
     }
 
     /*-----------------------------------------------
