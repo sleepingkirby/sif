@@ -47,12 +47,60 @@ manage inventory and services
           <div class="row mdRow">
             <div>
               <div class="inptLbl">
+              Buy Price:
+              </div>
+              $
+              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
+              </div>
+            </div>
+          </div>
+          <div class="row mdRow">
+            <div>
+              <div class="inptLbl">
               Sell Price:
               </div>
               $
               <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
                 <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
               </div>
+            </div>
+          </div>
+          <div class="mdlSubBox mdlSubBoxPad">
+            <div class="row mdRow">
+              <div class="lbl">
+              Bundled Inventory/Services
+              </div>
+            </div>
+            <div class="row mdRow invntSrvMdlFltr">
+              <div>
+                <input class="mdltxtInpt" type="text" placeholder="Filter by name, price, amnts, duration, sku" title="Filter by name, price, amnts, duration, sku"/>
+              </div>
+              <div class="">
+                <label class="inptLbl">
+                Status Filter:
+                </label>
+                <select title="Status Filter">
+                <option>all</option>
+                </select>
+              </div>
+              <div class="">
+                <label class="inptLbl">
+                Type Filter:
+                </label>
+                <select title="Type Filter">
+                <option>all</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mdRow">
+              <table>
+                <tr>
+                  <th>
+                  inventory services
+                  </th>
+                </tr>
+              </table>
             </div>
           </div>
         </div>
@@ -100,13 +148,16 @@ manage inventory and services
     'deferred':``
     };
 
+    this.tmpl.rghtModFormInvntLst=`
+    `;
+
     this.tmpl.headers=`
       <div id="invntSrvAdd" class="moduleAdd">
         <div id="invntSrvAddBtn" class="moduleAddBtn" title="New Inventory/Service" tabindex=0>⨁</div>
       </div>
       <div id="invntSrvFltr" class="fltrRow">
         <div id="invntSrvFltrInptWrap" class="fltrRowCell">
-          <input id="invntSrvFltrInpt" name="invntSrvFilter[input]" class="fltrInpt" type="text" placeholder="Filter by name, price, amnts, duration" title="Filter by name, price, amnts, duration"/>
+          <input id="invntSrvFltrInpt" name="invntSrvFilter[input]" class="fltrInpt" type="text" placeholder="Filter by name, price, amnts, duration, sku" title="Filter by name, price, amnts, duration, sku"/>
         </div>
         <div class="">
           <div class="fltrRowCellLbl">
@@ -166,7 +217,7 @@ manage inventory and services
     `;
 
     this.mainTblId="invntSrvMain";
-    this.fltrProps=['name','sell','buy','amnt','srv_durtn'];
+    this.fltrProps=['name','sell','buy','amnt','srv_durtn','sku'];
     this.sortCol="name";
     this.sortColDir="asc";
     this.typeStr=null;
@@ -176,6 +227,7 @@ manage inventory and services
     this.typesHsh=null;
     this.newInvntSrvTypesSlctId='invntSrvNewType';
     this.newInvntSrvPrcTypesSlctId='invntSrvPrcTypeId';
+    this.newInvntSrvInvntSrvLstId='invntSrvNewFormInvntSrvLst';
     this.fltrStr=null;
     }
 
@@ -447,7 +499,6 @@ manage inventory and services
     run(){
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
-    console.log(this.typesHsh);
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
     this.genRghtMod();

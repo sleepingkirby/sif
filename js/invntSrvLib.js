@@ -165,6 +165,56 @@ tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
 
+/*----------------------------------------------
+pre: sqlObj
+post: none
+gets inventory/service link items
+----------------------------------------------*/
+function getInvntSrvLnkArr(invntSrvId){
+  if(!invntSrvId){
+  return [];
+  }
+
+/*
+sqlite> .schema invntSrv
+CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
+sqlite> .schema invntSrvLnk
+CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
+sqlite> 
+
+*/
+let query=`
+select
+invntSrv.uuid,
+invntSrv.name,
+invntSrv.type_uuid as type_id,
+invntSrvTyp.name as type,
+invntSrv.create_date,
+invntSrv.mod_date,
+invntSrv.status as status_id,
+status.name as status_name,
+users.username as username,
+c.fName as fName,
+c.surName as surName,
+c.mName as mName,
+invntSrv.srv_durtn,
+invntSrv.sku,
+invntSrv.amnt,
+invntSrv.buy,
+invntSrv.sell,
+invntSrv.price_type_id,
+prcTyp.name as price_type_name,
+invntSrv.notes
+from invntSrv
+left join type as invntSrvTyp on invntSrv.type_uuid=invntSrvTyp.uuid
+left join status on invntSrv.status=status.uuid
+left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
+left join users on invntSrv_users.users_id=users.uuid
+left join contacts as c on users.uuid=c.user_id
+left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
+`;
+
+}
 
 /*----------------------------------------------
 pre: sqlObj

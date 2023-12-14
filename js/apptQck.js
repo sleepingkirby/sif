@@ -31,7 +31,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <input id="apptNewApptFormUserNewUser" type="submit" value="New User" disabled />
         </div>
       </div>
-      <div id="apptNewApptFormUserInfo">
+      <div id="apptNewApptFormUserInfo" class="mdlSubBox">
         <div class="row">
           <textarea name="contact[surName]" type="text" placeholder="Last Name"></textarea>
           <textarea name="contact[mName]" type="text" style="width:60px;" placeholder="M."></textarea>

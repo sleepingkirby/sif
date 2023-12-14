@@ -12,3 +12,11 @@ font-weight: 600;
 margin-bottom: 26px;
 }
 
+.invntSrvMdlFltr > div{
+margin-right: 24px;
+}
+
+.invntSrvMdlFltr > div:last-child{
+margin-right: 0px;
+}
+

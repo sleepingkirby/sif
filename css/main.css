@@ -154,14 +154,20 @@ color:rgba(255, 255, 255, 0.8);
 }
 
 select,option{
-background-color:var(--default-blue);
+background-color:transparent;
 color:white;
 border-width:0px;
-border-bottom:1px solid white;
 padding:4px 6px 4px 6px;
 font-size:x-large;
 }
 
+select{
+border-bottom:1px solid white;
+}
+
+option{
+background-color:var(--default-blue);
+}
 
 label{
 background-color: transparent;
@@ -618,6 +624,36 @@ margin-left:6px;
 .inptLbl{
 margin-right:8px;
 border-width:0px;
+}
+
+.mdlSubBox{
+width: 100%;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items: stretch;
+margin: 12px 0px;
+border-radius: 6px;
+background-color: rgba(255,255,255,0.15);
+box-sizing: border-box;
+}
+
+.mdlSubBoxPad{
+padding:12px 12px;
+}
+
+.mdltxtInpt{
+padding: 4px 6px;
+background-color: transparent;
+border: 1px solid white;
+border-radius: 6px;
+color: white;
+font-family: var(--font-family);
+font-size: x-large;
+}
+
+.mdltxtInpt::placeholder{
+color: var(--faded-white);
 }
 
 @keyframes opac{
