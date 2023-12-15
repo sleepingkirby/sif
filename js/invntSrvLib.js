@@ -170,8 +170,8 @@ pre: sqlObj
 post: none
 gets inventory/service link items
 ----------------------------------------------*/
-function getInvntSrvLnkArr(invntSrvId){
-  if(!invntSrvId){
+function getInvntSrvLnkArr(paramObj, ord, desc=false, limit=null, offset=null){
+  if(!paramObj||Object.keys(paramObj).length<=0||!paramObj.hasOwnProperty('invntSrvLnkPrnt')){
   return [];
   }
 
@@ -206,10 +206,76 @@ left join invntSrv_users on invSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
 left join contacts as c on users.uuid=c.user_id
 left join type as prcTyp on invSrv.price_type_id=prcTyp.uuid
-where isl.invntSrvLnkPrnt=$id
 `;
 
-let tmp=sqlObj.runQuery(query, {'$id':invntSrvId});
+let and='';
+let tmp=null;
+let obj={};
+  
+  
+  if(paramObj&&Object.keys(paramObj).length>0){
+  query+='where';
+    for(let param of Object.keys(paramObj)){
+      if(paramObj[param]){
+      query+=`${and} ${param}=\$${param}`;
+      obj[`\$${param}`]=paramObj[param];
+      and=' and';
+      }
+    }
+  }
+
+
+  switch(ord){
+  case 'mod_date':
+  query+=' order by mod_date';
+  query+=desc?' desc':' asc';
+  break;
+  case 'create_date':
+  query+=' order by create_date';
+  query+=desc?' desc':' asc';
+  break;
+  case 'status_name':
+  query+=' order by status';
+  query+=desc?' desc':' asc';
+  break;
+  case 'type':
+  query+=' order by type';
+  query+=desc?' desc':' asc';
+  break;
+  case 'sell':
+  query+=' order by sell';
+  query+=desc?' desc':' asc';
+  break;
+  case 'buy':
+  query+=' order by buy';
+  query+=desc?' desc':' asc';
+  break;
+  case 'amnt':
+  query+=' order by amnt';
+  query+=desc?' desc':' asc';
+  break;
+  case 'price_type_name':
+  query+=' order by price_type_name';
+  query+=desc?' desc':' asc';
+  break;
+  default:
+  break;
+  }
+
+  if(!isNaN(parseInt(limit))){
+  query+=' limit $limit';
+  obj['$limit']=limit;
+  }
+
+  if(!isNaN(parseInt(offset))){
+  query+=' offset $offset';
+  obj['$offset']=offset;
+  }
+
+console.log(query);
+console.log(obj);
+
+tmp=sqlObj.runQuery(query, obj);
 return tmp;
 }
 

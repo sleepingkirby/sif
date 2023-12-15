@@ -251,8 +251,11 @@ manage inventory and services
     this.fltrProps=['name','sell','buy','amnt','srv_durtn','sku'];
     this.sortCol="name";
     this.sortColDir="asc";
+    this.rghtMdlTblCol="name";
+    this.rghtMdlTblColDir="name";
     this.typeStr=null;
     this.statusStr=null;
+    this.rghtMdlTblStatusStr=null;
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
@@ -344,7 +347,7 @@ manage inventory and services
       document.getElementById(this.newInvntSrvPrcTypesSlctId).innerHTML=genSttsSlct(prcTypesSlct,null,'static');
       this.hookInvntSrvPrcType();
 
-      this.drawRghtMdlTbl();
+      this.drawRghtMdlTbl('545030ee-f0f8-4b1f-9f29-db6378bb5639');
       }
     }
 
@@ -473,17 +476,48 @@ manage inventory and services
     post: inventory
     draws table
     -----------------------------------------------*/
-    drawRghtMdlTbl(){
+    drawRghtMdlTbl(invntSrvId){
     let rtrn='';
     let hdrs='';
     let el=document.getElementById(this.newInvntSrvInvntSrvLstId);
+    //if element doesn't exist, don't do anything.
       if(!el){
       return null;
       }
+
       for(let hdr of this.tmpl.invntSrvRghtMdlTblHdArr){
       hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
       }
-    el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+this.tmpl.invntSrvRghtMdlTblEnd;
+
+    let lnkedRow=null;
+    console.log(invntSrvId);
+      if(invntSrvId){
+      this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+      console.log(this.invntSrvLnkList);
+        for(let isl of this.invntSrvLnkList){
+          lnkedRow+=`
+          <tr>
+            <td>${isl.name}</td>
+            <td>${isl.type}</td>
+            <td>${isl.srv_durtn}</td>
+            <td>${isl.amnt}</td>
+            <td>${isl.buy}</td>
+            <td>${isl.sell}</td>
+            <td>${isl.sell}</td>
+            <td>
+              <div class="moduleTblCellActns">
+                <div name="invntSrvEdit" class="menuIcon" onclick=console.log("${invntSrv.uuid}"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+                <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${invntSrv.uuid} disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+              </div>
+            </td>
+          </tr>
+          `;
+        }
+      }
+    console.log(lnkedRow); 
+    
+
+    el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+lnkedRow+this.tmpl.invntSrvRghtMdlTblEnd;
     }
 
     /*-----------------------------------------------
