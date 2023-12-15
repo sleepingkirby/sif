@@ -4,6 +4,7 @@
 --default-mid-gray: #c5c5c5;
 --default-light-gray: #f0f0f0;
 --faded-white: rgba(255,255,255,0.4);
+--faded-white-15: rgba(255,255,255,0.15);
 --font-family:"DejaVu Sans", Arial, sans-serif;
 --default-pad-size:0px 10px 0px 10px;
 --default-snglLn-pad-size:4px 6px 4px 6px;
@@ -24,7 +25,7 @@ border-spacing: 0px;
 width: 100%;
 }
 
-table th, td{
+table th, table td{
 border-style: solid;
 border-color: #c5c5c5;
 border-width: 1px;
@@ -84,7 +85,7 @@ align-items:center;
 height:30px;
 }
 
-table tr > th > .tblHdSrt > .tblHdSrtArrw svg{
+.tblHdSrtArrw svg{
 width:30px;
 fill:var(--default-gray);
 }
@@ -634,7 +635,7 @@ justify-content: flex-start;
 align-items: stretch;
 margin: 12px 0px;
 border-radius: 6px;
-background-color: rgba(255,255,255,0.15);
+background-color: var(--faded-white-15);
 box-sizing: border-box;
 }
 
@@ -654,6 +655,30 @@ font-size: x-large;
 
 .mdltxtInpt::placeholder{
 color: var(--faded-white);
+}
+
+.mdlTbl th,.mdlTbl td{
+border-color:white;
+color:white;
+min-width:12px;
+}
+
+.mdlTbl tr:nth-child(odd){
+background-color: var(--faded-white);
+}
+
+.mdlTbl svg{
+fill:white;
+}
+
+.mdlTblSlct{
+}
+
+.mdlTblSlct td{
+font-weight:900;
+}
+
+.mdlTblSlct td svg{
 }
 
 @keyframes opac{

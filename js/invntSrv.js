@@ -75,13 +75,13 @@ manage inventory and services
             </div>
             <div class="row mdRow invntSrvMdlFltr">
               <div>
-                <input class="mdltxtInpt" type="text" placeholder="Filter by name, price, amnts, duration, sku" title="Filter by name, price, amnts, duration, sku"/>
+                <input id="invntSrvNewFormFltrStr" class="mdltxtInpt" type="text" placeholder="Filter by name, price, amnts, duration, sku" title="Filter by name, price, amnts, duration, sku"/>
               </div>
               <div class="">
                 <label class="inptLbl">
                 Status Filter:
                 </label>
-                <select title="Status Filter">
+                <select id="invntSrvNewFormFltrStts" title="Status Filter">
                 <option>all</option>
                 </select>
               </div>
@@ -89,7 +89,7 @@ manage inventory and services
                 <label class="inptLbl">
                 Type Filter:
                 </label>
-                <select title="Type Filter">
+                <select id="invntSrvNewFormFltrTyp" title="Type Filter">
                 <option>all</option>
                 </select>
               </div>
@@ -198,6 +198,7 @@ manage inventory and services
     {'name':'actions','title':'actions', 'sort':false}
     ];
     this.tmpl.invntSrvRghtMdlTblHdArr=[
+    {'name':'&nbsp;','title':'&nbsp;', 'sort':false},
     {'name':'name','title':'name', 'sort':true},
     {'name':'type','title':'type', 'sort':true},
     {'name':'status_name','title':'status', 'sort':true},
@@ -223,7 +224,7 @@ manage inventory and services
     `;
 
     this.tmpl.invntSrvRghtMdlTblStrt=`
-        <table id="invntSrvNewFormInvntSrvLstTbl">
+        <table id="invntSrvNewFormInvntSrvLstTbl" class="mdlTbl">
           <tr>
     `;
     this.tmpl.invntSrvRghtMdlTblHdCll=[];
@@ -340,6 +341,9 @@ manage inventory and services
         }
       document.getElementById(this.newInvntSrvPrcTypesSlctId).innerHTML=genSttsSlct(prcTypesSlct,null,'static');
       this.hookInvntSrvPrcType();
+
+      document.getElementById('invntSrvNewFormFltrStts').innerHTML=this.genFltrSttsSlct();
+      document.getElementById('invntSrvNewFormFltrTyp').innerHTML=this.genFltrTypeSlct();
 
       this.drawRghtMdlTbl('545030ee-f0f8-4b1f-9f29-db6378bb5639');
       }
@@ -484,10 +488,8 @@ manage inventory and services
       }
 
     let lnkedRow='';
-    console.log(invntSrvId);
       if(invntSrvId){
       this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
-      console.log(this.invntSrvLnkList);
         for(let isl of this.invntSrvLnkList){
         let dur=isl.srv_durtn||'0';
         //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
@@ -497,7 +499,8 @@ manage inventory and services
           }
 
           lnkedRow+=`
-          <tr>
+          <tr class="mdlTblSlct">
+            <td>*</td>
             <td>${isl.name}</td>
             <td>${isl.type}</td>
             <td>${isl.status_name}</td>
@@ -507,16 +510,14 @@ manage inventory and services
             <td>${isl.sell}</td>
             <td>
               <div class="moduleTblCellActns">
-                <div name="invntSrvEdit" class="menuIcon" onclick=console.log("${invntSrv.uuid}"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-                <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${invntSrv.uuid} disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+                <div name="invntSrvEdit" class="menuIcon" onclick=console.log("${isl.uuid}"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+                <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${isl.uuid}_disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
               </div>
             </td>
           </tr>
           `;
         }
       }
-    console.log(lnkedRow); 
-    
 
     el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+lnkedRow+this.tmpl.invntSrvRghtMdlTblEnd;
     }
