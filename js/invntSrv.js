@@ -95,13 +95,7 @@ manage inventory and services
               </div>
             </div>
             <div id="invntSrvNewFormInvntSrvLst" class="row mdRow">
-              <table>
-                <tr>
-                  <th>
-                  inventory services
-                  </th>
-                </tr>
-              </table>
+            &nbsp;
             </div>
           </div>
         </div>
@@ -229,7 +223,7 @@ manage inventory and services
     `;
 
     this.tmpl.invntSrvRghtMdlTblStrt=`
-        <table id="invntSrvNewFormInvntSrvLst">
+        <table id="invntSrvNewFormInvntSrvLstTbl">
           <tr>
     `;
     this.tmpl.invntSrvRghtMdlTblHdCll=[];
@@ -489,20 +483,27 @@ manage inventory and services
       hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
       }
 
-    let lnkedRow=null;
+    let lnkedRow='';
     console.log(invntSrvId);
       if(invntSrvId){
       this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
       console.log(this.invntSrvLnkList);
         for(let isl of this.invntSrvLnkList){
+        let dur=isl.srv_durtn||'0';
+        //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
+        let buyType=null;
+          if(isl.type=='product'){
+          buyType=isl.price_type_name;
+          }
+
           lnkedRow+=`
           <tr>
             <td>${isl.name}</td>
             <td>${isl.type}</td>
-            <td>${isl.srv_durtn}</td>
+            <td>${isl.status_name}</td>
+            <td>${dur}</td>
             <td>${isl.amnt}</td>
-            <td>${isl.buy}</td>
-            <td>${isl.sell}</td>
+            <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
             <td>${isl.sell}</td>
             <td>
               <div class="moduleTblCellActns">
