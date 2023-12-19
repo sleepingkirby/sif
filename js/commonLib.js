@@ -160,3 +160,21 @@ function genSttsSlct(sttsArr,slctVl=null, dfltVl="active"){
   }
 return html;
 }
+
+/*-----------------------------------------------
+pre: none
+post: none
+flips the visibility of the 2 elements (buttons)
+-----------------------------------------------*/
+function btnFlip(addBtnId,updBtnId,updt=false){
+  if(!addBtnId||!updBtnId){
+  return null;
+  }
+let updtEl=document.getElementById(updBtnId);
+let addEl=document.getElementById(addBtnId);
+  if(updtEl&&addEl){
+    updtEl.style.display=updt?"flex":"none";
+    addEl.style.display=updt?"none":"flex";
+  }
+}
+

@@ -4,6 +4,9 @@
 --default-mid-gray: #c5c5c5;
 --default-light-gray: #f0f0f0;
 --faded-white: rgba(255,255,255,0.4);
+--faded-white-80: rgba(255,255,255,0.8);
+--faded-white-60: rgba(255,255,255,0.6);
+--faded-white-30: rgba(255,255,255,0.3);
 --faded-white-15: rgba(255,255,255,0.15);
 --font-family:"DejaVu Sans", Arial, sans-serif;
 --default-pad-size:0px 10px 0px 10px;
@@ -664,11 +667,18 @@ min-width:12px;
 }
 
 .mdlTbl tr:nth-child(odd){
-background-color: var(--faded-white);
+background-color: var(--faded-white-30);
 }
 
 .mdlTbl svg{
 fill:white;
+}
+
+.mdlTbl td:last-child > div.moduleTblCellActns{
+display:flex;
+justify-content: space-around;
+align-items:flex-start;
+width:100%;
 }
 
 .mdlTblSlct{
@@ -680,6 +690,8 @@ font-weight:900;
 
 .mdlTblSlct td svg{
 }
+
+
 
 @keyframes opac{
 0%{max-height: 0px; margin-bottom: 0px; padding-top: 4px; padding-bottom: 4px;}

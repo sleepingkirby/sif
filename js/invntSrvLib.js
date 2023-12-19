@@ -18,7 +18,7 @@ const q=`
 select
 invntSrv.uuid,
 invntSrv.name,
-invntSrv.type_uuid as type_id,
+invntSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
@@ -71,7 +71,7 @@ let query=`
 select
 invntSrv.uuid,
 invntSrv.name,
-invntSrv.type_uuid as type_id,
+invntSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
@@ -180,7 +180,7 @@ select
 isl.uuid,
 invSrv.uuid as invntSrvuuid,
 invSrv.name as name,
-invSrv.type_uuid as type_id,
+invSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invSrv.create_date as create_date,
 invSrv.mod_date,

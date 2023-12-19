@@ -8,8 +8,8 @@ manage inventory and services
     constructor(){
     this.tmpl={};
     this.invntSrvList=null;
+    this.invntSrvHsh=null;
     this.invntSrvLnkList=null;
-//CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
 
     this.tmpl.rghtModForm=`
       <div id="invntSrvNewForm">
@@ -97,6 +97,10 @@ manage inventory and services
             <div id="invntSrvNewFormInvntSrvLst" class="row mdRow">
             &nbsp;
             </div>
+          </div>
+          <div class="row">
+            <input id="invntSrvNewFormUpdtBtn" style="display:none;" type="submit" value="Update"/>
+            <input id="invntSrvNewFormAddBtn" style="" type="submit" value="Create" disabled/>
           </div>
         </div>
       </div>
@@ -247,16 +251,19 @@ manage inventory and services
     this.sortCol="name";
     this.sortColDir="asc";
     this.rghtMdlTblCol="name";
-    this.rghtMdlTblColDir="name";
+    this.rghtMdlTblColDir="asc";
     this.typeStr=null;
     this.statusStr=null;
     this.rghtMdlTblStatusStr=null;
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
+    this.newInvntSrvFormId='invntSrvNewFormInfo';
     this.newInvntSrvTypesSlctId='invntSrvNewType';
     this.newInvntSrvPrcTypesSlctId='invntSrvPrcTypeId';
     this.newInvntSrvInvntSrvLstId='invntSrvNewFormInvntSrvLst';
+    this.newInvntSrvUpdtBtnId='invntSrvNewFormUpdtBtn';
+    this.newInvntSrvAddBtnId='invntSrvNewFormAddBtn';
     this.fltrStr=null;
     }
 
@@ -326,7 +333,15 @@ manage inventory and services
     post: right modal filled
     generates right modal content
     -----------------------------------------------*/
-    genRghtMod(){
+    genRghtMod(invntSrvId){
+      if(invntSrvId&&(!this.invntSrvList||!Array.isArray(this.invntSrvList))){
+      this.invntSrvList=getInvntSrvArr();
+      this.invntSrvHsh={};
+        for(let is of this.invntSrvList){
+        this.invntSrvHsh[is.uuid]={...is};
+        }
+      }
+
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
       if(this.typesHsh&&this.typesHsh.hasOwnProperty("invntSrv")&&this.typesHsh.invntSrv.hasOwnProperty('')){
       let typesSlct=[];
@@ -345,7 +360,18 @@ manage inventory and services
       document.getElementById('invntSrvNewFormFltrStts').innerHTML=this.genFltrSttsSlct();
       document.getElementById('invntSrvNewFormFltrTyp').innerHTML=this.genFltrTypeSlct();
 
-      this.drawRghtMdlTbl('545030ee-f0f8-4b1f-9f29-db6378bb5639');
+      btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,invntSrvId?true:false);
+
+      //fill inputs with invntSrv values
+        if(invntSrvId&&this.invntSrvHsh.hasOwnProperty(invntSrvId)){
+        let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
+        let curIs=this.invntSrvHsh[invntSrvId];
+          for(let fld of formInpt){
+          fld.value=curIs[getSubs(fld.name,'invntSrv')];
+          }
+        }
+
+      this.drawRghtMdlTbl(invntSrvId);
       }
     }
 
@@ -482,15 +508,18 @@ manage inventory and services
       if(!el){
       return null;
       }
-
+      //generate table header
       for(let hdr of this.tmpl.invntSrvRghtMdlTblHdArr){
       hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
       }
 
     let lnkedRow='';
+    let invntSrvsRow='';
+    let lnkedHsh={};
       if(invntSrvId){
       this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
         for(let isl of this.invntSrvLnkList){
+        lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn||'0';
         //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
         let buyType=null;
@@ -498,28 +527,62 @@ manage inventory and services
           buyType=isl.price_type_name;
           }
 
-          lnkedRow+=`
-          <tr class="mdlTblSlct">
-            <td>*</td>
-            <td>${isl.name}</td>
-            <td>${isl.type}</td>
-            <td>${isl.status_name}</td>
-            <td>${dur}</td>
-            <td>${isl.amnt}</td>
-            <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
-            <td>${isl.sell}</td>
-            <td>
-              <div class="moduleTblCellActns">
-                <div name="invntSrvEdit" class="menuIcon" onclick=console.log("${isl.uuid}"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-                <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${isl.uuid}_disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
-              </div>
-            </td>
-          </tr>
-          `;
+        lnkedRow+=`
+        <tr class="mdlTblSlct">
+          <td>*</td>
+          <td>${isl.name}</td>
+          <td>${isl.type}</td>
+          <td>${isl.status_name}</td>
+          <td>${dur}</td>
+          <td>${isl.amnt}</td>
+          <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
+          <td>${isl.sell}</td>
+          <td>
+            <div class="moduleTblCellActns">
+              <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${isl.uuid}_disabled"); title="Remove from Inventory/Services">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+            </div>
+          </td>
+        </tr>
+        `;
+        }
+
+      //not linked items
+      let pObj={};
+      let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
+        for(let is of invntSrvList){
+          //don't list if item is linked or the item in question
+          if(is.uuid==invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
+          continue;
+          }
+        lnkedHsh[is.uuid]=is;
+        let dur=is.srv_durtn||'0';
+        //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
+        let buyType=null;
+          if(is.type=='product'){
+          buyType=is.price_type_name;
+          }
+    
+        invntSrvsRow+=`
+        <tr class="invntSrvsNA">
+          <td>&nbsp;</td>
+          <td>${is.name}</td>
+          <td>${is.type}</td>
+          <td>${is.status_name}</td>
+          <td>${dur}</td>
+          <td>${is.amnt}</td>
+          <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
+          <td>${is.sell}</td>
+          <td>
+            <div class="moduleTblCellActns">
+              <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${is.uuid}_add"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
+            </div>
+          </td>
+        </tr>
+        `;
         }
       }
 
-    el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+lnkedRow+this.tmpl.invntSrvRghtMdlTblEnd;
+    el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+lnkedRow+invntSrvsRow+this.tmpl.invntSrvRghtMdlTblEnd;
     }
 
     /*-----------------------------------------------
@@ -541,11 +604,15 @@ manage inventory and services
       }
 
       if(this.typeStr){
-      pObj['type_id']=this.typeStr;
+      pObj['type_uuid']=this.typeStr;
       }
 
     this.invntSrvList=getInvntSrvArr(pObj,this.sortCol,this.sortColDir);
     let invntSrvList=this.fltrInvntSrvs();
+    this.invntSrvHsh={};
+      for(let is of this.invntSrvList){
+      this.invntSrvHsh[is.uuid]={...is};
+      }
     let cntnt='';
       for(let invntSrv of invntSrvList){
       let dur=invntSrv.srv_durtn||'0';
@@ -614,7 +681,7 @@ manage inventory and services
     this.typesHsh=sepTypesHsh(this.types);
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
-    this.genRghtMod();
+    this.genRghtMod('545030ee-f0f8-4b1f-9f29-db6378bb5639');
     document.getElementById('mainEl').innerHTML=this.mainEl();
     document.getElementById('invntSrvFilterStatus').innerHTML=this.genFltrSttsSlct();
     document.getElementById('invntSrvFilterType').innerHTML=this.genFltrTypeSlct();

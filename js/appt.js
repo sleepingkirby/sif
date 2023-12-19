@@ -435,9 +435,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         el.onkeyup=(e)=>{
           if(e&&e.target&&e.target.name){
           let nm=e.target.name.replace(this.cntctPatt,'');
-          let phn=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[phone]');
-          let email=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[email]');
-          let fname=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[fName]');
+          let phn=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[phone]"]');
+          let email=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[email]"]');
+          let fname=document.querySelectorAll('.apptNewApptFormFullUserFormFields textarea[name^="contact[fName]"]');
           let crtUsrBtn=document.getElementById(this.creatUserBtnId);
             if(crtUsrBtn&&phn&&phn.length>0&&phn[0].value&&email&&email.length>0&&email[0].value&&fname&&fname.length>0&&fname[0].value){
             crtUsrBtn.disabled=false;

@@ -20,3 +20,8 @@ margin-right: 24px;
 margin-right: 0px;
 }
 
+.invntSrvsNA td{
+border-color: var(--faded-white-30);
+color:var(--faded-white-80);
+}
+
