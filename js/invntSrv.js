@@ -254,6 +254,7 @@ manage inventory and services
 
     this.mainTblId="invntSrvMain";
     this.fltrProps=['name','sell','buy','amnt','srv_durtn','sku'];
+    this.fltrPropsMdl=['name','sell','buy','amnt','srv_durtn','sku'];
     this.sortCol="name";
     this.sortColDir="asc";
     this.rghtMdlTblCol="name";
@@ -274,6 +275,7 @@ manage inventory and services
     this.fltrStr=null;
     this.rghtMdlTblFltrStr=null;
     this.invntSrvId=null;
+    this.invntSrvNewLnkHsh=null;
     }
 
     /*-----------------------------------------------
@@ -367,7 +369,21 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
-    pre: this class, this.invntSrvId, this.invntSrvHsh, elements
+    pre: this.rghtMdlTblTypeStr, this.rghtMdlTblStatusStr, this.rghtMdlTblFltrStr,  elements
+    post: filters in right modal cleared
+    clear modal filter inputs
+    -----------------------------------------------*/
+    clearRghtModFltr(){
+    this.rghtMdlTblTypeStr=null;
+    this.rghtMdlTblStatusStr=null;
+    this.rghtMdlTblFltrStr=null;
+    document.getElementById('invntSrvNewFormFltrStts').value=null;
+    document.getElementById('invntSrvNewFormFltrTyp').value=null;
+    document.getElementById('invntSrvNewFormFltrStr').value=null;
+    }
+
+    /*-----------------------------------------------
+    pre: this class, this.invntSrvId, this.invntSrvHsh, this.clearRghtModFltr, elements
     post: right modal cleared
     clear modal form's input
     -----------------------------------------------*/
@@ -382,11 +398,7 @@ manage inventory and services
         fld.value=null;
         }
       }
-    this.rghtMdlTblTypeStr=null;
-    this.rghtMdlTblStatusStr=null;
-    this.rghtMdlTblFltrStr=null;
-    document.getElementById('invntSrvNewFormFltrStts').value=null;
-    document.getElementById('invntSrvNewFormFltrTyp').value=null;
+    this.clearRghtModFltr();
     }
 
     /*-----------------------------------------------
@@ -470,6 +482,7 @@ manage inventory and services
       }
     this.invntSrvId=uuid;
       if(this.invntSrvHsh.hasOwnProperty(uuid)&&this.invntSrvHsh[uuid]){
+      this.clearRghtModFltr();
       this.fillRghtMod();
       this.drawRghtMdlTbl();
       btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
@@ -570,7 +583,7 @@ manage inventory and services
       }
     }
 
-    /*----------------------------------
+    /*---------------------------------
     pre: invntSrvNewFormFltrType element exists,
     post: event hook added
     addes event hook to invntSrvNewFormFltrTyp element
@@ -578,9 +591,21 @@ manage inventory and services
     hookMdlFltrSlctType(){
       document.getElementById('invntSrvNewFormFltrTyp').onchange=(e)=>{
       this.rghtMdlTblTypeStr=e.target.value=='null'?null:e.target.value;
-      console.log(e.target.value);
       this.drawRghtMdlTbl();
       }
+    }
+
+    /*---------------------------------
+    pre: invntSrvNewFormFltrStr element exists,
+    post: event hook added
+    addes event hook to invntSrvNewFormFltrStr element
+    ----------------------------------*/
+    hookMdlFltrInpt(){
+      //why the wrapper and not the input itself? Keyup/down/press is fired BEFORE the input value is set by the key press. The event bubbles up AFTER the input value is pressed
+      document.getElementById("invntSrvNewFormFltrStr").onkeyup=(e)=>{
+      this.rghtMdlTblFltrStr=e.target.value;
+      this.drawRghtMdlTbl();
+      };
     }
 
 
@@ -591,22 +616,40 @@ manage inventory and services
     ----------------------------------*/
     fltrInvntSrvs(){
     let invntSrvs=[];
-      if(this.fltrStr){
-        for(let invntSrv of this.invntSrvList){
-          for(let prop of this.fltrProps){
-            if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
-            invntSrvs.push({...invntSrv});
-            break;
-            }
+      if(!this.fltrStr){
+      return this.invntSrvList;
+      }
+      for(let invntSrv of this.invntSrvList){
+        for(let prop of this.fltrProps){
+          if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
+          invntSrvs.push({...invntSrv});
+          break;
           }
         }
-      }
-      else{
-      invntSrvs=[...this.invntSrvList];
       }
     return invntSrvs;
     }
 
+    /*----------------------------------
+    pre: this.fltrStr, this.invntSrvList
+    post: none
+    filters the inventory services
+    ----------------------------------*/
+    fltrInvntSrvsMdl(list){
+    let invntSrvs=[];
+      if(!this.rghtMdlTblFltrStr){
+      return list;
+      }
+      for(let invntSrv of list){
+        for(let prop of this.fltrPropsMdl){
+          if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.rghtMdlTblFltrStr.toLocaleLowerCase())>=0){
+          invntSrvs.push({...invntSrv});
+          break;
+          }
+        }
+      }
+    return invntSrvs;
+    }
 
     /*-----------------------------------------------
     pre: this.invntSrvLnkList, this.tmpl, 
@@ -640,7 +683,8 @@ manage inventory and services
         }
 
       this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
-        for(let isl of this.invntSrvLnkList){
+      let invntSrvLnkList=this.fltrInvntSrvsMdl(this.invntSrvLnkList);
+        for(let isl of invntSrvLnkList){
         lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn===null?'None':isl.srv_durtn;
         //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
@@ -680,12 +724,12 @@ manage inventory and services
 
     //grabbing the list fresh because this.invntSrvList is used for the main table of this module
     let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
+    invntSrvList=this.fltrInvntSrvsMdl(invntSrvList);
       for(let is of invntSrvList){
         //don't list if item is linked or the item in question
         if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
         continue;
         }
-      lnkedHsh[is.uuid]=is;
       let dur=is.srv_durtn===null?'None':is.srv_durtn;
       //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
       let buyType=null;
@@ -790,6 +834,7 @@ manage inventory and services
     this.hookFltrInpt();
     this.hookMdlFltrSlctStts();
     this.hookMdlFltrSlctType();
+    this.hookMdlFltrInpt();
     this.hookNewInvntBtn();
     }
 
