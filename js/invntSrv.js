@@ -382,6 +382,11 @@ manage inventory and services
         fld.value=null;
         }
       }
+    this.rghtMdlTblTypeStr=null;
+    this.rghtMdlTblStatusStr=null;
+    this.rghtMdlTblFltrStr=null;
+    document.getElementById('invntSrvNewFormFltrStts').value=null;
+    document.getElementById('invntSrvNewFormFltrTyp').value=null;
     }
 
     /*-----------------------------------------------
@@ -559,11 +564,25 @@ manage inventory and services
     ----------------------------------*/
     hookMdlFltrSlctStts(){
       document.getElementById('invntSrvNewFormFltrStts').onchange=(e)=>{
-      this.rghtMdlTblStatusStr=e.target.value;
+      this.rghtMdlTblStatusStr=e.target.value=='null'?null:e.target.value;
       console.log(e.target.value);
       this.drawRghtMdlTbl();
       }
     }
+
+    /*----------------------------------
+    pre: invntSrvNewFormFltrType element exists,
+    post: event hook added
+    addes event hook to invntSrvNewFormFltrTyp element
+    ----------------------------------*/
+    hookMdlFltrSlctType(){
+      document.getElementById('invntSrvNewFormFltrTyp').onchange=(e)=>{
+      this.rghtMdlTblTypeStr=e.target.value=='null'?null:e.target.value;
+      console.log(e.target.value);
+      this.drawRghtMdlTbl();
+      }
+    }
+
 
     /*----------------------------------
     pre: this.fltrStr, this.invntSrvList
@@ -613,14 +632,12 @@ manage inventory and services
     let pObj={};
       if(this.invntSrvId){
       pObj['invntSrvLnkPrnt']=this.invntSrvId;
-        if(this.rghtMdlTblStatusStr&&this.rghtMdlTblStatusStr!='null'){
+        if(this.rghtMdlTblStatusStr){
         pObj['status']=this.rghtMdlTblStatusStr;
         }
-        /* 
-        if(this.typeStr){
-        pObj['type_uuid']=this.typeStr;
+        if(this.rghtMdlTblTypeStr){
+        pObj['type_uuid']=this.rghtMdlTblTypeStr;
         }
-        */
 
       this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
         for(let isl of this.invntSrvLnkList){
@@ -653,13 +670,16 @@ manage inventory and services
       }
       //not linked items
     pObj={};
-      if(this.rghtMdlTblStatusStr&&this.rghtMdlTblStatusStr!='null'){
+      if(this.rghtMdlTblStatusStr){
       pObj['status']=this.rghtMdlTblStatusStr;
       }
+      if(this.rghtMdlTblTypeStr){
+      pObj['type_uuid']=this.rghtMdlTblTypeStr;
+      }
+
 
     //grabbing the list fresh because this.invntSrvList is used for the main table of this module
     let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
-    console.log(invntSrvList);
       for(let is of invntSrvList){
         //don't list if item is linked or the item in question
         if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
@@ -769,6 +789,7 @@ manage inventory and services
     this.hookFltrTyp();
     this.hookFltrInpt();
     this.hookMdlFltrSlctStts();
+    this.hookMdlFltrSlctType();
     this.hookNewInvntBtn();
     }
 
