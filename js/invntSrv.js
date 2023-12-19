@@ -433,12 +433,6 @@ manage inventory and services
 
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
 
-    //hook for filter input 
-      document.getElementById('invntSrvNewFormFltrStr').onkeyup=(e)=>{
-      this.rghtMdlTblFltrStr=e.target.value;
-      this.drawRghtMdlTbl();
-      }
-
       if(this.typesHsh&&this.typesHsh.hasOwnProperty("invntSrv")&&this.typesHsh.invntSrv.hasOwnProperty('')){
       let typesSlct=[];
         for(let i of Object.keys(this.typesHsh.invntSrv[''])){
