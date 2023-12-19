@@ -316,7 +316,7 @@ manage inventory and services
     setColSrt(srt){
       if(this.sortCol!=srt){
       this.sortCol=srt;
-      this.sortColDir="desc";
+      this.sortColDir="asc";
       return null;
       }
 
@@ -331,7 +331,7 @@ manage inventory and services
     setColSrtMdl(srt){
       if(this.rghtMdlTblCol!=srt){
       this.rghtMdlTblCol=srt;
-      this.rghtMdlTblColDir="desc";
+      this.rghtMdlTblColDir="asc";
       return null;
       }
 
@@ -363,6 +363,40 @@ manage inventory and services
       this.setColSrtMdl(nm);
       }
     this.drawRghtMdlTbl();
+    }
+
+    /*-----------------------------------------------
+    pre: this class, this.invntSrvId, this.invntSrvHsh, elements
+    post: right modal cleared
+    clear modal form's input
+    -----------------------------------------------*/
+    clearRghtMod(){
+    this.invntSrvId=null;
+    let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
+      for(let fld of formInpt){
+        if(fld.tagName=='SELECT'){
+        slctToDefault(fld);
+        }
+        else{
+        fld.value=null;
+        }
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: this class, this.invntSrvId, this.invntSrvHsh, elements
+    post: right modal filled
+    fill modal form's input
+    -----------------------------------------------*/
+    fillRghtMod(){
+    //fill inputs with invntSrv values
+      if(this.invntSrvId&&this.invntSrvHsh.hasOwnProperty(this.invntSrvId)){
+      let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
+      let curIs=this.invntSrvHsh[this.invntSrvId];
+        for(let fld of formInpt){
+        fld.value=curIs[getSubs(fld.name,'invntSrv')];
+        }
+      }
     }
 
     /*-----------------------------------------------
@@ -430,8 +464,9 @@ manage inventory and services
       }
     this.invntSrvId=uuid;
       if(this.invntSrvHsh.hasOwnProperty(uuid)&&this.invntSrvHsh[uuid]){
-      //this.fillRghtMod();
+      this.fillRghtMod();
       this.drawRghtMdlTbl();
+      btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       }
@@ -504,9 +539,12 @@ manage inventory and services
     ----------------------------------*/
     hookNewInvntBtn(){
       document.getElementById("invntSrvAddBtn").onclick=(e)=>{
-      //this.addUpdtBtnFlip();
-
-      //this.cleanRghtModForm();
+      btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,false);
+      this.rghtMdlTblCol='name';
+      this.rghtMdlTblColDir='asc';
+      this.rghtMdlTblFltrStr=null;
+      this.clearRghtMod();
+      this.drawRghtMdlTbl();
 
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
@@ -538,7 +576,7 @@ manage inventory and services
 
 
     /*-----------------------------------------------
-    pre: none
+    pre: this.invntSrvLnkList, this.tmpl, 
     post: inventory
     draws table
     -----------------------------------------------*/
@@ -562,7 +600,7 @@ manage inventory and services
       this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':this.invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
         for(let isl of this.invntSrvLnkList){
         lnkedHsh[isl.invntSrvuuid]=isl;
-        let dur=isl.srv_durtn||'0';
+        let dur=isl.srv_durtn===null?'None':isl.srv_durtn;
         //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
         let buyType=null;
           if(isl.type=='product'){
@@ -587,41 +625,42 @@ manage inventory and services
         </tr>
         `;
         }
-
+      }
       //not linked items
-      let pObj={};
-      let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
-        for(let is of invntSrvList){
-          //don't list if item is linked or the item in question
-          if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
-          continue;
-          }
-        lnkedHsh[is.uuid]=is;
-        let dur=is.srv_durtn||'0';
-        //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
-        let buyType=null;
-          if(is.type=='product'){
-          buyType=is.price_type_name;
-          }
-    
-        invntSrvsRow+=`
-        <tr class="invntSrvsNA">
-          <td>&nbsp;</td>
-          <td>${is.name}</td>
-          <td>${is.type}</td>
-          <td>${is.status_name}</td>
-          <td>${dur}</td>
-          <td>${is.amnt}</td>
-          <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
-          <td>${is.sell}</td>
-          <td>
-            <div class="moduleTblCellActns">
-              <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${is.uuid}_add"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
-            </div>
-          </td>
-        </tr>
-        `;
+    let pObj={};
+
+    //grabbing the list fresh because this.invntSrvList is used for the main table of this module
+    let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
+      for(let is of invntSrvList){
+        //don't list if item is linked or the item in question
+        if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
+        continue;
         }
+      lnkedHsh[is.uuid]=is;
+      let dur=is.srv_durtn===null?'None':is.srv_durtn;
+      //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
+      let buyType=null;
+        if(is.type=='product'){
+        buyType=is.price_type_name;
+        }
+    
+      invntSrvsRow+=`
+      <tr class="invntSrvsNA">
+        <td>&nbsp;</td>
+        <td>${is.name}</td>
+        <td>${is.type}</td>
+        <td>${is.status_name}</td>
+        <td>${dur}</td>
+        <td>${is.amnt}</td>
+        <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
+        <td>${is.sell}</td>
+        <td>
+          <div class="moduleTblCellActns">
+            <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${is.uuid}_add"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
+          </div>
+        </td>
+      </tr>
+      `;
       }
 
     el.innerHTML=this.tmpl.invntSrvRghtMdlTblStrt+hdrs+lnkedRow+invntSrvsRow+this.tmpl.invntSrvRghtMdlTblEnd;
@@ -657,7 +696,7 @@ manage inventory and services
       }
     let cntnt='';
       for(let invntSrv of invntSrvList){
-      let dur=invntSrv.srv_durtn||'0';
+      let dur=invntSrv.srv_durtn===null?'None':invntSrv.srv_durtn;
       //if the invntSrv is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
       let buyType=null;
         if(invntSrv.type=='product'){
@@ -723,7 +762,7 @@ manage inventory and services
     this.typesHsh=sepTypesHsh(this.types);
     this.statuses=selectStatus();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
-    this.genRghtMod('545030ee-f0f8-4b1f-9f29-db6378bb5639');
+    this.genRghtMod();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     document.getElementById('invntSrvFilterStatus').innerHTML=this.genFltrSttsSlct();
     document.getElementById('invntSrvFilterType').innerHTML=this.genFltrTypeSlct();

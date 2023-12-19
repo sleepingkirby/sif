@@ -164,6 +164,22 @@ return html;
 /*-----------------------------------------------
 pre: none
 post: none
+-----------------------------------------------*/
+function slctToDefault(slct=null){
+  if(!slct){
+  return null;
+  }
+  for(let opt of slct.options){
+    if(opt.hasAttribute('selected')){
+    slct.value=opt.value;
+    break;
+    }
+  }
+}
+
+/*-----------------------------------------------
+pre: none
+post: none
 flips the visibility of the 2 elements (buttons)
 -----------------------------------------------*/
 function btnFlip(addBtnId,updBtnId,updt=false){
