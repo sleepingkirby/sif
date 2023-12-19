@@ -220,6 +220,12 @@ manage inventory and services
               <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
             </div>
     `;
+    this.tmpl.invntSrvMdlTblHdCllIcn=`
+            <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="invntSrvObj.setColSrtMdlHookFunc(this)">
+              <div>##hdrTtl##</div>
+              <div class="tblHdSrtArrw" title="sort via ##hdlTtl">##icon##</div>
+            </div>
+    `;
     this.tmpl.invntSrvTblHdEnd=`
           </tr>
     `;
@@ -265,6 +271,8 @@ manage inventory and services
     this.newInvntSrvUpdtBtnId='invntSrvNewFormUpdtBtn';
     this.newInvntSrvAddBtnId='invntSrvNewFormAddBtn';
     this.fltrStr=null;
+    this.rghtMdlTblFltrStr=null;
+    this.invntSrvId=null;
     }
 
     /*-----------------------------------------------
@@ -316,6 +324,22 @@ manage inventory and services
     }
 
     /*----------------------------------
+    pre:this.sortCol,this.sortColDir
+    post:figure out sorting and sets variables
+    function to set proper variables
+    ----------------------------------*/
+    setColSrtMdl(srt){
+      if(this.rghtMdlTblCol!=srt){
+      this.rghtMdlTblCol=srt;
+      this.rghtMdlTblColDir="desc";
+      return null;
+      }
+
+      this.rghtMdlTblColDir=this.rghtMdlTblColDir=="desc"?"asc":"desc";
+    }
+
+
+    /*----------------------------------
     pre:this.setColSrt()
     post:none
     function to set to hook for table header sort
@@ -328,13 +352,26 @@ manage inventory and services
     this.drawTbl();
     }
 
+    /*----------------------------------
+    pre:right modal
+    post:none
+    function to set to hook for table header sort in the right modal 
+    ----------------------------------*/
+    setColSrtMdlHookFunc(e){
+    let nm=e.getAttribute("name");
+      if(nm){
+      this.setColSrtMdl(nm);
+      }
+    this.drawRghtMdlTbl();
+    }
+
     /*-----------------------------------------------
     pre: this class
     post: right modal filled
     generates right modal content
     -----------------------------------------------*/
-    genRghtMod(invntSrvId){
-      if(invntSrvId&&(!this.invntSrvList||!Array.isArray(this.invntSrvList))){
+    genRghtMod(){
+      if(this.invntSrvId&&(!this.invntSrvList||!Array.isArray(this.invntSrvList))){
       this.invntSrvList=getInvntSrvArr();
       this.invntSrvHsh={};
         for(let is of this.invntSrvList){
@@ -343,6 +380,13 @@ manage inventory and services
       }
 
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
+
+    //hook for filter input 
+      document.getElementById('invntSrvNewFormFltrStr').onkeyup=(e)=>{
+      this.rghtMdlTblFltrStr=e.target.value;
+      this.drawRghtMdlTbl();
+      }
+
       if(this.typesHsh&&this.typesHsh.hasOwnProperty("invntSrv")&&this.typesHsh.invntSrv.hasOwnProperty('')){
       let typesSlct=[];
         for(let i of Object.keys(this.typesHsh.invntSrv[''])){
@@ -360,18 +404,18 @@ manage inventory and services
       document.getElementById('invntSrvNewFormFltrStts').innerHTML=this.genFltrSttsSlct();
       document.getElementById('invntSrvNewFormFltrTyp').innerHTML=this.genFltrTypeSlct();
 
-      btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,invntSrvId?true:false);
+      btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
 
       //fill inputs with invntSrv values
-        if(invntSrvId&&this.invntSrvHsh.hasOwnProperty(invntSrvId)){
+        if(this.invntSrvId&&this.invntSrvHsh.hasOwnProperty(this.invntSrvId)){
         let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
-        let curIs=this.invntSrvHsh[invntSrvId];
+        let curIs=this.invntSrvHsh[this.invntSrvId];
           for(let fld of formInpt){
           fld.value=curIs[getSubs(fld.name,'invntSrv')];
           }
         }
 
-      this.drawRghtMdlTbl(invntSrvId);
+      this.drawRghtMdlTbl();
       }
     }
 
@@ -384,15 +428,13 @@ manage inventory and services
       if(!uuid){
       return null;
       }
-      /*
-      if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
-      this.apptsHsh[uuid];
-      this.fillRghtMod(this.apptsHsh[uuid]);
-      this.addUpdtBtnFlip(true);
+    this.invntSrvId=uuid;
+      if(this.invntSrvHsh.hasOwnProperty(uuid)&&this.invntSrvHsh[uuid]){
+      //this.fillRghtMod();
+      this.drawRghtMdlTbl();
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
       }
-      */
     }
 
 
@@ -500,7 +542,7 @@ manage inventory and services
     post: inventory
     draws table
     -----------------------------------------------*/
-    drawRghtMdlTbl(invntSrvId){
+    drawRghtMdlTbl(){
     let rtrn='';
     let hdrs='';
     let el=document.getElementById(this.newInvntSrvInvntSrvLstId);
@@ -510,14 +552,14 @@ manage inventory and services
       }
       //generate table header
       for(let hdr of this.tmpl.invntSrvRghtMdlTblHdArr){
-      hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
+      hdrs+=this.tmpl.invntSrvRghtMdlTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invntSrvMdlTblHdCllIcn,hdr,this.rghtMdlTblCol==hdr.name?this.rghtMdlTblColDir:null)+this.tmpl.invntSrvRghtMdlTblHdCll[1];
       }
 
     let lnkedRow='';
     let invntSrvsRow='';
     let lnkedHsh={};
-      if(invntSrvId){
-      this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+      if(this.invntSrvId){
+      this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':this.invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
         for(let isl of this.invntSrvLnkList){
         lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn||'0';
@@ -551,7 +593,7 @@ manage inventory and services
       let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
         for(let is of invntSrvList){
           //don't list if item is linked or the item in question
-          if(is.uuid==invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
+          if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
           continue;
           }
         lnkedHsh[is.uuid]=is;
@@ -634,7 +676,7 @@ manage inventory and services
         <td>`+invntSrvPrcFormat(invntSrv.sell,invntSrv.price_type_name)+`</td>
         <td>
           <div class="moduleTblCellActns">
-            <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtApptRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+            <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtInvntSrvRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
             <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>
         </td>

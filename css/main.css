@@ -653,7 +653,7 @@ border: 1px solid white;
 border-radius: 6px;
 color: white;
 font-family: var(--font-family);
-font-size: x-large;
+font-size: large;
 }
 
 .mdltxtInpt::placeholder{
