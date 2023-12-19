@@ -259,6 +259,7 @@ manage inventory and services
     this.rghtMdlTblCol="name";
     this.rghtMdlTblColDir="asc";
     this.typeStr=null;
+    this.rghtMdlTblTypeStr=null;
     this.statusStr=null;
     this.rghtMdlTblStatusStr=null;
     this.statuses=null;
@@ -552,6 +553,19 @@ manage inventory and services
     }
 
     /*----------------------------------
+    pre: invntSrvNewFormFltrStts element exists,
+    post: event hook added
+    addes event hook to invntSrvNewFormFltrStts element
+    ----------------------------------*/
+    hookMdlFltrSlctStts(){
+      document.getElementById('invntSrvNewFormFltrStts').onchange=(e)=>{
+      this.rghtMdlTblStatusStr=e.target.value;
+      console.log(e.target.value);
+      this.drawRghtMdlTbl();
+      }
+    }
+
+    /*----------------------------------
     pre: this.fltrStr, this.invntSrvList
     post: none
     filters the inventory services
@@ -596,8 +610,19 @@ manage inventory and services
     let lnkedRow='';
     let invntSrvsRow='';
     let lnkedHsh={};
+    let pObj={};
       if(this.invntSrvId){
-      this.invntSrvLnkList=getInvntSrvLnkArr({'invntSrvLnkPrnt':this.invntSrvId}, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+      pObj['invntSrvLnkPrnt']=this.invntSrvId;
+        if(this.rghtMdlTblStatusStr&&this.rghtMdlTblStatusStr!='null'){
+        pObj['status']=this.rghtMdlTblStatusStr;
+        }
+        /* 
+        if(this.typeStr){
+        pObj['type_uuid']=this.typeStr;
+        }
+        */
+
+      this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
         for(let isl of this.invntSrvLnkList){
         lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn===null?'None':isl.srv_durtn;
@@ -627,10 +652,14 @@ manage inventory and services
         }
       }
       //not linked items
-    let pObj={};
+    pObj={};
+      if(this.rghtMdlTblStatusStr&&this.rghtMdlTblStatusStr!='null'){
+      pObj['status']=this.rghtMdlTblStatusStr;
+      }
 
     //grabbing the list fresh because this.invntSrvList is used for the main table of this module
     let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
+    console.log(invntSrvList);
       for(let is of invntSrvList){
         //don't list if item is linked or the item in question
         if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
@@ -739,6 +768,7 @@ manage inventory and services
     this.hookFltrStts();
     this.hookFltrTyp();
     this.hookFltrInpt();
+    this.hookMdlFltrSlctStts();
     this.hookNewInvntBtn();
     }
 
