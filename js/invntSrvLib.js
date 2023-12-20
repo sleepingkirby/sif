@@ -298,7 +298,7 @@ let price='';
 
   switch(type){
   case 'percentage':
-  let tmpnum=num
+  let tmpnum=String(num);
     if(tmpnum.match('0.')==0){
     tmpnum=tmpnum.substr(2);
     }

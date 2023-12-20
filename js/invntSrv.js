@@ -46,31 +46,35 @@ manage inventory and services
           <div id="invntSrvNewFormPrcs">
             &nbsp;
           </div>
-          <div class="row mdRow">
-            <div>
-              <div class="inptLbl">
-              Buy Price:
-              </div>
-              $
-              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
-                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
+          <div id="invntSrvPrcs">
+            <div class="row mdRow">
+              <div>
+                <div class="inptLbl">
+                Buy Price:
+                </div>
+                <span id="invntSrvBuySign">$</span>
+                <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                  <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
+                </div>
+                <span id="invntSrvBuyPrcnt">%</span>
               </div>
             </div>
-          </div>
-          <div class="row mdRow">
-            <div>
-              <div class="inptLbl">
-              Sell Price:
-              </div>
-              $
-              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
-                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
+            <div class="row mdRow">
+              <div>
+                <div class="inptLbl">
+                Sell Price:
+                </div>
+                <span id="invntSrvSellSign">$</span>
+                <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                  <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
+                </div>
+                <span id="invntSrvSellPrcnt">%</span>
               </div>
             </div>
           </div>
           <div class="mdlSubBox mdlSubBoxPad">
             <div class="row mdRow">
-              <div class="lbl">
+              <div class="lbl" style="margin-bottom:0px;">
               Bundled Inventory/Services
               </div>
             </div>
@@ -106,50 +110,6 @@ manage inventory and services
         </div>
       </div>
 `;
-
-    this.tmpl.rghtModFormPrcType={
-    'static':`
-          <div class="row mdRow">
-            <div>
-              <div class="inptLbl">
-              Sell Price:
-              </div>
-              $
-              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
-                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".2"/>
-              </div>
-            </div>
-          </div>
-          <div class="row mdRow">
-            <div>
-              <div class="inptLbl">
-              Buy Price:
-              </div>
-              $
-              <div class="inptNumNumRszWrap inptNumPrc" title="BUy price">
-                <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
-              </div>
-            </div>
-          </div>
-    `,
-    'percentage':`
-          <div class="row mdRow">
-            <div>
-              <div class="inptLbl">
-              Price:
-              </div>
-              <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
-                <input class="inptNumRsz" type="number" name="invntSrv[sell]" step=".1"/>
-              </div>
-              %
-            </div>
-          </div>
-    `,
-    'deferred':``
-    };
-
-    this.tmpl.rghtModFormInvntLst=`
-    `;
 
     this.tmpl.headers=`
       <div id="invntSrvAdd" class="moduleAdd">
@@ -273,6 +233,11 @@ manage inventory and services
     this.newInvntSrvInvntSrvLstId='invntSrvNewFormInvntSrvLst';
     this.newInvntSrvUpdtBtnId='invntSrvNewFormUpdtBtn';
     this.newInvntSrvAddBtnId='invntSrvNewFormAddBtn';
+    this.rghtMdlBuyPrcSgnId='invntSrvBuySign';
+    this.rghtMdlBuyPrcPrcntId='invntSrvBuyPrcnt';
+    this.rghtMdlSellPrcSgnId='invntSrvSellSign';
+    this.rghtMdlSellPrcPrcntId='invntSrvSellPrcnt';
+    this.rghtMdlPrcsId='invntSrvPrcs';
     this.fltrStr=null;
     this.rghtMdlTblFltrStr=null;
     this.invntSrvId=null;
@@ -399,6 +364,7 @@ manage inventory and services
         fld.value=null;
         }
       }
+    this.prcFlipsByType('static');
     this.clearRghtModFltr();
     }
 
@@ -415,6 +381,7 @@ manage inventory and services
         for(let fld of formInpt){
         fld.value=curIs[getSubs(fld.name,'invntSrv')];
         }
+      this.prcFlipsByType(curIs['price_type_name']);
       }
     }
 
@@ -590,13 +557,69 @@ manage inventory and services
 
 
     /*----------------------------------
+    pre: this.rghtMdlBuyPrcSgnId, this.rghtMdlBuyPrcPrcntId, this.rghtMdlSellPrcSgnId, this.rghtMdlSellPrcPrcntId
+    post: html element displayed or not
+    flips the displays of the prices 
+    ----------------------------------*/
+    prcFlips(prcnt=false,all=true){
+    let el=document.getElementById(this.rghtMdlPrcsId);
+    let buyInpt=document.querySelector('input[name^="invntSrv[buy]"]');
+    let sellInpt=document.querySelector('input[name^="invntSrv[sell]"]');
+
+      if(el){
+        if(all){
+        el.style.display='block';
+        }
+        else{
+        el.style.display='none';
+        buyInpt.value=null;
+        sellInpt.value=null;
+        return null;
+        }
+      }
+
+      if(prcnt){
+      document.getElementById(this.rghtMdlBuyPrcSgnId).style.display='none';
+      document.getElementById(this.rghtMdlSellPrcSgnId).style.display='none';
+      document.getElementById(this.rghtMdlBuyPrcPrcntId).style.display='block';
+      document.getElementById(this.rghtMdlSellPrcPrcntId).style.display='block';
+      }   
+      else{
+      document.getElementById(this.rghtMdlBuyPrcPrcntId).style.display='none';
+      document.getElementById(this.rghtMdlSellPrcPrcntId).style.display='none';
+      document.getElementById(this.rghtMdlBuyPrcSgnId).style.display='block';
+      document.getElementById(this.rghtMdlSellPrcSgnId).style.display='block';
+      } 
+    }
+
+
+    /*----------------------------------
+    pre: this.prcFlips()
+    post: price input changed
+    a word version of this.prcFlips();
+    ----------------------------------*/
+    prcFlipsByType(type){
+      switch(type){
+        case 'percentage':
+        this.prcFlips(true,true);
+        break;
+        case 'deferred':
+        this.prcFlips(false,false);
+        break;
+        default:
+        this.prcFlips();
+        break;
+      }
+    }
+
+    /*----------------------------------
     pre: this.newInvntSrvPrcTypesSlctId filled and element exists
     post: event hook added
     addes event hook to this.newInvntSrvPrcTypesSlctId element
     ----------------------------------*/
     hookInvntSrvPrcType(){
       document.getElementById(this.newInvntSrvPrcTypesSlctId).onchange=(e)=>{
-      console.log(e.target.value);
+        this.prcFlipsByType(e.target.options[e.target.selectedIndex].text);
       }
     }
 
