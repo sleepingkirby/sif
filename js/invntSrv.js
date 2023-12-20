@@ -10,6 +10,7 @@ manage inventory and services
     this.invntSrvList=null;
     this.invntSrvHsh=null;
     this.invntSrvLnkList=null;
+    this.invntSrvLnkIndxHsh=null; //has of uuid -> this.invntSrvLnkList index needs to be modified everytime this.invntSrvLnkList is modified
 
     this.tmpl.rghtModForm=`
       <div id="invntSrvNewForm">
@@ -466,8 +467,20 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
-    pre: this.invntSrvLnkList, this.rghtMdlTblStatusStr, this.rghtMdlTblTypeStr, getInvntSrvLnkArr();
-    post: this.invntSrvList filled
+    pre: this.invntSrvLnkList, this.invntSrvLnkIndxHsh 
+    post: this.invntSrvLnkHsh redone
+    used for when this.invntSrvLnkIndxHsh needs to be redone. Like on initialization or this.invntSrvLnkList was spliced
+    -----------------------------------------------*/
+    hshInvntSrvLnkList(){
+      this.invntSrvLnkIndxHsh={};
+      for(let i in this.invntSrvLnkList){
+      this.invntSrvLnkIndxHsh[this.invntSrvLnkList[i].invntSrvuuid]=i;
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: this.invntSrvLnkList, this.invntSrvLnkHsh, this.rghtMdlTblStatusStr, this.rghtMdlTblTypeStr, getInvntSrvLnkArr(), this.hshInvntSrvLnkList()
+    post: this.invntSrvList and this.invntSrvLnkHsh filled
     get/fill this.invntSrvLnkList depending on uuid
     -----------------------------------------------*/
     getInvntSrvLnkList(uuid=null){
@@ -483,6 +496,73 @@ manage inventory and services
       pObj['type_uuid']=this.rghtMdlTblTypeStr;
       }
     this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+    this.hshInvntSrvLnkList();
+    }
+
+    /*-----------------------------------------------
+    pre: this.invntSrvLnkList, this.invntSrvLnkIndxHsh
+    post: this.invntSrvLnkList, this.invntSrvLnkIndxHsh modified
+    this.invntSrvLnkList, this.invntSrvLnkIndxHsh cleared
+    -----------------------------------------------*/
+    clearInvntSrvLnkList(){
+    this.invntSrvLnkList=null;
+    this.invntSrvLnkIndxHsh=null
+    }
+
+    /*-----------------------------------------------
+    pre: this.invntSrvLnkList this.invntSrvLnkIndxHsh this.invntSrvHsh
+    post: this.invntSrvLnkList this.invntSrvLnkIndxHsh modified 
+    add to this.invntSrvLnkList this.invntSrvLnkIndxHsh
+    -----------------------------------------------*/
+    addInvntSrvLnkList(uuid){
+      if(!uuid||!this.invntSrvHsh.hasOwnProperty(uuid)){
+      return null;
+      }
+    let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, ...this.invntSrvHsh[uuid]});
+      if(!this.invntSrvLnkIndxHsh){
+      this.invntSrvLnkIndxHsh={};
+      }
+    this.invntSrvLnkIndxHsh[uuid]=Number(i-1).toString();
+    }
+
+    /*-----------------------------------------------
+    pre: this.addInvntSrvLnkList(uuid), this.drawRghtMdlTbl();
+    post: this.invntSrvLnkList this.invntSrvLnkIndxHsh modified, page drawn
+    add to this.invntSrvLnkList and redraw table
+    -----------------------------------------------*/
+    addDrawInvntSrvLnkList(uuid){
+    this.addInvntSrvLnkList(uuid);
+    this.drawRghtMdlTbl();
+    }
+
+    /*-----------------------------------------------
+    pre: this.invntSrvLnkList this.invntSrvLnkIndxHsh
+    post: this.invntSrvLnkList this.invntSrvLnkIndxHsh modified 
+    add to this.invntSrvLnkList this.invntSrvLnkIndxHsh
+    -----------------------------------------------*/
+    rmInvntSrvLnkList(uuid){
+      if(!uuid||!this.invntSrvLnkIndxHsh.hasOwnProperty(uuid)){
+      return null;
+      }
+    let i=this.invntSrvLnkIndxHsh[uuid];
+    let len=this.invntSrvLnkList.length;
+    this.invntSrvLnkList.splice(i,1);
+      if(Number(i)==len-1){
+      delete this.invntSrvLnkIndxHsh[uuid];
+      }
+      else{
+      this.hshInvntSrvLnkList();
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: this.addInvntSrvLnkList(uuid), this.drawRghtMdlTbl();
+    post: this.invntSrvLnkList this.invntSrvLnkIndxHsh modified, page drawn
+    add to this.invntSrvLnkList and redraw table
+    -----------------------------------------------*/
+    rmDrawInvntSrvLnkList(uuid){
+    this.rmInvntSrvLnkList(uuid);
+    this.drawRghtMdlTbl();
     }
 
     /*-----------------------------------------------
@@ -497,6 +577,7 @@ manage inventory and services
     this.invntSrvId=uuid;
       if(this.invntSrvHsh.hasOwnProperty(uuid)&&this.invntSrvHsh[uuid]){
       this.clearRghtModFltr();
+      this.clearInvntSrvLnkList();
       this.fillRghtMod();
       this.getInvntSrvLnkList(uuid);
 
@@ -579,6 +660,7 @@ manage inventory and services
       this.rghtMdlTblColDir='asc';
       this.rghtMdlTblFltrStr=null;
       this.clearRghtMod();
+      this.clearInvntSrvLnkList();
       this.invntSrvLnkList=[];
       this.drawRghtMdlTbl();
 
@@ -743,8 +825,6 @@ manage inventory and services
     let lnkedHsh={};
     let pObj={};
       if(this.invntSrvLnkList){
-      console.log(this.invntSrvLnkList);
-      //pObj['invntSrvLnkPrnt']=this.invntSrvId;
         if(this.rghtMdlTblStatusStr){
         pObj['status']=this.rghtMdlTblStatusStr;
         }
@@ -752,10 +832,8 @@ manage inventory and services
         pObj['type_uuid']=this.rghtMdlTblTypeStr;
         }
 
-      //this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
       let invntSrvLnkList=this.fltrInvntSrvsMdl(this.invntSrvLnkList,pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
         for(let isl of invntSrvLnkList){
-        lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn===null?'None':isl.srv_durtn;
         //if the isl is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
         let buyType=null;
@@ -775,14 +853,15 @@ manage inventory and services
           <td>${isl.sell}</td>
           <td>
             <div class="moduleTblCellActns">
-              <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${isl.uuid}_disabled"); title="Remove from Inventory/Services">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+              <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.rmDrawInvntSrvLnkList("${isl.invntSrvuuid}"); title="Remove from Inventory/Services">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
             </div>
           </td>
         </tr>
         `;
         }
       }
-      //not linked items
+
+    //not linked items
     pObj={};
       if(this.rghtMdlTblStatusStr){
       pObj['status']=this.rghtMdlTblStatusStr;
@@ -797,7 +876,7 @@ manage inventory and services
     invntSrvList=this.fltrInvntSrvsMdl(invntSrvList);
       for(let is of invntSrvList){
         //don't list if item is linked or the item in question
-        if(is.uuid==this.invntSrvId||lnkedHsh.hasOwnProperty(is.uuid)){
+        if(is.uuid==this.invntSrvId||(this.invntSrvLnkIndxHsh&&this.invntSrvLnkIndxHsh.hasOwnProperty(is.uuid))){
         continue;
         }
       let dur=is.srv_durtn===null?'None':is.srv_durtn;
@@ -819,7 +898,7 @@ manage inventory and services
         <td>${is.sell}</td>
         <td>
           <div class="moduleTblCellActns">
-            <div name="invntSrvDisable" class="menuIcon" onclick=console.log("${is.uuid}_add"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
+            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.addDrawInvntSrvLnkList("${is.uuid}"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
           </div>
         </td>
       </tr>
