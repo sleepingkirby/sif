@@ -466,6 +466,26 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: this.invntSrvLnkList, this.rghtMdlTblStatusStr, this.rghtMdlTblTypeStr, getInvntSrvLnkArr();
+    post: this.invntSrvList filled
+    get/fill this.invntSrvLnkList depending on uuid
+    -----------------------------------------------*/
+    getInvntSrvLnkList(uuid=null){
+      if(!uuid){
+      return null;
+      }
+    let pObj={};
+    pObj['invntSrvLnkPrnt']=this.invntSrvId;
+      if(this.rghtMdlTblStatusStr){
+      pObj['status']=this.rghtMdlTblStatusStr;
+      }
+      if(this.rghtMdlTblTypeStr){
+      pObj['type_uuid']=this.rghtMdlTblTypeStr;
+      }
+    this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+    }
+
+    /*-----------------------------------------------
     pre: none
     post: updates rghtModal
     update rghtModal 
@@ -478,6 +498,8 @@ manage inventory and services
       if(this.invntSrvHsh.hasOwnProperty(uuid)&&this.invntSrvHsh[uuid]){
       this.clearRghtModFltr();
       this.fillRghtMod();
+      this.getInvntSrvLnkList(uuid);
+
       this.drawRghtMdlTbl();
       btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
@@ -557,6 +579,7 @@ manage inventory and services
       this.rghtMdlTblColDir='asc';
       this.rghtMdlTblFltrStr=null;
       this.clearRghtMod();
+      this.invntSrvLnkList=[];
       this.drawRghtMdlTbl();
 
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
@@ -629,17 +652,69 @@ manage inventory and services
     post: none
     filters the inventory services
     ----------------------------------*/
-    fltrInvntSrvsMdl(list){
-    let invntSrvs=[];
-      if(!this.rghtMdlTblFltrStr){
-      return list;
+    fltrInvntSrvsMdl(lnkList,pObj=null,sortCol=null,sortDir=null){
+      if(!lnkList){
+      return lnkList;
       }
+    let invntSrvs=[];
+    let list=[...lnkList];
+
+    //===== array of object sort (when db sort isn't available)========
+      if(sortCol){
+        if(sortDir=='desc'){
+          list=list.sort((b,a)=>{
+            if(a[sortCol]<b[sortCol]){
+            return -1;
+            }
+            if(a[sortCol]>b[sortCol]){
+            return 1;
+            }
+          return 0;
+          });
+        }
+        else{
+          list=list.sort((a,b)=>{
+            if(a[sortCol]<b[sortCol]){
+            return -1;
+            }
+            if(a[sortCol]>b[sortCol]){
+            return 1;
+            }
+          return 0;
+          });
+        }
+      }
+
+      let pObjInds=null;
       for(let invntSrv of list){
-        for(let prop of this.fltrPropsMdl){
-          if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.rghtMdlTblFltrStr.toLocaleLowerCase())>=0){
-          invntSrvs.push({...invntSrv});
-          break;
+      //========filter by pObj=========
+        if(pObj&&typeof pObj=="object"&&Object.keys(pObj).length>0){
+          if(!pObjInds){
+          pObjInds=Object.keys(pObj);
           }
+        let flag=0;
+          //if the current invntSrv doesn't have any of the pObj values on the appropriate properties, don't include.
+          for(let inds of pObjInds){
+            if(invntSrv[inds]==pObj[inds]){
+            flag=1;
+            break;
+            }
+          }
+          if(flag==0){
+          continue;
+          }
+        }
+      //====== filter by String, if this.rghtMdlTblFltrStr is null, don't filter ===========
+        if(this.rghtMdlTblFltrStr){ 
+          for(let prop of this.fltrPropsMdl){
+            if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.rghtMdlTblFltrStr.toLocaleLowerCase())>=0){
+            invntSrvs.push({...invntSrv});
+            break;
+            }
+          }
+        }
+        else{
+        invntSrvs.push({...invntSrv});
         }
       }
     return invntSrvs;
@@ -667,8 +742,9 @@ manage inventory and services
     let invntSrvsRow='';
     let lnkedHsh={};
     let pObj={};
-      if(this.invntSrvId){
-      pObj['invntSrvLnkPrnt']=this.invntSrvId;
+      if(this.invntSrvLnkList){
+      console.log(this.invntSrvLnkList);
+      //pObj['invntSrvLnkPrnt']=this.invntSrvId;
         if(this.rghtMdlTblStatusStr){
         pObj['status']=this.rghtMdlTblStatusStr;
         }
@@ -676,8 +752,8 @@ manage inventory and services
         pObj['type_uuid']=this.rghtMdlTblTypeStr;
         }
 
-      this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
-      let invntSrvLnkList=this.fltrInvntSrvsMdl(this.invntSrvLnkList);
+      //this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
+      let invntSrvLnkList=this.fltrInvntSrvsMdl(this.invntSrvLnkList,pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
         for(let isl of invntSrvLnkList){
         lnkedHsh[isl.invntSrvuuid]=isl;
         let dur=isl.srv_durtn===null?'None':isl.srv_durtn;
