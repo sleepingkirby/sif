@@ -21,24 +21,24 @@ manage inventory and services
         <div id="invntSrvNewFormInfo">
           <div class="row mdRow">
             <div>
-              <textarea name="invntSrv[name]" type="text" placeholder="Name"></textarea>
-              <textarea name="invntSrv[sku]" type="text" placeholder="Sku"></textarea>
+              <textarea name="invntSrv[name]" type="text" placeholder="Name" title="Name of this item or service"></textarea>
+              <textarea name="invntSrv[sku]" type="text" placeholder="Sku" title="SKU number, if it exists"></textarea>
             </div>
             <div id="invntSrvAmntDrtn" style="margin-left:80px;">
               <label class="inptLbl" for="invntSrvNewType" title="Product, service or discount">
               Type:
               </label>
-              <select id="invntSrvNewType" name="invntSrv[type_uuid]">
+              <select id="invntSrvNewType" name="invntSrv[type_uuid]" title="Is this an item, service or discount?">
                 <option>type</option>
               </select>
             </div>
           </div>
           <div class="row mdRow">
             <div>
-              <label class="inptLbl" for="invntSrvNewType" title="Product, service or discount">
+              <label class="inptLbl" for="invntSrvNewType" title="Price for item">
               Price Type:
               </label>
-              <select id="invntSrvPrcTypeId" name="invntSrv[price_type_id]">
+              <select id="invntSrvPrcTypeId" name="invntSrv[price_type_id]" title="The price type for this item or service. Percentage can be used for things like discounts. Deferred are used for items that won't have its own price but will, instead, rely on the price of its parent. ">
                 <option>price type</option>
               </select>
             </div>
@@ -53,7 +53,7 @@ manage inventory and services
                 Buy Price:
                 </div>
                 <span id="invntSrvBuySign">$</span>
-                <div class="inptNumNumRszWrap inptNumPrc" title="Sell price">
+                <div class="inptNumNumRszWrap inptNumPrc" title="Buy price">
                   <input class="inptNumRsz" type="number" name="invntSrv[buy]" step=".2"/>
                 </div>
                 <span id="invntSrvBuyPrcnt">%</span>
