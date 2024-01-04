@@ -364,6 +364,7 @@ manage inventory and services
         fld.value=null;
         }
       }
+    document.getElementById(this.newInvntSrvAddBtnId).disabled=true; //disables create button, which is the default
     this.prcFlipsByType('static');
     this.clearRghtModFltr();
     }
@@ -419,6 +420,20 @@ manage inventory and services
       document.getElementById('invntSrvNewFormFltrTyp').innerHTML=this.genFltrTypeSlct();
 
       btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
+
+      //enables or disables create button
+      let nm=document.getElementsByName('invntSrv[name]');
+        if(nm&&typeof nm=='object'&&nm.length>=1){
+          nm[0].onkeyup=(e)=>{
+          let btn=document.getElementById(this.newInvntSrvAddBtnId);
+            if(!e.target.value||e.target.value==''){
+            btn.disabled=true;
+            }
+            else{
+            btn.removeAttribute('disabled');
+            }
+          }
+        }
 
       //fill inputs with invntSrv values
         if(this.invntSrvId&&this.invntSrvHsh.hasOwnProperty(this.invntSrvId)){
