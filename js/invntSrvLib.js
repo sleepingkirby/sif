@@ -6,7 +6,7 @@ common library for getting setting the events
 
 /*-----------------------------------------------
 pre: sqlObj
-post: update databasewith new inventory/service
+post: update database with new inventory/service
 create new inventory/service
 -----------------------------------------------*/
 function createInvntSrv(name, typeId, statusId, durtn, sku, amnt, buy, sell, priceTypeId, notes, isLnkArr){
@@ -16,8 +16,6 @@ let query='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, st
 let queryDfltStts='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), (select uuid from status where name="active"), $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)';
 let uuid=createUUID();
 let obj={$uuid:uuid, $name:name, $type_id:typeId, $status_id:statusId, $durtn:durtn, $sku:sku, $amnt:amnt, $buy:buy, $sell:sell, $price_type_id:priceTypeId, $notes:notes};
-console.log(query);
-console.log(obj);
 sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
 
   //set what inventory/service is under this inventory/service
@@ -33,7 +31,22 @@ sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
   }
 }
 
-
+/*-----------------------------------------------
+pre: sqlObj
+post: update database inventory/service with new status
+update database inventory/service with new status
+-----------------------------------------------*/
+function updtInvntSrvStts(uuid, stts, id=true){
+let query="";
+  if(id){
+  query="update invntSrv set status=$stts where uuid=$uuid";
+  }
+  else{
+  query='update invntSrv set status=(select uuid from status where name=$stts) where uuid=$uuid';
+  }
+let obj={$uuid:uuid, $stts:stts};
+sqlObj.runQuery(query,obj);
+}
 
 /*----------------------------------------------
 pre: sqlObj
@@ -132,7 +145,6 @@ left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
 let and='';
 let tmp=null;
 let obj={};
-
 
   if(paramObj&&Object.keys(paramObj).length>0){
   query+='where';

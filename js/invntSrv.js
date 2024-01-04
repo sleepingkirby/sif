@@ -390,6 +390,19 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: invntSrvLib's updtInvntSrvStts()
+    post: database updated. Page redrawn
+    updates the database of the invntSrv to update the status
+    -----------------------------------------------*/
+    updtInvntSrvStts(uuid, stts){
+      if(uuid&&stts){
+      updtInvntSrvStts(uuid, stts, false);
+      }
+    mainObj.setFloatMsg("Inventory/Service Status Updated");
+    this.drawTbl();
+    }
+
+    /*-----------------------------------------------
     pre: this class, this.invntSrvId, this.invntSrvHsh, elements
     post: right modal filled
     fill modal form's input
@@ -619,7 +632,6 @@ manage inventory and services
       mainObj.modPrcClsCall(el);
       }
     }
-
 
     /*----------------------------------
     pre: this.rghtMdlBuyPrcSgnId, this.rghtMdlBuyPrcPrcntId, this.rghtMdlSellPrcSgnId, this.rghtMdlSellPrcPrcntId
@@ -1061,7 +1073,8 @@ manage inventory and services
         <td>
           <div class="moduleTblCellActns">
             <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtInvntSrvRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtEvntStts("`+invntSrv.uuid+`","disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtInvntSrvStts("`+invntSrv.uuid+`","active"); title="Activate Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtInvntSrvStts("`+invntSrv.uuid+`","disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>
         </td>
       </tr>
@@ -1109,6 +1122,10 @@ manage inventory and services
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
     this.statuses=selectStatus();
+    let actveStts=invntSrvObj.statuses.find((e)=>{return e.name=="active"});
+      if(actveStts){
+      this.statusStr=actveStts.uuid;
+      }
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
     this.genRghtMod();
     document.getElementById('mainEl').innerHTML=this.mainEl();
