@@ -47,6 +47,26 @@ manage inventory and services
             &nbsp;
           </div>
           <div id="invntSrvPrcs">
+            <div class="row mdRow" id="invntSrvDurtnWrapId" style="display:none;">
+              <div>
+                <div class="inptLbl">
+                Duration:
+                </div>
+                <div class="inptNumNumRszWrap" title="Duration of Service (in minutes)" style="width:60px; min-width:50px;">
+                  <input class="inptNumRsz" type="number" name="invntSrv[srv_durtn]" title="Duration of Service (in minutes)" placeholder="0" min="0"/>
+                </div>
+              </div>
+            </div>
+            <div class="row mdRow">
+              <div>
+                <div class="inptLbl">
+                Amount:
+                </div>
+                <div class="inptNumNumRszWrap" title="Amount of Product. Use -1 for unlimited amount." style="width:60px; min-width:50px;">
+                  <input class="inptNumRsz" type="number" name="invntSrv[amnt]" title="Amount of Product. Use -1 for unlimited amount." placeholder="0" min="-1"/>
+                </div>
+              </div>
+            </div>
             <div class="row mdRow">
               <div>
                 <div class="inptLbl">
@@ -105,7 +125,7 @@ manage inventory and services
           </div>
           <div class="row">
             <input id="invntSrvNewFormUpdtBtn" style="display:none;" type="submit" value="Update"/>
-            <input id="invntSrvNewFormAddBtn" style="" type="submit" value="Create" disabled/>
+            <input id="invntSrvNewFormAddBtn" style="" type="submit" value="Create" onclick='invntSrvObj.createInvntSrv()' disabled/>
           </div>
         </div>
       </div>
@@ -380,7 +400,16 @@ manage inventory and services
       let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
       let curIs=this.invntSrvHsh[this.invntSrvId];
         for(let fld of formInpt){
-        fld.value=curIs[getSubs(fld.name,'invntSrv')];
+        let nm=getSubs(fld.name,'invntSrv');
+        fld.value=curIs[nm];
+          if(nm=='type_uuid'){
+            if(fld.options[fld.selectedIndex].text=='service'){
+            this.typeDurtnHide(false);
+            }
+            else{
+            this.typeDurtnHide(true);
+            }
+          }
         }
       this.prcFlipsByType(curIs['price_type_name']);
       }
@@ -446,6 +475,27 @@ manage inventory and services
 
       this.drawRghtMdlTbl();
       }
+    }
+
+    /*-----------------------------------------------
+    pre: createInvntSrv(), form elemtns of invntSrv["namehere"], this.invntSrvLnkList
+    post: database updated. modal closed. main page redrawn
+    -----------------------------------------------*/
+    createInvntSrv(){
+    let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
+    let obj={};
+      for(let fld of formInpt){
+      obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
+      }
+    let lnkArr=[];
+      for(let lnk of this.invntSrvLnkList){
+      lnkArr.push(lnk.invntSrvuuid);
+      }
+    createInvntSrv(obj.name, obj.type_uuid, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", lnkArr);
+    let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+    mainObj.modPrcClsCall(el);
+    mainObj.setFloatMsg("Inventory/Service Created");
+    this.drawTbl();
     }
 
     /*-----------------------------------------------
@@ -634,7 +684,18 @@ manage inventory and services
     ----------------------------------*/
     hookInvntSrvPrcType(){
       document.getElementById(this.newInvntSrvPrcTypesSlctId).onchange=(e)=>{
-        this.prcFlipsByType(e.target.options[e.target.selectedIndex].text);
+      this.prcFlipsByType(e.target.options[e.target.selectedIndex].text);
+      }
+    }
+
+    /*----------------------------------
+    pre: 
+    post:
+    ----------------------------------*/
+    typeDurtnHide(hide=true){
+    let durEl=document.getElementById('invntSrvDurtnWrapId');
+      if(durEl){
+      durEl.style.display=hide?'none':'flex';
       }
     }
 
@@ -645,7 +706,12 @@ manage inventory and services
     ----------------------------------*/
     hookNewInvntSrvType(){
       document.getElementById(this.newInvntSrvTypesSlctId).onchange=(e)=>{
-      console.log(e.target.value);
+        if(e.target.options[e.target.selectedIndex].text=="service"){
+        this.typeDurtnHide(false);
+        }
+        else{
+        this.typeDurtnHide(true);
+        }
       }
     }
 
@@ -744,7 +810,6 @@ manage inventory and services
       this.drawRghtMdlTbl();
       };
     }
-
 
     /*----------------------------------
     pre: this.fltrStr, this.invntSrvList

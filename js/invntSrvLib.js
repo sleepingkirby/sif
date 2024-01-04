@@ -4,6 +4,37 @@ post: none
 common library for getting setting the events
 -----------------------------------------------*/
 
+/*-----------------------------------------------
+pre: sqlObj
+post: update databasewith new inventory/service
+create new inventory/service
+-----------------------------------------------*/
+function createInvntSrv(name, typeId, statusId, durtn, sku, amnt, buy, sell, priceTypeId, notes, isLnkArr){
+let evnt_uuid=createUUID();
+
+let query='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), $status_id, $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)' ;
+let queryDfltStts='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), (select uuid from status where name="active"), $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)';
+let uuid=createUUID();
+let obj={$uuid:uuid, $name:name, $type_id:typeId, $status_id:statusId, $durtn:durtn, $sku:sku, $amnt:amnt, $buy:buy, $sell:sell, $price_type_id:priceTypeId, $notes:notes};
+console.log(query);
+console.log(obj);
+sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
+
+  //set what inventory/service is under this inventory/service
+  let subQ='';
+  let subObj='';
+
+  if(isLnkArr&&typeof isLnkArr=="object"&&isLnkArr.length>0){
+    for(let isUUID of isLnkArr){
+    subQ='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm) values($uuid, $prntUUID, $uuid)';
+    subObj={$uuid:createUUID(), $prntUUID:uuid, $uuid:isUUID};
+    sqlObj.runQuery(subQ,subObj);
+    }
+  }
+}
+
+
+
 /*----------------------------------------------
 pre: sqlObj
 post: none
