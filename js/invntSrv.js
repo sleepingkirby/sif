@@ -1041,7 +1041,7 @@ manage inventory and services
       }
     let cntnt='';
       for(let invntSrv of invntSrvList){
-      let dur=invntSrv.srv_durtn===null?'None':invntSrv.srv_durtn;
+      let dur=invntSrv.srv_durtn==null||invntSrv.srv_durtn==""?'None':invntSrv.srv_durtn;
       //if the invntSrv is not type product, the buy price doesn't make sense. Setting format of buying price to N/A
       let buyType=null;
         if(invntSrv.type=='product'){
@@ -1055,9 +1055,9 @@ manage inventory and services
         <td>`+invntSrv.type+`</td>
         <td>`+statusColor(invntSrv.status_name)+`</td>
         <td>`+dur+`</td>
-        <td>`+invntSrv.amnt+`</td>
-        <td>`+invntSrvPrcFormat(invntSrv.buy,buyType)+`</td>
-        <td>`+invntSrvPrcFormat(invntSrv.sell,invntSrv.price_type_name)+`</td>
+        <td>`+Number(invntSrv.amnt).toString()+`</td>
+        <td>`+invntSrvPrcFormat(Number(invntSrv.buy).toString(),buyType)+`</td>
+        <td>`+invntSrvPrcFormat(Number(invntSrv.sell).toString(),invntSrv.price_type_name)+`</td>
         <td>
           <div class="moduleTblCellActns">
             <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtInvntSrvRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
