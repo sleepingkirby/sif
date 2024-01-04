@@ -590,7 +590,7 @@ background-color:var(--default-gray);
 
 .statusNotActive{
 font-weight:900;
-color:red;
+color:#FF6666;
 }
 
 .mdRow{

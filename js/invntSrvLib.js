@@ -33,6 +33,73 @@ sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
 
 /*-----------------------------------------------
 pre: sqlObj
+post: update database with new inventory/service
+update inventory/service
+-----------------------------------------------*/
+function updateInvntSrv(uuid, hsh, lnkArr){
+  if(!uuid){
+  return null;
+  }
+//CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
+let query='update invntSrv set mod_date=datetime("now")';
+let obj={};
+  if(hsh.hasOwnProperty('name')&&hsh.name){
+  query+=", name=$name";
+  obj['$name']=hsh.name;
+  }
+  if(hsh.hasOwnProperty('status')&&hsh.status){
+  query+=", status=$status";
+  obj['$status']=hsh.status;
+  }
+  if(hsh.hasOwnProperty('srv_durtn')&&hsh.srv_durtn){
+  query+=", srv_durtn=$srv_durtn";
+  obj['$srv_durtn']=hsh.srv_durtn;
+  }
+  if(hsh.hasOwnProperty('sku')&&hsh.sku){
+  query+=", sku=$sku";
+  obj['$sku']=hsh.sku;
+  }
+  if(hsh.hasOwnProperty('amnt')&&hsh.amnt){
+  query+=", amnt=$amnt";
+  obj['$amnt']=hsh.amnt;
+  }
+  if(hsh.hasOwnProperty('buy')&&hsh.buy){
+  query+=", buy=$buy";
+  obj['$buy']=hsh.buy;
+  }
+  if(hsh.hasOwnProperty('sell')&&hsh.sell){
+  query+=", sell=$sell";
+  obj['$sell']=hsh.sell;
+  }
+  if(hsh.hasOwnProperty('price_type_id')&&hsh.price_type_id){
+  query+=", price_type_id=$price_type_id";
+  obj['$price_type_id']=hsh.price_type_id;
+  }
+  if(hsh.hasOwnProperty('notes')&&hsh.notes){
+  query+=", notes=$notes";
+  obj['$notes']=hsh.notes;
+  }
+query+=" where uuid=$uuid";
+obj['$uuid']=uuid;
+sqlObj.runQuery(query,obj);
+
+//CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
+query='delete from invntSrvLnk where invntSrvLnkPrnt=$uuid';
+obj={$uuid:uuid};
+sqlObj.runQuery(query,obj);
+
+query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm) values($uuid, $prnt, $itm)';
+obj={};
+  for(let lnk of lnkArr){
+  obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk};
+  sqlObj.runQuery(query,obj);
+  }
+
+}
+
+
+/*-----------------------------------------------
+pre: sqlObj
 post: update database inventory/service with new status
 update database inventory/service with new status
 -----------------------------------------------*/

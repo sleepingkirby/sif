@@ -16,7 +16,7 @@ manage inventory and services
       <div id="invntSrvNewForm">
         <div class="lbl">Inventory/Service</div>
         <div id="invntSrvNewFormUUID">
-          <input id="invntSrvNewFormInfoUUID" type="hidden" />
+          <input id="invntSrvNewFormInfoUUID" name="invntSrv[uuid]" type="hidden" />
         </div>
         <div id="invntSrvNewFormInfo">
           <div class="row mdRow">
@@ -124,7 +124,7 @@ manage inventory and services
             </div>
           </div>
           <div class="row">
-            <input id="invntSrvNewFormUpdtBtn" style="display:none;" type="submit" value="Update"/>
+            <input id="invntSrvNewFormUpdtBtn" style="display:none;" type="submit" value="Update" onclick='invntSrvObj.updateInvntSrv()'/>
             <input id="invntSrvNewFormAddBtn" style="" type="submit" value="Create" onclick='invntSrvObj.createInvntSrv()' disabled/>
           </div>
         </div>
@@ -247,6 +247,7 @@ manage inventory and services
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
+    this.newInvntSrvFormUUID='invntSrvNewFormInfoUUID';
     this.newInvntSrvFormId='invntSrvNewFormInfo';
     this.newInvntSrvTypesSlctId='invntSrvNewType';
     this.newInvntSrvPrcTypesSlctId='invntSrvPrcTypeId';
@@ -412,6 +413,13 @@ manage inventory and services
       if(this.invntSrvId&&this.invntSrvHsh.hasOwnProperty(this.invntSrvId)){
       let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
       let curIs=this.invntSrvHsh[this.invntSrvId];
+
+      //sets the uuid of the inventory service
+      let uuidEl=document.getElementById(this.newInvntSrvFormUUID);
+        if(uuidEl){
+        uuidEl.value=this.invntSrvId;
+        }
+
         for(let fld of formInpt){
         let nm=getSubs(fld.name,'invntSrv');
         fld.value=curIs[nm];
@@ -491,7 +499,7 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
-    pre: createInvntSrv(), form elemtns of invntSrv["namehere"], this.invntSrvLnkList
+    pre: createInvntSrv(), form elements of invntSrv["namehere"], this.invntSrvLnkList
     post: database updated. modal closed. main page redrawn
     -----------------------------------------------*/
     createInvntSrv(){
@@ -510,6 +518,31 @@ manage inventory and services
     mainObj.setFloatMsg("Inventory/Service Created");
     this.drawTbl();
     }
+
+    /*-----------------------------------------------
+    pre: updateInvntSrv(), form elements of invntSrv["namehere"], this.invntSrvLnkList
+    post: database updated. modal closed. main page redrawn
+    update a inventory/services
+    -----------------------------------------------*/
+    updateInvntSrv(){
+    let formInpt=document.querySelectorAll('#'+this.newInvntSrvFormId+' *[name^="invntSrv["]');
+    let obj={};
+      for(let fld of formInpt){
+      obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
+      }
+    let lnkArr=[];
+      for(let lnk of this.invntSrvLnkList){
+      lnkArr.push(lnk.invntSrvuuid);
+      }
+    
+    let uuid=document.getElementById(this.newInvntSrvFormUUID);
+    updateInvntSrv(uuid.value, obj, lnkArr);
+    let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+    mainObj.modPrcClsCall(el);
+    mainObj.setFloatMsg("Inventory/Service Updated");
+    this.drawTbl();
+    }
+
 
     /*-----------------------------------------------
     pre: this.invntSrvLnkList, this.invntSrvLnkIndxHsh 
@@ -961,7 +994,7 @@ manage inventory and services
           <td>*</td>
           <td>${isl.name}</td>
           <td>${isl.type}</td>
-          <td>${isl.status_name}</td>
+          <td>`+statusColor(isl.status_name)+`</td>
           <td>${dur}</td>
           <td>${isl.amnt}</td>
           <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
@@ -1006,7 +1039,7 @@ manage inventory and services
         <td>&nbsp;</td>
         <td>${is.name}</td>
         <td>${is.type}</td>
-        <td>${is.status_name}</td>
+        <td>`+statusColor(is.status_name)+`</td>
         <td>${dur}</td>
         <td>${is.amnt}</td>
         <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
@@ -1123,6 +1156,7 @@ manage inventory and services
     this.typesHsh=sepTypesHsh(this.types);
     this.statuses=selectStatus();
     let actveStts=invntSrvObj.statuses.find((e)=>{return e.name=="active"});
+      //set the initial this.statusStr
       if(actveStts){
       this.statusStr=actveStts.uuid;
       }
