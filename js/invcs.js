@@ -6,7 +6,12 @@ manage inventory and services
 -------------------------------------------*/
   class invcs{
     constructor(){
-      this.tmpl={};
+
+    this.invcsList=null;
+    this.invcsSrtCol='create_date';
+    this.invcsSrtDir='desc';
+
+    this.tmpl={};
     this.tmpl.headers=`
       <div id="invcAdd" class="moduleAdd">
         <div id="invcAddBtn" class="moduleAddBtn" title="New Invoice" tabindex=0>⨁</div>
@@ -77,8 +82,6 @@ manage inventory and services
     ];
 
     this.mainTblId='invcMain';
-
-
     }
 
     /*-----------------------------------------------
@@ -86,8 +89,45 @@ manage inventory and services
     post: draws top left nav
     draws top left nav
     -----------------------------------------------*/
-    genLeftNavInvntSrv(){
+    genLeftNavInvcs(){
     return "Invoices";
+    }
+
+
+    /*-----------------------------------------------
+    pre: this.invcsList
+    post: none
+    returns invoices with sorting
+    -----------------------------------------------*/
+    getInvcsList(){
+    this.invcsSrtCol='create_date';
+    this.invcsSrtDir='desc';
+    let invcsList=getInvcs({},this.invcsSrtCol,this.invcsSrtDir);
+    return invcsList;
+    }
+
+
+    /*-----------------------------------------------
+    pre: this.invcsList
+    post: none
+    returns filter invoices
+    -----------------------------------------------*/
+    fltrInvcs(){
+      if(!this.fltrStr){
+      return this.invntSrvList;
+      }
+
+    let invcsArr=[];
+      for(let invntSrv of this.invntSrvList){
+        for(let prop of this.fltrProps){
+          if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
+          invntSrvs.push({...invntSrv});
+          break;
+          }
+        }
+      }
+
+    return invcsArr;
     }
 
     /*----------------------------------
@@ -126,6 +166,9 @@ manage inventory and services
       hdrs+=this.tmpl.invcsTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invcsTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invcsTblHdCll[1];
       }
 
+    this.invcsList=this.getInvcsList();
+    let invcsArr=this.fltrInvcs(this.invcsList);
+
     let cntnt='';
     /*
       cntnt+=`
@@ -152,7 +195,6 @@ manage inventory and services
     */
 
     rtrn+=this.tmpl.invcsTblStrt+hdrs+this.tmpl.invcsTblHdEnd+cntnt+this.tmpl.invcsTblEnd;
-
     document.getElementById(this.mainTblId).innerHTML=rtrn;
     }
 
@@ -167,13 +209,12 @@ manage inventory and services
     }
 
 
-
     /*-----------------------------------------------
     pre:
     post:
     -----------------------------------------------*/
     run(){
-    document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvntSrv();
+    document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvcs();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     this.drawTbl();
     this.hookNewInvntBtn()
