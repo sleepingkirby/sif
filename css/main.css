@@ -189,6 +189,11 @@ justify-content: center;
 align-items: center;
 }
 
+.lbl{
+font-weight: 600;
+margin-bottom: 26px;
+}
+
 .lblTggl{
 display: none;
 }

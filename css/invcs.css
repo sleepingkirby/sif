@@ -1,0 +1,41 @@
+#invcsNewForm{
+padding: 0px 12px 0px 12px;
+width:100%;
+min-width:65vw;
+}
+
+#invcsNewFormInfo{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:space-between;
+width:100%;
+}
+
+#invcsNewFormInfo > div{
+display:flex;
+width:100%;
+flex-direction:row;
+align-items:center;
+justify-content:space-between;
+}
+
+#invcsNewFormInfo .flexLeft{
+display:flex;
+justify-content:flex-start;
+flex-direction:row;
+}
+
+#invcsNewFormInfo .flexLeft > div{
+padding-right: 12px;
+}
+
+#invcsNewFormInfo .flexRight{
+display:flex;
+justify-content:flex-end;
+}
+
+#invcsNewFormInfo .flexCol{
+flex-direction:column;
+}
+

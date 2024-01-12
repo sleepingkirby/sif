@@ -41,6 +41,30 @@ manage inventory and services
       </div>
     `;
 
+    this.tmpl.rghtMod=`
+    <div id="invcsNewForm">
+      <div class="lbl">Invoice</div>
+      <div id="invcsNewFormUUID">
+        <input id="invcsNewFormInfoUUID" name="invcs[uuid]" type="hidden" />
+      </div>
+      <div id="invcsNewFormInfo">
+        <div style="margin-bottom:12px;">
+          <div class="flexLeft">
+            <div>create: 1234-01-23</div>
+            <div>due: 1234-01-23</div>
+          </div>
+          <div class="flexRight flexCol">
+            <div class="flexRight">status</div>
+            <div>paid: 1234-01-23</div>
+          </div>
+        </div>
+        <div>test</div>
+        <div>test</div>
+        <div>test</div>
+      </div>
+    </div>
+    `;
+
     this.tmpl.invcsTblStrt=`
         <table id="invcsList">
           <tr>
@@ -89,7 +113,7 @@ manage inventory and services
     post: draws top left nav
     draws top left nav
     -----------------------------------------------*/
-    genLeftNavInvcs(){
+    genLeftNav(){
     return "Invoices";
     }
 
@@ -106,6 +130,14 @@ manage inventory and services
     return invcsList;
     }
 
+    /*-----------------------------------------------
+    pre: none 
+    post: html drawn
+    drawn right modal
+    -----------------------------------------------*/
+    genRghtMod(){
+      document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
+    }
 
     /*-----------------------------------------------
     pre: this.invcsList
@@ -214,8 +246,9 @@ manage inventory and services
     post:
     -----------------------------------------------*/
     run(){
-    document.getElementById('leftNavMod').innerHTML=this.genLeftNavInvcs();
+    document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
+    this.genRghtMod();
     this.drawTbl();
     this.hookNewInvntBtn()
     }
