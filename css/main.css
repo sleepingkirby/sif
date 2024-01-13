@@ -151,6 +151,7 @@ border-radius: 6px;
 color: white;
 font-family:var(--font-family);
 font-size: x-large;
+box-sizing:border-box;
 }
 
 input[type="number"]::placeholder{

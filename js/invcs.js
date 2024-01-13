@@ -48,14 +48,31 @@ manage inventory and services
         <input id="invcsNewFormInfoUUID" name="invcs[uuid]" type="hidden" />
       </div>
       <div id="invcsNewFormInfo">
-        <div style="margin-bottom:12px;">
-          <div class="flexLeft">
-            <div>create: 1234-01-23</div>
-            <div>due: 1234-01-23</div>
+        <div id="invcsNewFormInvcsStts" class="row">
+          <div class="flexLeft flexCol">
+            <div class="lbl" style="margin-bottom:6px;">due:</div>
+            <div>
+              <input type="datetime-local" name="invcs[due_date]" title="Due Date" value="${toInptValFrmt()}"/>
+            </div>
           </div>
           <div class="flexRight flexCol">
-            <div class="flexRight">status</div>
-            <div>paid: 1234-01-23</div>
+            <div class="flexRight" style="margin-bottom:6px;">
+              <select id="invcsSelectStatus" name="invcs[status_id]" title="Invoice Status">
+                <option>status</option>
+              </select>
+            </div>
+            <div class="flexRight">create: 1234-01-23</div>
+            <div class="flexRight">paid: 1234-01-23</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
+              <option>by user</option>
+            </select>
+          </div>
+          <div class="inptNumNumRszWrap inptNumPrc">
+            <input class="inptNumRsz" type="number" name="invcs[total]" step=".2">
           </div>
         </div>
         <div>test</div>

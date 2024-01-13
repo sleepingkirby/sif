@@ -39,3 +39,7 @@ justify-content:flex-end;
 flex-direction:column;
 }
 
+#invcsNewFormInvcsStts{
+margin-bottom:12px;
+align-items:flex-start;
+}
