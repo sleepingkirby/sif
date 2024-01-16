@@ -18,6 +18,11 @@ margin-bottom: 8px;
 cursor: pointer;
 }
 
+.midBtn{
+height:30px;
+fill:#FFFFFF;
+}
+
 .menuIcon{
 display: flex;
 box-sizing: border-box;

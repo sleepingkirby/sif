@@ -8,6 +8,7 @@ manage inventory and services
     constructor(){
 
     this.invcsList=null;
+    this.invcsNewItemsList=null;
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
 
@@ -66,16 +67,27 @@ manage inventory and services
           </div>
         </div>
         <div class="row">
+          <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
+            <option>by user</option>
+          </select>
           <div>
-            <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
-              <option>by user</option>
-            </select>
-          </div>
-          <div class="inptNumNumRszWrap inptNumPrc">
-            <input class="inptNumRsz" type="number" name="invcs[total]" step=".2">
+            <div style="font-weight:600; align-items:center;">$</div>
+            <div class="inptNumNumRszWrap inptNumPrc">
+              <input class="inptNumRsz" type="number" name="invcs[total]" step=".2" />
+            </div>
           </div>
         </div>
-        <div>test</div>
+        <div class="mdlSubBoxOutln" style="flex-direction:column; align-items:stretch;">
+          <div class="row flexRight">
+            <select name="invcsNewItem" title="New Invoice Item">
+              <option>new item</option>
+            </select>
+            <div class="midBtn" title="Add New Invoice Item" style="margin-left: 12px;">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+          </div>
+          <div id="invcsNewItems">
+          table
+          </div>
+        </div>
         <div>test</div>
         <div>test</div>
       </div>
@@ -106,6 +118,26 @@ manage inventory and services
     `;
     this.tmpl.invcsTblEnd=`
         </table>
+    `;
+
+    this.tmpl.invcsNewItemsTbl={};
+
+    this.tmpl.invcsNewItemsTbl['tableStart']=`
+      <table>
+        <tr>
+    `;
+
+    this.tmpl.invcsNewItemsTbl['headStart']=`
+          <th>
+    `;
+
+    this.tmpl.invcsNewItemsTbl['headEnd']=`
+          </th>
+    `;
+
+    this.tmpl.invcsNewItemsTbl['tableEnd']=`
+      </tr>
+    </table>
     `;
 
     //CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
@@ -148,12 +180,21 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre:
+    post:
+    -----------------------------------------------*/
+    genInvcsNewItemsTbl(){
+    return this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
+    }
+
+    /*-----------------------------------------------
     pre: none 
     post: html drawn
     drawn right modal
     -----------------------------------------------*/
     genRghtMod(){
       document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
+      document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     }
 
     /*-----------------------------------------------
