@@ -184,7 +184,40 @@ manage inventory and services
     post:
     -----------------------------------------------*/
     genInvcsNewItemsTbl(){
-    return this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
+    //let tmp=this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
+    let tmp=`
+      <table id="invcsNewItemsTbl">
+        <tr>
+          <th>
+          &nbsp;
+          </th>
+          <th style="width:100%;">
+          name
+          </th>
+          <th>
+          price
+          </th>
+          <th>
+          subtotal
+          </th>
+        </tr>
+        <tr>
+          <td>
+          &nbsp;
+          </td>
+          <td>
+          shampoo
+          </td>
+          <td>
+          5.99
+          </td>
+          <td>
+          5.99
+          </td>
+        </tr>
+      </table>
+    `;
+    return tmp;
     }
 
     /*-----------------------------------------------

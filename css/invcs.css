@@ -40,3 +40,16 @@ flex-direction:column;
 justify-content: center;
 align-items:flex-start;
 }
+
+#invcsNewItemsTbl{
+color: white;
+border: 0px;
+}
+
+#invcsNewItemsTbl tr:first-child{
+background-color: transparent;
+}
+
+#invcsNewItemsTbl th{
+text-align: left;
+}
