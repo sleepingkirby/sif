@@ -202,6 +202,9 @@ manage inventory and services
           type
           </th>
           <th>
+          price type
+          </th>
+          <th>
           price
           </th>
         </tr>
@@ -215,6 +218,11 @@ manage inventory and services
           </td>
           <td>
             <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
+          </td>
+          <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
           </td>
           <td>
             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
@@ -237,6 +245,11 @@ manage inventory and services
           </td>
           <td>
             <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
+          </td>
+          <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
           </td>
           <td>
             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
