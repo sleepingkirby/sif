@@ -90,10 +90,22 @@ align-items:center;
 
 .invcsNewItemActns div{
 fill:white;
-width: 30px;
-height: 30px;
+width: 32px;
+height: 32px;
+margin-left:4px;
 }
 
 .invcsNewItemActns div:first-child{
 margin-right:18px;
+}
+
+.invcsNewItemsSlct{
+border-width: 0px 0px 1px 0px;
+box-sizing: border-box;
+min-height: 26px;
+height: 26px;
+font-size: 16px;
+font-weight:600;
+padding-top:0px;
+padding-bottom:0px;
 }

@@ -89,7 +89,7 @@ manage inventory and services
           </div>
         </div>
         <div style="justify-content:flex-end;">
-          <input id="invcsNewFormAddBtn" style="" type="submit" value="Update" disabled/>
+          <input id="invcsNewFormAddBtn" style="display:none;" type="submit" value="Update" disabled/>
           <input id="invcsNewFormAddBtn" style="" type="submit" value="Create" disabled/>
         </div>
       </div>
@@ -187,6 +187,8 @@ manage inventory and services
     -----------------------------------------------*/
     genInvcsNewItemsTbl(){
     //let tmp=this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
+    //CREATE TABLE invcs_items(uuid text not null primary key, invc_id text not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real not null, price_dscntd real null, notes null, foreign key(invc_id) references invcs(uuid), foreign key(type_id) references type(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
+
     let tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
@@ -195,6 +197,9 @@ manage inventory and services
           </th>
           <th style="width:100%;">
           name
+          </th>
+          <th>
+          type
           </th>
           <th>
           price
@@ -212,6 +217,11 @@ manage inventory and services
             <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
           </td>
           <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
+          </td>
+          <td>
             <div class="inptNumNumRszWrap minInptNumWarp">
               <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
             </div>
@@ -227,6 +237,11 @@ manage inventory and services
           </td>
           <td>
             <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
+          </td>
+          <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
           </td>
           <td>
             <div class="inptNumNumRszWrap minInptNumWarp">
