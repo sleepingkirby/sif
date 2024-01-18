@@ -635,6 +635,29 @@ width:120px;
 margin-left:6px;
 }
 
+.minInptNumWarp{
+width:80px;
+height:26px;
+min-height:26px;
+}
+
+input.minInptNum{
+font-weight:600;
+border-width: 0px 0px 1px 0px;
+padding: 2px 2px 2px 8px;
+font-size:16px;
+border-radius:unset;
+height:100%;
+}
+
+.smallTAInpt{
+border-width: 0px 0px 1px 0px;
+box-sizing:border-box;
+min-height:26px;
+height:26px;
+font-size:16px;
+}
+
 .inptLbl{
 margin-right:8px;
 border-width:0px;

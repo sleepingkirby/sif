@@ -88,8 +88,10 @@ manage inventory and services
           table
           </div>
         </div>
-        <div>test</div>
-        <div>test</div>
+        <div style="justify-content:flex-end;">
+          <input id="invcsNewFormAddBtn" style="" type="submit" value="Update" disabled/>
+          <input id="invcsNewFormAddBtn" style="" type="submit" value="Create" disabled/>
+        </div>
       </div>
     </div>
     `;
@@ -197,22 +199,39 @@ manage inventory and services
           <th>
           price
           </th>
-          <th>
-          subtotal
-          </th>
         </tr>
         <tr>
           <td>
-          &nbsp;
+            <div class="invcsNewItemActns">
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
+            </div>
           </td>
           <td>
-          shampoo
+            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
           </td>
           <td>
-          5.99
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="invcsNewItemActns">
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
+            </div>
           </td>
           <td>
-          5.99
+            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
           </td>
         </tr>
       </table>
