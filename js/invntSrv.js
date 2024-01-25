@@ -11,6 +11,7 @@ manage inventory and services
     this.invntSrvHsh=null;
     this.invntSrvLnkList=null;
     this.invntSrvLnkIndxHsh=null; //has of uuid -> this.invntSrvLnkList index needs to be modified everytime this.invntSrvLnkList is modified
+    this.invntSrvRghtHsh=null;
 
     this.tmpl.rghtModForm=`
       <div id="invntSrvNewForm">
@@ -437,6 +438,33 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: this.invntSrvList
+    post: this.invntSrvHsh repopulated
+    this.invntSrvHsh repopulated
+    -----------------------------------------------*/
+    repopInvntSrvHsh(){
+    this.invntSrvHsh={};
+      for(let is of this.invntSrvList){
+      this.invntSrvHsh[is.uuid]={...is};
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: none
+    post: this.invntSrvRghtHsh repopulated
+    this.invntSrvRghtHsh repopulated
+    -----------------------------------------------*/
+    repopInvntSrvRghtHsh(arr=null){
+      if(!arr){
+      return null;
+      }
+    this.invntSrvRghtHsh={};
+      for(let is of arr){
+      this.invntSrvRghtHsh[is.uuid]={...is};
+      }
+    }
+
+    /*-----------------------------------------------
     pre: this class
     post: right modal filled
     generates right modal content
@@ -444,12 +472,8 @@ manage inventory and services
     genRghtMod(){
       if(this.invntSrvId&&(!this.invntSrvList||!Array.isArray(this.invntSrvList))){
       this.invntSrvList=getInvntSrvArr();
-      this.invntSrvHsh={};
-        for(let is of this.invntSrvList){
-        this.invntSrvHsh[is.uuid]={...is};
-        }
+      this.repopInvntSrvHsh();
       }
-
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtModForm;
 
       if(this.typesHsh&&this.typesHsh.hasOwnProperty("invntSrv")&&this.typesHsh.invntSrv.hasOwnProperty('')){
@@ -593,10 +617,11 @@ manage inventory and services
     add to this.invntSrvLnkList this.invntSrvLnkIndxHsh
     -----------------------------------------------*/
     addInvntSrvLnkList(uuid){
-      if(!uuid||!this.invntSrvHsh.hasOwnProperty(uuid)){
+      if(!uuid||!this.invntSrvRghtHsh.hasOwnProperty(uuid)){
       return null;
       }
-    let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, ...this.invntSrvHsh[uuid]});
+    //let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, 'addAmnt':1, ...this.invntSrvHsh[uuid]});
+    let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, 'addAmnt':1, ...this.invntSrvRghtHsh[uuid]});
       if(!this.invntSrvLnkIndxHsh){
       this.invntSrvLnkIndxHsh={};
       }
@@ -888,7 +913,6 @@ manage inventory and services
       }
     let invntSrvs=[];
     let list=[...lnkList];
-
     //===== array of object sort (when db sort isn't available)========
       if(sortCol){
         if(sortDir=='desc'){
@@ -951,6 +975,16 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: this.invntSrvLnkList
+    post: this.invntSrvLnkList[id].addAmnt updated
+    updates the addAmnt in this.invntSrvLnkList[id]
+    -----------------------------------------------*/
+    updtNumInvntSrvLnkList(id, el){
+    console.log(id);
+    console.log(el.value);
+    }
+
+    /*-----------------------------------------------
     pre: this.invntSrvLnkList, this.tmpl, 
     post: inventory
     draws table
@@ -998,9 +1032,12 @@ manage inventory and services
           <td>${dur}</td>
           <td>${isl.amnt}</td>
           <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
-          <td>${isl.sell}</td>
+          <td>`+invntSrvPrcFormat(isl.sell,buyType)+`</td>
           <td>
             <div class="moduleTblCellActns">
+              <div class="inptNumNumRszWrap" title="Buy price">
+                <input class="inptNumRsz" type="number" name="invntSrvNewFormInvntSrvLstItm" step="1" value="${isl?.addAmnt||0}" onchange=invntSrvObj.updtNumInvntSrvLnkList("${isl.invntSrvuuid}",this); />
+              </div>
               <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.rmDrawInvntSrvLnkList("${isl.invntSrvuuid}"); title="Remove from Inventory/Services">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
             </div>
           </td>
@@ -1022,6 +1059,7 @@ manage inventory and services
     //grabbing the list fresh because this.invntSrvList is used for the main table of this module
     let invntSrvList=getInvntSrvArr(pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
     invntSrvList=this.fltrInvntSrvsMdl(invntSrvList);
+    this.repopInvntSrvRghtHsh(invntSrvList);
       for(let is of invntSrvList){
         //don't list if item is linked or the item in question
         if(is.uuid==this.invntSrvId||(this.invntSrvLnkIndxHsh&&this.invntSrvLnkIndxHsh.hasOwnProperty(is.uuid))){
@@ -1043,7 +1081,7 @@ manage inventory and services
         <td>${dur}</td>
         <td>${is.amnt}</td>
         <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
-        <td>${is.sell}</td>
+        <td>`+invntSrvPrcFormat(is.sell,buyType)+`</td>
         <td>
           <div class="moduleTblCellActns">
             <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.addDrawInvntSrvLnkList("${is.uuid}"); title="Add to Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addBox')+`</div>
@@ -1080,10 +1118,7 @@ manage inventory and services
 
     this.invntSrvList=getInvntSrvArr(pObj,this.sortCol,this.sortColDir);
     let invntSrvList=this.fltrInvntSrvs();
-    this.invntSrvHsh={};
-      for(let is of this.invntSrvList){
-      this.invntSrvHsh[is.uuid]={...is};
-      }
+    this.repopInvntSrvHsh();
     let cntnt='';
       for(let invntSrv of invntSrvList){
       let dur=invntSrv.srv_durtn==null||invntSrv.srv_durtn==""?'None':invntSrv.srv_durtn;

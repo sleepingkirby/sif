@@ -134,7 +134,7 @@ invntSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
-invntSrv.status as status_id,
+invntSrv.status as status,
 isLnk.invntSrvLnkPrnt as parent_id,
 status.name as status_name,
 users.username as username,
@@ -204,7 +204,7 @@ invntSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invntSrv.create_date as create_date,
 invntSrv.mod_date as mod_date,
-invntSrv.status as status_id,
+invntSrv.status as status,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
@@ -293,7 +293,6 @@ let obj={};
   query+=' offset $offset';
   obj['$offset']=offset;
   }
-
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
@@ -317,7 +316,7 @@ invSrv.type_uuid as type_uuid,
 invntSrvTyp.name as type,
 invSrv.create_date as create_date,
 invSrv.mod_date as mod_date,
-invSrv.status as status_id,
+invSrv.status as status,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
@@ -326,6 +325,7 @@ c.mName as mName,
 invSrv.srv_durtn as srv_durtn,
 invSrv.sku as sku,
 invSrv.amnt as amnt,
+isl.amnt as addAmnt,
 invSrv.buy as buy,
 invSrv.sell as sell,
 invSrv.price_type_id as price_type_id,

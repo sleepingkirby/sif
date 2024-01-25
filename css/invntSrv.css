@@ -25,3 +25,15 @@ border-color: var(--faded-white-30);
 color:var(--faded-white-80);
 }
 
+#invntSrvNewFormInvntSrvLstTbl td:last-child > div.moduleTblCellActns{
+align-items:center;
+justify-content:flex-end;
+}
+
+#invntSrvNewFormInvntSrvLstTbl td:last-child > div.moduleTblCellActns > div.inptNumNumRszWrap{
+min-width:64px;
+width:64px;
+margin-right:6px;
+margin-left:6px;
+text-align:center;
+}
