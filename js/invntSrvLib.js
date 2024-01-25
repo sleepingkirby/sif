@@ -120,12 +120,13 @@ pre: sqlObj
 post: none
 gets all the invntSrv records in hash
 ----------------------------------------------*/
-function getInvntSrv(username=null, excldNull=false){
+function getInvntSrv(username=null, excldNull=false, ord=null, desc='desc'){
 let whereUsr=' where username is null or username=$username';
   if(excldNull){
   whereUsr=' where username=$username';
   }
-const q=`
+
+let q=`
 select
 invntSrv.uuid,
 invntSrv.name,
@@ -134,6 +135,7 @@ invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
 invntSrv.status as status_id,
+isLnk.invntSrvLnkPrnt as parent_id,
 status.name as status_name,
 users.username as username,
 c.fName as fName,
@@ -154,8 +156,18 @@ left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
 left join contacts as c on users.uuid=c.user_id
 left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
+left join invntSrvLnk as isLnk on invntSrv.uuid=isLnk.invntSrvLnkItm
 ${whereUsr}
 `;
+
+  switch(ord){
+  case 'name':
+  q+=' order by invntSrv.name';
+  q+=desc=='desc'?' desc':' asc';
+  break;
+  default:
+  break;
+  }
 
 let invntSrv=sqlObj.runQuery(q,{$email:username});
 let invntSrvObj={};
@@ -163,10 +175,16 @@ let invntSrvObj={};
     if(!invntSrvObj.hasOwnProperty(r.uuid)){
     invntSrvObj[r.uuid]={...r};
     delete invntSrvObj[r.uuid].username;
-    invntSrvObj[r.uuid].users=[r.username];
+    invntSrvObj[r.uuid].users=[];
+    delete invntSrvObj[r.uuid].parent_id;
+    invntSrvObj[r.uuid].parentIds=[];
     }
-    else{
+
+    if(r.username&&r.username!=""){
     invntSrvObj[r.uuid].users.push(r.username);
+    }
+    if(r.parent_id&&r.parent_id!=""){
+    invntSrvObj[r.uuid].parentIds.push(r.parent_id);
     }
   }
 return invntSrvObj;

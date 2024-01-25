@@ -146,7 +146,7 @@ pre: none
 post: none
 -----------------------------------------------*/
 function genSttsSlct(sttsArr,slctVl=null, dfltVl="active"){
-  let html="";
+let html="";
   for(const stts of sttsArr){
     if(slctVl&&stts.uuid==slctVl){
     html+='<option value="'+stts.uuid+'" selected >'+stts.name+"</option>";
@@ -160,6 +160,57 @@ function genSttsSlct(sttsArr,slctVl=null, dfltVl="active"){
   }
 return html;
 }
+
+/*-----------------------------------------------
+pre: none
+post: none
+-----------------------------------------------*/
+function genSlct(arr, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
+let html="";
+  if(!vlProp||vlProp==null||!nmProp||nmProp==null){
+  return html;
+  }
+
+  for(const i of arr){
+    if(slctVl&&i[vlProp]==slctVl){
+    html+='<option value="'+i[vlProp]+'" selected >'+i[nmProp]+"</option>";
+    }
+    else if(i.name==dfltVl){
+    html+='<option value="'+i[vlProp]+'" selected >'+i[nmProp]+"</option>";
+    }
+    else{
+    html+='<option value="'+i[vlProp]+'" >'+i[nmProp]+"</option>";
+    }
+  }
+return html;
+}
+
+/*-----------------------------------------------
+pre: none
+post: none
+-----------------------------------------------*/
+function genSlctHsh(hsh, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
+let html="";
+  if(!vlProp||vlProp==null||!nmProp||nmProp==null){
+  return html;
+  }
+
+let arr=Object.keys(hsh);
+
+  for(const i of arr){
+    if(slctVl&&hsh[i][vlProp]==slctVl){
+    html+='<option value="'+hsh[i][vlProp]+'" selected >'+hsh[i][nmProp]+"</option>";
+    }
+    else if(i.name==dfltVl){
+    html+='<option value="'+hsh[i][vlProp]+'" selected >'+hsh[i][nmProp]+"</option>";
+    }
+    else{
+    html+='<option value="'+hsh[i][vlProp]+'" >'+hsh[i][nmProp]+"</option>";
+    }
+  }
+return html;
+}
+
 
 /*-----------------------------------------------
 pre: none

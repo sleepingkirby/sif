@@ -8,7 +8,14 @@ manage inventory and services
     constructor(){
 
     this.invcsList=null;
+//CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
     this.invcsNewItemsList=null;
+    this.statuses=null;
+    this.types=null;
+    this.typesHsh=null;
+    this.users=null;
+    this.customers=null;
+    this.invntSrvItems=null;
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
 
@@ -76,6 +83,11 @@ manage inventory and services
               <input class="inptNumRsz" type="number" name="invcs[total]" step=".2" />
             </div>
           </div>
+        </div>
+        <div class="row">
+          <select id="invcsSelectForUser" name="invcs[ForUser_id]" title="User created for">
+            <option>for user</option>
+          </select>
         </div>
         <div class="mdlSubBoxOutln" style="flex-direction:column; align-items:stretch;">
           <div class="row flexRight">
@@ -268,13 +280,52 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: none
+    post: none
+    generate status dropdown
+    -----------------------------------------------*/
+    genSttsSlct(){
+    let html=genSttsSlct(this.statuses);
+    return html;
+    }
+
+    /*-----------------------------------------------
+    pre: none 
+    post: html drawn
+    fill the right modal
+    -----------------------------------------------*/
+    fillRghtMod(){
+
+    }
+
+    /*-----------------------------------------------
     pre: none 
     post: html drawn
     drawn right modal
     -----------------------------------------------*/
     genRghtMod(){
-      document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
-      document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
+    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+
+    //status dropdown
+    let stts=document.getElementById('invcsSelectStatus');
+      if(stts){
+      stts.innerHTML=this.genSttsSlct();  
+      }
+
+    //for and by users for drop down
+    this.users=getUsers();
+    const {customer:customers, '':users}=spltUsr(this.users);
+    this.customers=customers;
+    document.getElementById('invcsSelectByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    document.getElementById('invcsSelectForUser').innerHTML=genUsrSlct(customers,'username','Username','uuid',state.user.uuid);
+
+    //fill inventory/services items
+    //function getInvntSrv(username=null, excldNull=false, ord=null, desc='desc'){
+    this.invntSrvItems=getInvntSrv(null, false, 'name', 'asc');
+    console.log(this.invntSrvItems);
+    //function genSlct(arr, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
+    document.getElementsByName('invcsNewItem')[0].innerHTML=genSlctHsh(this.invntSrvItems, 'uuid', 'name');
     }
 
     /*-----------------------------------------------
@@ -384,6 +435,9 @@ manage inventory and services
     post:
     -----------------------------------------------*/
     run(){
+    this.statuses=selectStatus();
+    this.types=selectType('invntSrv');
+    this.typesHsh=sepTypesHsh(this.types);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     this.genRghtMod();
