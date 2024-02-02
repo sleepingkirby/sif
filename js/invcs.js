@@ -217,6 +217,13 @@ manage inventory and services
           price type
           </th>
           <th>
+          item
+          price
+          </th>
+          <th>
+          num
+          </th>
+          <th>
           price
           </th>
         </tr>
@@ -246,6 +253,16 @@ manage inventory and services
               <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
             </div>
           </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>
@@ -267,6 +284,16 @@ manage inventory and services
             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
             <option>type</option>
             </select>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
+            </div>
           </td>
           <td>
             <div class="inptNumNumRszWrap minInptNumWarp">

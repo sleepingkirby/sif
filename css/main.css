@@ -639,11 +639,13 @@ margin-left:6px;
 width:80px;
 height:26px;
 min-height:26px;
+border-bottom:1px solid white;
+padding-right:12px;
 }
 
 input.minInptNum{
 font-weight:600;
-border-width: 0px 0px 1px 0px;
+border-width: 0px;
 padding: 2px 2px 2px 8px;
 font-size:16px;
 border-radius:unset;
