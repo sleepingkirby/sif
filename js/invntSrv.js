@@ -1033,7 +1033,7 @@ manage inventory and services
           <td>`+invntSrvPrcFormat(isl.sell,buyType)+`</td>
           <td>
             <div class="moduleTblCellActns">
-              <div class="inptNumNumRszWrap" title="Buy price">
+              <div class="inptNumNumRszWrap" title="linked item amount">
                 <input class="inptNumRsz" type="number" name="invntSrvNewFormInvntSrvLstItm" step="1" value="${isl?.addAmnt||0}" onchange=invntSrvObj.updtNumInvntSrvLnkList("${isl.invntSrvuuid}",this); />
               </div>
               <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.rmDrawInvntSrvLnkList("${isl.invntSrvuuid}"); title="Remove from Inventory/Services">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
