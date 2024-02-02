@@ -23,10 +23,12 @@ sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
   let subObj='';
 
   if(isLnkArr&&typeof isLnkArr=="object"&&isLnkArr.length>0){
-    for(let isUUID of isLnkArr){
-    subQ='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm) values($uuid, $prntUUID, $uuid)';
-    subObj={$uuid:createUUID(), $prntUUID:uuid, $uuid:isUUID};
-    sqlObj.runQuery(subQ,subObj);
+  query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm, amnt) values($uuid, $prnt, $itm, $amnt)';
+  obj={};
+  console.log(isLnkArr);
+    for(let lnk of isLnkArr){
+    obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk.invntSrvuuid,$amnt:lnk.addAmnt};
+    sqlObj.runQuery(query,obj);
     }
   }
 }
@@ -88,13 +90,13 @@ query='delete from invntSrvLnk where invntSrvLnkPrnt=$uuid';
 obj={$uuid:uuid};
 sqlObj.runQuery(query,obj);
 
-query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm) values($uuid, $prnt, $itm)';
+query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm, amnt) values($uuid, $prnt, $itm, $amnt)';
 obj={};
+console.log(lnkArr);
   for(let lnk of lnkArr){
-  obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk};
+  obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk.invntSrvuuid,$amnt:lnk.addAmnt};
   sqlObj.runQuery(query,obj);
   }
-
 }
 
 

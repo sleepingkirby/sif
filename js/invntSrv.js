@@ -532,11 +532,7 @@ manage inventory and services
       for(let fld of formInpt){
       obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
       }
-    let lnkArr=[];
-      for(let lnk of this.invntSrvLnkList){
-      lnkArr.push(lnk.invntSrvuuid);
-      }
-    createInvntSrv(obj.name, obj.type_uuid, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", lnkArr);
+    createInvntSrv(obj.name, obj.type_uuid, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", this.invntSrvLnkList);
     let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
     mainObj.modPrcClsCall(el);
     mainObj.setFloatMsg("Inventory/Service Created");
@@ -554,13 +550,10 @@ manage inventory and services
       for(let fld of formInpt){
       obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
       }
-    let lnkArr=[];
-      for(let lnk of this.invntSrvLnkList){
-      lnkArr.push(lnk.invntSrvuuid);
-      }
-    
+
     let uuid=document.getElementById(this.newInvntSrvFormUUID);
-    updateInvntSrv(uuid.value, obj, lnkArr);
+    console.log(this.invntSrvLnkList);
+    updateInvntSrv(uuid.value, obj, this.invntSrvLnkList);
     let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
     mainObj.modPrcClsCall(el);
     mainObj.setFloatMsg("Inventory/Service Updated");
@@ -620,7 +613,6 @@ manage inventory and services
       if(!uuid||!this.invntSrvRghtHsh.hasOwnProperty(uuid)){
       return null;
       }
-    //let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, 'addAmnt':1, ...this.invntSrvHsh[uuid]});
     let i=this.invntSrvLnkList.push({'invntSrvuuid':uuid, 'addAmnt':1, ...this.invntSrvRghtHsh[uuid]});
       if(!this.invntSrvLnkIndxHsh){
       this.invntSrvLnkIndxHsh={};
@@ -975,13 +967,19 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
-    pre: this.invntSrvLnkList
-    post: this.invntSrvLnkList[id].addAmnt updated
-    updates the addAmnt in this.invntSrvLnkList[id]
+    pre: this.invntSrvLnkList, this.invntSrvLnkIndxHsh
+    post: this.invntSrvLnkList[id].amnt updated
+    updates the amnt in this.invntSrvLnkList[id]
     -----------------------------------------------*/
     updtNumInvntSrvLnkList(id, el){
-    console.log(id);
-    console.log(el.value);
+      if(!id){
+      return;
+      }
+      if(!this.invntSrvLnkIndxHsh.hasOwnProperty(id)){
+      return;
+      }
+    let indx=this.invntSrvLnkIndxHsh[id];
+    this.invntSrvLnkList[indx].addAmnt=el.value;
     }
 
     /*-----------------------------------------------
