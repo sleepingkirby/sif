@@ -285,14 +285,65 @@ manage inventory and services
     let prdSlct=null;
     let prcSlct=null;
     let subTtl=null;
+    let lastSubTtl=null;
+    let sell=null;
 
       for(let i in this.invcsNewItemsList){
+      console.log(`============>> ${i}`);
+      console.log(this.invcsNewItemsList[i]);
       let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
       prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_uuid);
       prcSlct=genSlctHshIndx(prcTypeHsh, this.invcsNewItemsList[i].price_type_id);
-      subTtl=this.invcsNewItemsList[i].hasOwnProperty('subTtl')?this.invcsNewItemsList[i].subTtl:Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+        switch(this.invcsNewItemsList[i].price_type_name){
+          case 'percentage':
+            if(lastSubTtl!==null){
+              if(this.invcsNewItemsList[i].type=='discount'){
+              subTtl=lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2);
+              }
+              else if(this.invcsNewItemsList[i].type=='service'){
+              subTtl=lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2);
+              }
+            lastSubTtl=subTtl;
+            }
+            //anything else doesn't make sense.
+          break;
+          case 'deferred':
+            //no price
+          break;
+          default:
+          //static
+            if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
+            subTtl=this.invcsNewItemsList[i].subTtl;
+            }
+            else{
+            subTtl=Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+            }
+          lastSubTtl=subTtl;
+          break;
+        }
+      console.log(subTtl);
+        if(subTtl===null){
+        subTtl='';
+        }
+        else{
+        subTtl=Number(subTtl).toFixed(2);
+        }
       let dlrSgn=this.invcsNewItemsList[i].price_type_name=='static'?'$':'';
       let prcntSgn=this.invcsNewItemsList[i].price_type_name=='percentage'?'%':'';
+        switch(this.invcsNewItemsList[i].price_type_name){
+          case 'static':
+          dlrSgn='$';
+          prcntSgn='';
+          sell=Number(this.invcsNewItemsList[i].sell).toFixed(2);
+          break;
+          case 'percentage':
+          dlrSgn='';
+          prcntSgn='%';
+          sell=this.invcsNewItemsList[i].sell;
+          break;
+          default:
+          break;
+        }
       let prcHtml='';
       let amntHtml='';
       let subTtlHtml='';
@@ -307,7 +358,7 @@ manage inventory and services
         `;
         amntHtml=`
                <div class="inptNumNumRszWrap minInptNumWarp">
-                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step="1" value="${addAmnt}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"amnt",this) />
+                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step="1" value="${addAmnt}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"addAmnt",this) />
                </div>
         `;
         subTtlHtml=`
