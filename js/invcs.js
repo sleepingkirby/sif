@@ -9,7 +9,54 @@ manage inventory and services
 
     this.invcsList=null;
 //CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
-    this.invcsNewItemsList=null;
+    this.invcsNewItemsList=[
+      {
+      "amnt":20,
+      "buy":6.4,
+      "create_date":"2023-11-27 12:15:00",
+      "fName":null,
+      "mName":null,
+      "mod_date":"2023-11-27 12:15:00",
+      "name":"conditioner",
+      "notes":null,
+      "parentIds":['545030ee-f0f8-4b1f-9f29-db6378bb5639'],
+      "price_type_id":"6a2f0079-b8fc-450e-b432-85d42932318e",
+      "price_type_name":"percentage",
+      "sell":2.5,
+      "sku":"sku56789",
+      "srv_durtn":null,
+      "status":"79255733-6d34-4999-8ee0-b5e824269cc9",
+      "status_name":"active",
+      "surName":null,
+      "type":"product",
+      "type_uuid":"59a69f74-1d26-4b25-8de1-b1fac23b3839",
+      "users":[],
+      "uuid":"9be012af-ac42-42b4-8b7d-5607153279de",
+      },
+      {
+      "amnt":20,
+      "buy":6.4,
+      "create_date":"2023-11-27 12:15:00",
+      "fName":null,
+      "mName":null,
+      "mod_date":"2023-11-27 12:15:00",
+      "name":"conditioner",
+      "notes":null,
+      "parentIds":['545030ee-f0f8-4b1f-9f29-db6378bb5639'],
+      "price_type_id":"6a2f0079-b8fc-450e-b432-85d42932318e",
+      "price_type_name":"percentage",
+      "sell":2.5,
+      "sku":"sku56789",
+      "srv_durtn":null,
+      "status":"79255733-6d34-4999-8ee0-b5e824269cc9",
+      "status_name":"active",
+      "surName":null,
+      "type":"product",
+      "type_uuid":"59a69f74-1d26-4b25-8de1-b1fac23b3839",
+      "users":[],
+      "uuid":"9be012af-ac42-42b4-8b7d-5607153279de",
+      }
+    ];
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
@@ -201,6 +248,53 @@ manage inventory and services
     //let tmp=this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
     //CREATE TABLE invcs_items(uuid text not null primary key, invc_id text not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real not null, price_dscntd real null, notes null, foreign key(invc_id) references invcs(uuid), foreign key(type_id) references type(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
 
+    let itmsHTML='';
+    for(let itm of this.invcsNewItemsList){
+    console.log(itm);
+    let sellPrc=Number(itm.sell);
+    let amnt=Number(itm.amnt);
+    let subTtl=amnt*sellPrc;
+    itmsHTML+=`
+        <tr>
+          <td>
+            <div class="invcsNewItemActns">
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
+              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
+            </div>
+          </td>
+          <td>
+            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">${itm.name}</textarea>
+          </td>
+          <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
+          </td>
+          <td>
+            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
+            <option>type</option>
+            </select>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${sellPrc}"/>
+            </div>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${amnt}"/>
+            </div>
+          </td>
+          <td>
+            <div class="inptNumNumRszWrap minInptNumWarp">
+              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}"/>
+            </div>
+          </td>
+        </tr>
+    `;
+    }
+
     let tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
@@ -227,80 +321,7 @@ manage inventory and services
           price
           </th>
         </tr>
-        <tr>
-          <td>
-            <div class="invcsNewItemActns">
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
-            </div>
-          </td>
-          <td>
-            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div class="invcsNewItemActns">
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
-            </div>
-          </td>
-          <td>
-            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">shampoo</textarea>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="5.99"/>
-            </div>
-          </td>
-        </tr>
+        `+itmsHTML+`
       </table>
     `;
     return tmp;
