@@ -29,6 +29,31 @@ return obj;
 }
 
 /*-----------------------------------------------
+pre: array of types (from types table)
+post: none
+separates types record into an array
+-----------------------------------------------*/
+function sepTypesIdHsh(arr){
+  if(typeof arr!="object"){
+  return null;
+  }
+let obj={};
+  for(let row of arr){
+    if(row.hasOwnProperty('categ')&&row.hasOwnProperty('col')){
+      if(!obj.hasOwnProperty(row.categ)){
+      obj[row.categ]={};
+      }
+      if(!obj[row.categ].hasOwnProperty(row.col)){
+      obj[row.categ][row.col]={};
+      }
+      obj[row.categ][row.col][row.uuid]=row.name;
+    }
+  }
+return obj;
+}
+
+
+/*-----------------------------------------------
 pre: sqlObj, type table
 post: none
 get type

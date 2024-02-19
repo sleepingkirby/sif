@@ -9,57 +9,61 @@ manage inventory and services
 
     this.invcsList=null;
 //CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
+    //this.invcsNewItemsList=null;
     this.invcsNewItemsList=[
       {
-      "amnt":20,
-      "buy":6.4,
-      "create_date":"2023-11-27 12:15:00",
-      "fName":null,
-      "mName":null,
-      "mod_date":"2023-11-27 12:15:00",
-      "name":"conditioner",
-      "notes":null,
-      "parentIds":['545030ee-f0f8-4b1f-9f29-db6378bb5639'],
-      "price_type_id":"6a2f0079-b8fc-450e-b432-85d42932318e",
-      "price_type_name":"percentage",
-      "sell":2.5,
-      "sku":"sku56789",
-      "srv_durtn":null,
-      "status":"79255733-6d34-4999-8ee0-b5e824269cc9",
-      "status_name":"active",
-      "surName":null,
-      "type":"product",
-      "type_uuid":"59a69f74-1d26-4b25-8de1-b1fac23b3839",
-      "users":[],
-      "uuid":"9be012af-ac42-42b4-8b7d-5607153279de",
+      'addAmnt':1,
+      'amnt':20,
+      'buy':6.4,
+      'create_date':"2023-11-27 12:15:00",
+      'fName':null,
+      'mName':null,
+      'mod_date':"2023-11-27 12:15:00",
+      'name':"conditioner",
+      'notes':null,
+      'parentIds':['545030ee-f0f8-4b1f-9f29-db6378bb5639', 'af2cca44-5f6c-4278-b17a-f100fbbf8466'],
+      'price_type_id':"6a2f0079-b8fc-450e-b432-85d42932318e",
+      'price_type_name':"percentage",
+      'sell':2.5,
+      'sku':"sku56789",
+      'srv_durtn':null,
+      'status':"79255733-6d34-4999-8ee0-b5e824269cc9",
+      'status_name':"active",
+      'surName':null,
+      'type':"product",
+      'type_uuid':"59a69f74-1d26-4b25-8de1-b1fac23b3839",
+      'users':[],
+      'uuid':"9be012af-ac42-42b4-8b7d-5607153279de"
       },
       {
-      "amnt":20,
-      "buy":6.4,
-      "create_date":"2023-11-27 12:15:00",
-      "fName":null,
-      "mName":null,
-      "mod_date":"2023-11-27 12:15:00",
-      "name":"conditioner",
-      "notes":null,
-      "parentIds":['545030ee-f0f8-4b1f-9f29-db6378bb5639'],
-      "price_type_id":"6a2f0079-b8fc-450e-b432-85d42932318e",
-      "price_type_name":"percentage",
-      "sell":2.5,
-      "sku":"sku56789",
-      "srv_durtn":null,
-      "status":"79255733-6d34-4999-8ee0-b5e824269cc9",
-      "status_name":"active",
-      "surName":null,
-      "type":"product",
-      "type_uuid":"59a69f74-1d26-4b25-8de1-b1fac23b3839",
-      "users":[],
-      "uuid":"9be012af-ac42-42b4-8b7d-5607153279de",
-      }
+      'addAmnt':1,
+      'amnt':20,
+      'buy':6.4,
+      'create_date':"2023-11-27 12:15:00",
+      'fName':null,
+      'mName':null,
+      'mod_date':"2023-11-27 12:15:00",
+      'name':"conditioner",
+      'notes':null,
+      'parentIds':['545030ee-f0f8-4b1f-9f29-db6378bb5639', 'af2cca44-5f6c-4278-b17a-f100fbbf8466'],
+      'price_type_id':"6a2f0079-b8fc-450e-b432-85d42932318e",
+      'price_type_name':"percentage",
+      'sell':2.5,
+      'sku':"sku56789",
+      'srv_durtn':null,
+      'status':"79255733-6d34-4999-8ee0-b5e824269cc9",
+      'status_name':"active",
+      'surName':null,
+      'type':"product",
+      'type_uuid':"59a69f74-1d26-4b25-8de1-b1fac23b3839",
+      'users':[],
+      'uuid':"9be012af-ac42-42b4-8b7d-5607153279de"
+      },
     ];
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
+    this.typesIdHsh=null;
     this.users=null;
     this.customers=null;
     this.invntSrvItems=null;
@@ -227,7 +231,6 @@ manage inventory and services
     return "Invoices";
     }
 
-
     /*-----------------------------------------------
     pre: this.invcsList
     post: none
@@ -241,60 +244,114 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: this.updtInvcsNewItemsTbl, ths, this.typesIdHsh['invntSrv']
+    post: this.updtInvcsNewItemsTbl
+    updates this.updtInvcsNewItemsTbl
+    -----------------------------------------------*/
+    updtInvcsNewItemsTbl(indx, propNm=null, ths){
+      if(!this.invcsNewItemsList||!this.invcsNewItemsList.hasOwnProperty(indx)){
+      return null;
+      }
+    this.invcsNewItemsList[indx][propNm]=ths.value;
+      if(propNm=='price_type_id'){
+      this.invcsNewItemsList[indx]["price_type_name"]=this.typesIdHsh['invntSrv']["price_type"][ths.value];
+      }
+      if(propNm=='type_uuid'){
+      this.invcsNewItemsList[indx]["type"]=this.typesIdHsh['invntSrv'][""][ths.value];
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: this.updtInvcsNewItemsTbl, ths, this.genInvcsNewItemsTbl(), document.getElementById('invcsNewItems')
+    post: this.updtInvcsNewItemsTbl
+    updates this.updtInvcsNewItemsTbl, redraw the table
+    -----------------------------------------------*/
+    updtInvcsNewItemsTblRdrw(indx, propNm=null, ths){
+    this.updtInvcsNewItemsTbl(indx, propNm, ths);
+    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    }
+
+
+    /*-----------------------------------------------
     pre:
     post:
     -----------------------------------------------*/
     genInvcsNewItemsTbl(){
     //let tmp=this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
     //CREATE TABLE invcs_items(uuid text not null primary key, invc_id text not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real not null, price_dscntd real null, notes null, foreign key(invc_id) references invcs(uuid), foreign key(type_id) references type(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
+    let newItmTbl='';
+    let prodTypeHsh=this.typesHsh['invntSrv'][""]; 
+    let prcTypeHsh=this.typesHsh['invntSrv']["price_type"];
+    let prdSlct=null;
+    let prcSlct=null;
+    let subTtl=null;
 
-    let itmsHTML='';
-    for(let itm of this.invcsNewItemsList){
-    console.log(itm);
-    let sellPrc=Number(itm.sell);
-    let amnt=Number(itm.amnt);
-    let subTtl=amnt*sellPrc;
-    itmsHTML+=`
-        <tr>
-          <td>
-            <div class="invcsNewItemActns">
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
-              <div>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
-            </div>
-          </td>
-          <td>
-            <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">${itm.name}</textarea>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]">
-            <option>type</option>
-            </select>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${sellPrc}"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${amnt}"/>
-            </div>
-          </td>
-          <td>
-            <div class="inptNumNumRszWrap minInptNumWarp">
-              <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}"/>
-            </div>
-          </td>
-        </tr>
-    `;
-    }
+      for(let i in this.invcsNewItemsList){
+      let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
+      prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_uuid);
+      prcSlct=genSlctHshIndx(prcTypeHsh, this.invcsNewItemsList[i].price_type_id);
+      subTtl=this.invcsNewItemsList[i].hasOwnProperty('subTtl')?this.invcsNewItemsList[i].subTtl:Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+      let dlrSgn=this.invcsNewItemsList[i].price_type_name=='static'?'$':'';
+      let prcntSgn=this.invcsNewItemsList[i].price_type_name=='percentage'?'%':'';
+      let prcHtml='';
+      let amntHtml='';
+      let subTtlHtml='';
 
+        if(this.invcsNewItemsList[i].price_type_name!='deferred'){
+        prcHtml=`
+               <div class="inptNumNumRszWrap minInptNumWarp">
+                 `+dlrSgn+`
+                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${this.invcsNewItemsList[i].sell}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"sell",this) />
+                 `+prcntSgn+`
+               </div>
+        `;
+        amntHtml=`
+               <div class="inptNumNumRszWrap minInptNumWarp">
+                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step="1" value="${addAmnt}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"amnt",this) />
+               </div>
+        `;
+        subTtlHtml=`
+               <div class="inptNumNumRszWrap minInptNumWarp">
+                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"subTtl",this) />
+               </div>
+        `;
+        }
+
+      newItmTbl+=`
+         <tr>
+           <td>
+             <div class="invcsNewItemActns">
+               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
+               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
+             </div>
+           </td>
+           <td>
+             <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">${this.invcsNewItemsList[i].name}</textarea>
+           </td>
+           <td>
+             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"type_uuid",this) >
+             `+prdSlct+`
+             </select>
+           </td>
+           <td>
+             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"price_type_id",this) >
+             `+prcSlct+`
+             </select>
+           </td>
+           <td>
+             `+prcHtml+`
+           </td>
+           <td>
+             `+amntHtml+`
+           </td>
+           <td>
+             `+subTtlHtml+`
+           </td>
+         </tr>
+      `; 
+     
+      }
     let tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
@@ -321,9 +378,9 @@ manage inventory and services
           price
           </th>
         </tr>
-        `+itmsHTML+`
-      </table>
+        `+newItmTbl+`
     `;
+    
     return tmp;
     }
 
@@ -352,6 +409,7 @@ manage inventory and services
     drawn right modal
     -----------------------------------------------*/
     genRghtMod(){
+    console.log("genRghtMod");
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
     document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
 
@@ -371,7 +429,6 @@ manage inventory and services
     //fill inventory/services items
     //function getInvntSrv(username=null, excldNull=false, ord=null, desc='desc'){
     this.invntSrvItems=getInvntSrv(null, false, 'name', 'asc');
-    console.log(this.invntSrvItems);
     //function genSlct(arr, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
     document.getElementsByName('invcsNewItem')[0].innerHTML=genSlctHsh(this.invntSrvItems, 'uuid', 'name');
     }
@@ -486,9 +543,11 @@ manage inventory and services
     this.statuses=selectStatus();
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
+    this.typesIdHsh=sepTypesIdHsh(this.types);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     this.genRghtMod();
+    //document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     this.drawTbl();
     this.hookNewInvntBtn()
     }

@@ -189,6 +189,33 @@ return html;
 pre: none
 post: none
 -----------------------------------------------*/
+function genSlctHshIndx(hsh, slctVl=null, dfltVl=null){
+let html="";
+  if(!hsh){
+  return html;
+  }
+
+let arr=Object.keys(hsh);
+
+  for(const i of arr){
+    if(slctVl&&hsh[i]==slctVl){
+    html+='<option value="'+hsh[i]+'" selected >'+i+"</option>";
+    }
+    else if(hsh[i]==dfltVl){
+    html+='<option value="'+hsh[i]+'" selected >'+i+"</option>";
+    }
+    else{
+    html+='<option value="'+hsh[i]+'" >'+i+"</option>";
+    }
+  }
+return html;
+}
+
+
+/*-----------------------------------------------
+pre: none
+post: none
+-----------------------------------------------*/
 function genSlctHsh(hsh, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
 let html="";
   if(!vlProp||vlProp==null||!nmProp||nmProp==null){

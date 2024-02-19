@@ -641,6 +641,9 @@ height:26px;
 min-height:26px;
 border-bottom:1px solid white;
 padding-right:12px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 input.minInptNum{
@@ -650,6 +653,7 @@ padding: 2px 2px 2px 8px;
 font-size:16px;
 border-radius:unset;
 height:100%;
+display:flex;
 }
 
 .smallTAInpt{
