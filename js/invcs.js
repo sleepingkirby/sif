@@ -43,7 +43,7 @@ manage inventory and services
       'fName':null,
       'mName':null,
       'mod_date':"2023-11-27 12:15:00",
-      'name':"conditioner",
+      'name':"conditioner2",
       'notes':null,
       'parentIds':['545030ee-f0f8-4b1f-9f29-db6378bb5639', 'af2cca44-5f6c-4278-b17a-f100fbbf8466'],
       'price_type_id':"6a2f0079-b8fc-450e-b432-85d42932318e",
@@ -271,6 +271,58 @@ manage inventory and services
     document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     }
 
+    /*-----------------------------------------------
+    pre: this.invcsNewItemsList
+    post:
+    swaps 2 elements in this.invcsNewItemsList
+    -----------------------------------------------*/
+    swapInvcsNewItemsList(indx=null, dir=null){
+      if(indx===null||!dir){
+      return null;
+      }
+    let newIndx=null;
+
+      if(dir=='up'){
+      newIndx=indx - 1;
+      }
+      else if(dir=='down'){
+      newIndx=indx + 1;
+      }
+
+    //newIndx invalid.
+      if(newIndx<0||newIndx>=this.invcsNewItemsList.length){
+      return null;
+      }
+
+    let tmp=this.invcsNewItemsList[indx];
+    this.invcsNewItemsList[indx]=this.invcsNewItemsList[newIndx];
+    this.invcsNewItemsList[newIndx]=tmp;
+    return true;
+    }
+
+    /*-----------------------------------------------
+    pre: this.invcsNewItemsList, this.genInvcsNewItemsTbl()
+    post:
+    swaps 2 elements in this.invcsNewItemsList via genInvcsNewItemsTbl() and redraw table
+    -----------------------------------------------*/
+    swapInvcsNewItemsListRedrw(indx=null, dir=null){
+      if(this.swapInvcsNewItemsList(indx, dir)){
+      document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: this.genInvcsNewItemsTbl()
+    post:
+    delete indx from this.invcsNewItemsList via genInvcsNewItemsTbl() and redraw table
+    -----------------------------------------------*/
+    delInvcsNewItemsListRedrw(indx=null){
+      if(indx===null||indx<0||indx>=this.invcsNewItemsList.length){
+      return null;
+      }
+    this.invcsNewItemsList.splice(indx,1);
+    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    }
 
     /*-----------------------------------------------
     pre:
@@ -289,8 +341,6 @@ manage inventory and services
     let sell=null;
 
       for(let i in this.invcsNewItemsList){
-      console.log(`============>> ${i}`);
-      console.log(this.invcsNewItemsList[i]);
       let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
       prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_uuid);
       prcSlct=genSlctHshIndx(prcTypeHsh, this.invcsNewItemsList[i].price_type_id);
@@ -321,7 +371,6 @@ manage inventory and services
           lastSubTtl=subTtl;
           break;
         }
-      console.log(subTtl);
         if(subTtl===null){
         subTtl='';
         }
@@ -368,13 +417,15 @@ manage inventory and services
         `;
         }
 
+      let up=i>0?`<div onclick=invcsObj.swapInvcsNewItemsListRedrw(${i},'up')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>`:``;
+      let dwn=i<this.invcsNewItemsList.length-1?`<div onclick=invcsObj.swapInvcsNewItemsListRedrw(${i},'down')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>`:``;
       newItmTbl+=`
          <tr>
            <td>
              <div class="invcsNewItemActns">
-               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
-               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>
-               <div onclick=console.log(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>
+               <div onclick=invcsObj.delInvcsNewItemsListRedrw(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+               `+up+`
+               `+dwn+`
              </div>
            </td>
            <td>
