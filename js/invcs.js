@@ -131,7 +131,7 @@ manage inventory and services
           <div>
             <div style="font-weight:600; align-items:center;">$</div>
             <div class="inptNumNumRszWrap inptNumPrc">
-              <input class="inptNumRsz" type="number" name="invcs[total]" step=".2" />
+              <input class="inptNumRsz" type="number" name="invcs[total]" step=".2" title="invoice total"/>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ manage inventory and services
             <select name="invcsNewItem" title="New Invoice Item">
               <option>new item</option>
             </select>
-            <div class="midBtn" title="Add New Invoice Item" style="margin-left: 12px;">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+            <div class="midBtn" title="Add New Invoice Item" style="margin-left: 12px;" onclick=invcsObj.addInvcsNewItemsListRedrw()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
           </div>
           <div id="invcsNewItems">
           table
@@ -268,7 +268,7 @@ manage inventory and services
     -----------------------------------------------*/
     updtInvcsNewItemsTblRdrw(indx, propNm=null, ths){
     this.updtInvcsNewItemsTbl(indx, propNm, ths);
-    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    this.newInvcsTblTtlRedrw();
     }
 
     /*-----------------------------------------------
@@ -307,7 +307,7 @@ manage inventory and services
     -----------------------------------------------*/
     swapInvcsNewItemsListRedrw(indx=null, dir=null){
       if(this.swapInvcsNewItemsList(indx, dir)){
-      document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+      this.newInvcsTblTtlRedrw();
       }
     }
 
@@ -321,8 +321,27 @@ manage inventory and services
       return null;
       }
     this.invcsNewItemsList.splice(indx,1);
-    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    this.newInvcsTblTtlRedrw();
     }
+
+    /*-----------------------------------------------
+    pre:
+    post:
+    adds invcs item to table and redraw
+    -----------------------------------------------*/
+    addInvcsNewItemsListRedrw(){
+    //get valuefrom
+    let els=document.getElementsByName("invcsNewItem");
+    console.log(els[0]);
+    console.log(els[0].value);
+    console.log(this.invntSrvItems);
+      if(!this.invntSrvItems.hasOwnProperty(els[0].value)){
+      return null;
+      }
+    this.invcsNewItemsList.push({'addAmnt':1, ...this.invntSrvItems[els[0].value]});
+    this.newInvcsTblTtlRedrw();
+    }
+
 
     /*-----------------------------------------------
     pre:
@@ -338,7 +357,9 @@ manage inventory and services
     let prcSlct=null;
     let subTtl=null;
     let lastSubTtl=null;
+    let lastNewItem=null;
     let sell=null;
+    let ttl=0;
 
       for(let i in this.invcsNewItemsList){
       let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
@@ -354,6 +375,7 @@ manage inventory and services
               subTtl=lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2);
               }
             lastSubTtl=subTtl;
+            lastNewItem=this.invcsNewItemsList[i];
             }
             //anything else doesn't make sense.
           break;
@@ -362,13 +384,36 @@ manage inventory and services
           break;
           default:
           //static
-            if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
-            subTtl=this.invcsNewItemsList[i].subTtl;
+            if(this.invcsNewItemsList[i].type=='discount'&&lastSubTtl!==null){
+              //discount with a static price. ex. 5 dollar coupon
+              subTtl=Number(lastSubTtl) - (Number(this.invcsNewItemsList[i].sell) * Number(addAmnt));
             }
             else{
-            subTtl=Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+              if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
+              subTtl=this.invcsNewItemsList[i].subTtl;
+              }
+              else{
+              subTtl=Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+              }
             }
+
+          //======== need to figure out how to calculate total
+          /* assuming price type is always static
+
+          different items:
+          1) a) products. price type static. Can never be percentage as no actual, physical product's actual price is a percentage of another product. If this is needed, apply via discount.
+             b) products. price type deferred. This product has no pricing of it's own. It's part of a large bundle. Hence, deferres to the parent item for the price.
+          2) a) service. Price type static. ex. haircut is 10.20
+             b) service. price type percentage. If a service is included in a product. Ex. buy a shampoo, the hairwashing is 90% price of the shampoo. Most people don't do this, but just in case.
+          3) a) discount. price type static. ex. 5 dollar off coupon.
+             b) discount. price type percentage. ex. 10% off.
+
+          if current item is first item (i.e. lastSubTtl===null) is valid (is a product or service with a static price type.), add suTtl to ttl
+          if current item is valid, add lastSubTtl to ttl. (because the lastSubTtl will always reflect the proper price to be added to the ttl.)
+          loop has reach it's end, remaining lastSubTtl gets added to the ttl
+          */
           lastSubTtl=subTtl;
+          lastNewItem=this.invcsNewItemsList[i];
           break;
         }
         if(subTtl===null){
@@ -452,8 +497,11 @@ manage inventory and services
            </td>
          </tr>
       `; 
-     
+      //ttl+=Number(subTtl);
       }
+
+
+    console.log(`<=========total: ${ttl}`);
     let tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
@@ -485,6 +533,16 @@ manage inventory and services
     
     return tmp;
     }
+
+    /*-----------------------------------------------
+    pre: none
+    post: none
+    -----------------------------------------------*/
+    newInvcsTblTtlRedrw(){
+
+    document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
+    }
+
 
     /*-----------------------------------------------
     pre: none
