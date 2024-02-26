@@ -369,12 +369,14 @@ manage inventory and services
           case 'percentage':
             if(lastSubTtl!==null){
               if(this.invcsNewItemsList[i].type=='discount'){
-              subTtl=lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2);
+              subTtl=Number(lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
               }
               else if(this.invcsNewItemsList[i].type=='service'){
-              subTtl=lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2);
+              subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
+              //a service with a percentage price type is its own item in invoice. Hence add lastSubTtl to ttl so this one can be counted as own item.
+              ttl+=Number(lastSubTtl).toFixed(2);
               }
-            lastSubTtl=subTtl;
+            lastSubTtl=Number(subTtl);
             lastNewItem=this.invcsNewItemsList[i];
             }
             //anything else doesn't make sense.
@@ -390,32 +392,33 @@ manage inventory and services
             }
             else{
               if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
-              subTtl=this.invcsNewItemsList[i].subTtl;
+              subTtl=Number(this.invcsNewItemsList[i].subTtl);
               }
               else{
-              subTtl=Number(this.invcsNewItemsList[i].sell) * Number(addAmnt);
+              subTtl=(Number(this.invcsNewItemsList[i].sell) * Number(addAmnt)).toFixed(2);
               }
+
+              //======== need to figure out how to calculate total
+              /* assuming price type is always static
+
+              different items:
+              1) a) products. price type static. Can never be percentage as no actual, physical product's actual price is a percentage of another product. If this is needed, apply via discount.
+                 b) products. price type deferred. This product has no pricing of it's own. It's part of a large bundle. Hence, deferres to the parent item for the price.
+              2) a) service. Price type static. ex. haircut is 10.20
+                 b) service. price type percentage. If a service is included in a product. Ex. buy a shampoo, the hairwashing is 90% price of the shampoo. Most people don't do this, but just in case.
+              3) a) discount. price type static. ex. 5 dollar off coupon.
+                 b) discount. price type percentage. ex. 10% off.
+              */
+
+              //if current item is valid, add lastSubTtl to ttl. (because the lastSubTtl will always reflect the proper price to be added to the ttl.)
+            ttl+=Number(lastSubTtl);
+            lastSubTtl=Number(subTtl);
+            lastNewItem=this.invcsNewItemsList[i];
             }
-
-          //======== need to figure out how to calculate total
-          /* assuming price type is always static
-
-          different items:
-          1) a) products. price type static. Can never be percentage as no actual, physical product's actual price is a percentage of another product. If this is needed, apply via discount.
-             b) products. price type deferred. This product has no pricing of it's own. It's part of a large bundle. Hence, deferres to the parent item for the price.
-          2) a) service. Price type static. ex. haircut is 10.20
-             b) service. price type percentage. If a service is included in a product. Ex. buy a shampoo, the hairwashing is 90% price of the shampoo. Most people don't do this, but just in case.
-          3) a) discount. price type static. ex. 5 dollar off coupon.
-             b) discount. price type percentage. ex. 10% off.
-
-          if current item is first item (i.e. lastSubTtl===null) is valid (is a product or service with a static price type.), add suTtl to ttl
-          if current item is valid, add lastSubTtl to ttl. (because the lastSubTtl will always reflect the proper price to be added to the ttl.)
-          loop has reach it's end, remaining lastSubTtl gets added to the ttl
-          */
-          lastSubTtl=subTtl;
-          lastNewItem=this.invcsNewItemsList[i];
           break;
         }
+
+        //sanitizing subTtl for display
         if(subTtl===null){
         subTtl='';
         }
@@ -457,7 +460,7 @@ manage inventory and services
         `;
         subTtlHtml=`
                <div class="inptNumNumRszWrap minInptNumWarp">
-                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"subTtl",this) />
+                 $<input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"subTtl",this) />
                </div>
         `;
         }
@@ -497,10 +500,18 @@ manage inventory and services
            </td>
          </tr>
       `; 
-      //ttl+=Number(subTtl);
       }
 
 
+    console.log(`<=========lastNewItem:`);
+    console.log(lastNewItem);
+    console.log(`<=========lastSubTtl: ${lastSubTtl}`);
+    console.log(typeof lastSubTtl);
+      //loop has reach it's end, remaining lastSubTtl gets added to the ttl// done further down.
+      if(lastSubTtl!==null){
+      ttl=Number(ttl) + Number(lastSubTtl);
+      }
+    console.log(typeof ttl);
     console.log(`<=========total: ${ttl}`);
     let tmp=`
       <table id="invcsNewItemsTbl">
