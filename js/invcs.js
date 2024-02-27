@@ -10,56 +10,7 @@ manage inventory and services
     this.invcsList=null;
 //CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
     //this.invcsNewItemsList=null;
-    this.invcsNewItemsList=[
-      {
-      'addAmnt':1,
-      'amnt':20,
-      'buy':6.4,
-      'create_date':"2023-11-27 12:15:00",
-      'fName':null,
-      'mName':null,
-      'mod_date':"2023-11-27 12:15:00",
-      'name':"conditioner",
-      'notes':null,
-      'parentIds':['545030ee-f0f8-4b1f-9f29-db6378bb5639', 'af2cca44-5f6c-4278-b17a-f100fbbf8466'],
-      'price_type_id':"6a2f0079-b8fc-450e-b432-85d42932318e",
-      'price_type_name':"percentage",
-      'sell':2.5,
-      'sku':"sku56789",
-      'srv_durtn':null,
-      'status':"79255733-6d34-4999-8ee0-b5e824269cc9",
-      'status_name':"active",
-      'surName':null,
-      'type':"product",
-      'type_uuid':"59a69f74-1d26-4b25-8de1-b1fac23b3839",
-      'users':[],
-      'uuid':"9be012af-ac42-42b4-8b7d-5607153279de"
-      },
-      {
-      'addAmnt':1,
-      'amnt':20,
-      'buy':6.4,
-      'create_date':"2023-11-27 12:15:00",
-      'fName':null,
-      'mName':null,
-      'mod_date':"2023-11-27 12:15:00",
-      'name':"conditioner2",
-      'notes':null,
-      'parentIds':['545030ee-f0f8-4b1f-9f29-db6378bb5639', 'af2cca44-5f6c-4278-b17a-f100fbbf8466'],
-      'price_type_id':"6a2f0079-b8fc-450e-b432-85d42932318e",
-      'price_type_name':"percentage",
-      'sell':2.5,
-      'sku':"sku56789",
-      'srv_durtn':null,
-      'status':"79255733-6d34-4999-8ee0-b5e824269cc9",
-      'status_name':"active",
-      'surName':null,
-      'type':"product",
-      'type_uuid':"59a69f74-1d26-4b25-8de1-b1fac23b3839",
-      'users':[],
-      'uuid':"9be012af-ac42-42b4-8b7d-5607153279de"
-      },
-    ];
+    this.invcsNewItemsList=[];
     this.statuses=null;
     this.types=null;
     this.typesHsh=null;
@@ -338,7 +289,6 @@ manage inventory and services
     addInvcsNewItemsListRedrw(){
     //get valuefrom
     let els=document.getElementsByName("invcsNewItem");
-    console.log(this.invntSrvItems);
       if(!this.invntSrvItems.hasOwnProperty(els[0].value)){
       return null;
       }
@@ -399,7 +349,6 @@ manage inventory and services
     let prcSlct=null;
     let subTtl=null;
     let lastSubTtl=null;
-    let lastNewItem=null;
     let sell=null;
     let ttl=0;
 
@@ -411,15 +360,15 @@ manage inventory and services
           case 'percentage':
             if(lastSubTtl!==null){
               if(this.invcsNewItemsList[i].type=='discount'){
-              subTtl=Number(lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
+              subTtl=Number(lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100));
               }
               else if(this.invcsNewItemsList[i].type=='service'){
-              subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
+              //subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
+              subTtl=Number(lastSubTtl * Number(this.invcsNewItemsList[i].sell) / 100);
               //a service with a percentage price type is its own item in invoice. Hence add lastSubTtl to ttl so this one can be counted as own item.
-              ttl+=Number(lastSubTtl).toFixed(2);
+              ttl+=Number(lastSubTtl);
               }
             lastSubTtl=Number(subTtl);
-            lastNewItem=this.invcsNewItemsList[i];
             }
             //anything else doesn't make sense.
           break;
@@ -429,8 +378,9 @@ manage inventory and services
           default:
           //static
             if(this.invcsNewItemsList[i].type=='discount'&&lastSubTtl!==null){
-              //discount with a static price. ex. 5 dollar coupon
-              subTtl=Number(lastSubTtl) - (Number(this.invcsNewItemsList[i].sell) * Number(addAmnt));
+            //discount with a static price. ex. 5 dollar coupon
+            subTtl=Number(lastSubTtl) - (Number(this.invcsNewItemsList[i].sell) * Number(addAmnt));
+            lastSubTtl=Number(subTtl);
             }
             else{
               if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
@@ -455,7 +405,6 @@ manage inventory and services
               //if current item is valid, add lastSubTtl to ttl. (because the lastSubTtl will always reflect the proper price to be added to the ttl.)
             ttl+=Number(lastSubTtl);
             lastSubTtl=Number(subTtl);
-            lastNewItem=this.invcsNewItemsList[i];
             }
           break;
         }
@@ -545,16 +494,10 @@ manage inventory and services
       }
 
 
-    console.log(`<=========lastNewItem:`);
-    console.log(lastNewItem);
-    console.log(`<=========lastSubTtl: ${lastSubTtl}`);
-    console.log(typeof lastSubTtl);
       //loop has reach it's end, remaining lastSubTtl gets added to the ttl// done further down.
       if(lastSubTtl!==null){
       ttl=Number(ttl) + Number(lastSubTtl);
       }
-    console.log(typeof ttl);
-    console.log(`<=========total: ${ttl}`);
 
     let ttlEl=document.getElementsByName("invcs[total]");
       if(ttlEl&&ttlEl.length>=1){

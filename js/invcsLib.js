@@ -1,13 +1,69 @@
-/*
-CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
-
-CREATE TABLE invcs_items(uuid text not null primary key, invc_id text not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real not null, price_dscntd real null, notes null, foreign key(invc_id) references invcs(uuid), foreign key(type_id) references type(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
-
-CREATE TABLE invcs_item_mods(uuid text not null primary key, invcs_items_id not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invcs_items_id) references invcs_items(uuid), foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
-*/
 /*-----------------------------------------------
-pre:
-post:
+pre: runQuery()
+post: none
+gets 
+-----------------------------------------------*/
+function createInvcs(invcs, invcsItems){
+  if(!invcs){
+  return null;
+  }
+
+let invcsId=createUUID();
+let query=`insert into invcs(uuid, due_date, paid_date, status_id, sub_total, total_dscntd, total, total_paid, forUser_id, byUser_id, event_id, notes) values($uuid, $dueDate, $paidDate, $statusId, $subTtl, $totalDscntd, $ttl, $ttlPaid, $forUserId, $byUserId, $eventId, $notes)`;
+let qObj={
+$uuid:invcsId,
+$dueDate:invcs.hasOwnProperty('dueDate')?invcs.dueDate:null,
+$paidDate:invcs.hasOwnProperty('paidDate')?invcs.paidDate:null,
+$statusId:invcs.hasOwnProperty('statusId')?invcs.statusId:null,
+$subTtl:invcs.hasOwnProperty('subTtl')?invcs.subTtl:null,
+$totalDscntd:invcs.hasOwnProperty('totalDscntd')?invcs.totalDscntd:null,
+$ttl:invcs.hasOwnProperty('ttl')?invcs.ttl:null,
+$ttlPaid:invcs.hasOwnProperty('ttlPaid')?invcs.ttlPaid:null,
+$forUserId:invcs.hasOwnProperty('forUserId')?invcs.forUserId:null,
+$byUserId:invcs.hasOwnProperty('byUserId')?invcs.byUserId:null,
+$eventId:invcs.hasOwnProperty('eventId')?invcs.eventId:null,
+$notes:invcs.hasOwnProperty('notes')?invcs.notes:''
+};
+  try{
+  sqlObj.runQuery(query, qObj);
+  }
+  catch(e){
+  console.log('Unable to add entry to "invcs" table. query: '+query+', binds: '+JSON.stringify(qObj));
+  console.log(e);
+  return null;
+  }
+
+let itemUUID=null;
+  for(let row of invcsItems){
+  itemUUID=createUUID();
+  query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $notes)`;
+    qObj={
+    $uuid:itemUUID,
+    $typeId:row.hasOwnProperty('typeId')?row.typeId:null,
+    $invcs:invcsId,
+    $invntSrvId:row.hasOwnProperty('invntSrvId')?row.invntSrvId:null,
+    $prntInvcsItemId:row.hasOwnProperty('prntInvcsItemId')?row.prntInvcsItemId:null,
+    $ord:row.hasOwnProperty('ord')?row.ord:null,
+    $name:row.hasOwnProperty('name')?row.name:'',
+    $price:row.hasOwnProperty('price')?row.price:0,
+    $priceTypeId:row.hasOwnProperty('priceTypeId')?row.priceTypeId:null,
+    $notes:row.hasOwnProperty('notes')?row.notes:''
+    }
+    try{
+    sqlObj.runQuery(query, qObj);
+    }
+    catch(e){
+    console.log('Unable to add entry to "invcs_items" table. query: '+query+', binds: '+JSON.stringify(qObj));
+    console.log(e);
+    return null;
+    }
+  }
+}
+
+/*-----------------------------------------------
+pre: runQuery()
+post: none
+gets invoices
 -----------------------------------------------*/
 //function getInvntSrvArr(paramObj, ord, desc=false, limit=null, offset=null){
 function getInvcs(paramObj, ord, desc=false, limit=null, offset=null){
