@@ -706,6 +706,7 @@ manage inventory and services
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
     this.typesIdHsh=sepTypesIdHsh(this.types);
+    console.log(this.typesIdHsh);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     this.genRghtMod();

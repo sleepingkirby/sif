@@ -1,5 +1,5 @@
 /*-----------------------------------------------
-pre: runQuery()
+pre: runQuery(), selectType()
 post: none
 gets 
 -----------------------------------------------*/
@@ -33,21 +33,29 @@ $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
   return null;
   }
 
-let itemUUID=null;
-  for(let row of invcsItems){
+
+let types=selectType('invntSrv');
+let typesIdHsh=sepTypesIdHsh(types);
+
+let prntUUID=null;
+  for(let indx in invcsItems){
   itemUUID=createUUID();
   query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $notes)`;
+    if(typesIdHsh.invntSrv[""].[invcsItems[indx].typeId]!="discount"){
+    prntUUID=itemUUID;
+    }
+
     qObj={
     $uuid:itemUUID,
-    $typeId:row.hasOwnProperty('typeId')?row.typeId:null,
+    $typeId:invcsItems[indx].hasOwnProperty('typeId')?invcsItems[indx].typeId:null,
     $invcs:invcsId,
-    $invntSrvId:row.hasOwnProperty('invntSrvId')?row.invntSrvId:null,
-    $prntInvcsItemId:row.hasOwnProperty('prntInvcsItemId')?row.prntInvcsItemId:null,
-    $ord:row.hasOwnProperty('ord')?row.ord:null,
-    $name:row.hasOwnProperty('name')?row.name:'',
-    $price:row.hasOwnProperty('price')?row.price:0,
-    $priceTypeId:row.hasOwnProperty('priceTypeId')?row.priceTypeId:null,
-    $notes:row.hasOwnProperty('notes')?row.notes:''
+    $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrvId')?invcsItems[indx].invntSrvId:null,
+    $prntInvcsItemId:typesIdHsh.invntSrv[""].[invcsItems[indx].typeId]!="discount":null:prntUUID,
+    $ord:invcsItems[indx].hasOwnProperty('ord')?invcsItems[indx].ord:null,
+    $name:invcsItems[indx].hasOwnProperty('name')?invcsItems[indx].name:'',
+    $price:invcsItems[indx].hasOwnProperty('price')?invcsItems[indx].price:0,
+    $priceTypeId:invcsItems[indx].hasOwnProperty('priceTypeId')?invcsItems[indx].priceTypeId:null,
+    $notes:invcsItems[indx].hasOwnProperty('notes')?invcsItems[indx].notes:''
     }
     try{
     sqlObj.runQuery(query, qObj);
