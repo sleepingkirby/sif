@@ -100,6 +100,10 @@ margin-left:4px;
 margin-right:18px;
 }
 
+.invcsNewItemsSubTtl{
+min-width:100px;
+}
+
 .invcsNewItemsSlct{
 border-width: 0px 0px 1px 0px;
 box-sizing: border-box;

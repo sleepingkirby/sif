@@ -69,6 +69,7 @@ manage inventory and services
     this.invntSrvItems=null;
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
+    this.invcsNewApptId=null;
 
     this.tmpl={};
     this.tmpl.headers=`
@@ -152,7 +153,7 @@ manage inventory and services
           </div>
         </div>
         <div style="justify-content:flex-end;">
-          <input id="invcsNewFormAddBtn" style="display:none;" type="submit" value="Update" disabled/>
+          <input id="invcsNewFormUpdtBtn" style="display:none;" type="submit" value="Update" disabled/>
           <input id="invcsNewFormAddBtn" style="" type="submit" value="Create" disabled/>
         </div>
       </div>
@@ -322,6 +323,11 @@ manage inventory and services
       }
     this.invcsNewItemsList.splice(indx,1);
     this.newInvcsTblTtlRedrw();
+
+      if(this.invcsNewItemsList.length<=0){
+      let mode=this.invcsNewApptId?'update':'create';
+      this.flipNewInvcsBtn(mode, true);
+      }
     }
 
     /*-----------------------------------------------
@@ -332,16 +338,52 @@ manage inventory and services
     addInvcsNewItemsListRedrw(){
     //get valuefrom
     let els=document.getElementsByName("invcsNewItem");
-    console.log(els[0]);
-    console.log(els[0].value);
     console.log(this.invntSrvItems);
       if(!this.invntSrvItems.hasOwnProperty(els[0].value)){
       return null;
       }
     this.invcsNewItemsList.push({'addAmnt':1, ...this.invntSrvItems[els[0].value]});
     this.newInvcsTblTtlRedrw();
+
+      if(this.invcsNewItemsList.length>0){
+      let mode=this.invcsNewApptId?'update':'create';
+      this.flipNewInvcsBtn(mode, false);
+      }
     }
 
+    /*-----------------------------------------------
+    pre: el.id="invcsNewFormAddBtn"
+    post: element's disable moved or removed.
+    flips or set disable on create/update button
+    -----------------------------------------------*/
+    flipNewInvcsBtn(btn='create', dsbl=null){
+    //invcsNewFormAddBtn
+    let el=null;
+      if(!btn){
+      return null;
+      }
+      if(btn=='create'){
+      el=document.getElementById("invcsNewFormAddBtn");
+      }
+      else if(btn=='update'){
+      el=document.getElementById("invcsNewFormUpdtBtn");
+      }
+      
+      if(dsbl===null){
+      el.disabled=!el.disabled
+      return null;
+      }
+
+      if(dsbl===true){
+      el.disabled=true;
+      return null;
+      }
+
+      if(dsbl===false){
+      el.removeAttribute('disabled');
+      return null;
+      }
+    }
 
     /*-----------------------------------------------
     pre:
@@ -459,7 +501,7 @@ manage inventory and services
                </div>
         `;
         subTtlHtml=`
-               <div class="inptNumNumRszWrap minInptNumWarp">
+               <div class="invcsNewItemsSubTtl inptNumNumRszWrap minInptNumWarp">
                  $<input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"subTtl",this) />
                </div>
         `;
@@ -513,6 +555,12 @@ manage inventory and services
       }
     console.log(typeof ttl);
     console.log(`<=========total: ${ttl}`);
+
+    let ttlEl=document.getElementsByName("invcs[total]");
+      if(ttlEl&&ttlEl.length>=1){
+      ttlEl[0].value=Number(ttl).toFixed(2);
+      }
+
     let tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
