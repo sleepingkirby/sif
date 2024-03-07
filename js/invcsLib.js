@@ -41,7 +41,7 @@ let prntUUID=null;
   for(let indx in invcsItems){
   itemUUID=createUUID();
   query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $notes)`;
-    if(typesIdHsh.invntSrv[""].[invcsItems[indx].typeId]!="discount"){
+    if(typesIdHsh.invntSrv[""][invcsItems[indx].typeId]!="discount"){
     prntUUID=itemUUID;
     }
 
@@ -50,7 +50,7 @@ let prntUUID=null;
     $typeId:invcsItems[indx].hasOwnProperty('typeId')?invcsItems[indx].typeId:null,
     $invcs:invcsId,
     $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrvId')?invcsItems[indx].invntSrvId:null,
-    $prntInvcsItemId:typesIdHsh.invntSrv[""].[invcsItems[indx].typeId]!="discount":null:prntUUID,
+    $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].typeId]!="discount"?null:prntUUID,
     $ord:invcsItems[indx].hasOwnProperty('ord')?invcsItems[indx].ord:null,
     $name:invcsItems[indx].hasOwnProperty('name')?invcsItems[indx].name:'',
     $price:invcsItems[indx].hasOwnProperty('price')?invcsItems[indx].price:0,

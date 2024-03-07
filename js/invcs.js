@@ -21,6 +21,7 @@ manage inventory and services
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
     this.invcsNewApptId=null;
+    this.invcsNewFrmId='invcsNewForm';
 
     this.tmpl={};
     this.tmpl.headers=`
@@ -60,24 +61,27 @@ manage inventory and services
       </div>
       <div id="invcsNewFormInfo">
         <div id="invcsNewFormInvcsStts" class="row">
-          <div class="flexLeft flexCol">
-            <div class="lbl" style="margin-bottom:6px;">due:</div>
-            <div>
-              <input type="datetime-local" name="invcs[due_date]" title="Due Date" value="${toInptValFrmt()}"/>
-            </div>
+          <div class="flexLeft" style="align-items:center;">
+            <div class="lbl" style="margin-right:6px; margin-bottom:0px;">due:</div>
+            <input type="datetime-local" name="invcs[dueDate]" title="Due Date" value="${toInptValFrmt()}"/>
           </div>
           <div class="flexRight flexCol">
             <div class="flexRight" style="margin-bottom:6px;">
-              <select id="invcsSelectStatus" name="invcs[status_id]" title="Invoice Status">
+              <select id="invcsSelectStatus" name="invcs[statusId]" title="Invoice Status">
                 <option>status</option>
               </select>
             </div>
-            <div class="flexRight">create: 1234-01-23</div>
-            <div class="flexRight">paid: 1234-01-23</div>
+            <div class="flexRight">create: <span style="margin-left:6px;">1234-01-23</span></div>
           </div>
         </div>
         <div class="row">
-          <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
+          <div class="flexLeft" style="align-items:center;">
+            <div class="lbl" style="margin-right:6px; margin-bottom:0px;">paid:</div>
+            <input type="datetime-local" name="invcs[paidDate]" title="Paid Date" value=""/>
+          </div>
+        </div>
+        <div class="row">
+          <select id="invcsSelectByUser" name="invcs[byUserId]" title="User created">
             <option>by user</option>
           </select>
           <div>
@@ -88,7 +92,7 @@ manage inventory and services
           </div>
         </div>
         <div class="row">
-          <select id="invcsSelectForUser" name="invcs[ForUser_id]" title="User created for">
+          <select id="invcsSelectForUser" name="invcs[ForUserId]" title="User created for">
             <option>for user</option>
           </select>
         </div>
@@ -104,8 +108,8 @@ manage inventory and services
           </div>
         </div>
         <div style="justify-content:flex-end;">
-          <input id="invcsNewFormUpdtBtn" style="display:none;" type="submit" value="Update" disabled/>
-          <input id="invcsNewFormAddBtn" style="" type="submit" value="Create" disabled/>
+          <input id="invcsNewFormUpdtBtn" style="display:none;" type="submit" value="Update" onclick=invcsObj.updtInvcs() disabled/>
+          <input id="invcsNewFormAddBtn" style="" type="submit" value="Create" onclick=invcsObj.newInvcs()  disabled/>
         </div>
       </div>
     </div>
@@ -541,7 +545,6 @@ manage inventory and services
     post: none
     -----------------------------------------------*/
     newInvcsTblTtlRedrw(){
-
     document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     }
 
@@ -564,6 +567,40 @@ manage inventory and services
     fillRghtMod(){
 
     }
+
+    /*-----------------------------------------------
+    pre: createInvcs()
+    post: db updated. main table redrawn. rghtMod closed
+    gathers data, writes to db. 
+    -----------------------------------------------*/
+    newInvcs(){
+    //invcsNewForm
+    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    console.log(els);
+    /*
+CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
+
+$dueDate:invcs.hasOwnProperty('dueDate')?invcs.dueDate:null,
+$paidDate:invcs.hasOwnProperty('paidDate')?invcs.paidDate:null,
+$statusId:invcs.hasOwnProperty('statusId')?invcs.statusId:null,
+$subTtl:invcs.hasOwnProperty('subTtl')?invcs.subTtl:null,
+$totalDscntd:invcs.hasOwnProperty('totalDscntd')?invcs.totalDscntd:null,
+$ttl:invcs.hasOwnProperty('ttl')?invcs.ttl:null,
+$ttlPaid:invcs.hasOwnProperty('ttlPaid')?invcs.ttlPaid:null,
+$forUserId:invcs.hasOwnProperty('forUserId')?invcs.forUserId:null,
+$byUserId:invcs.hasOwnProperty('byUserId')?invcs.byUserId:null,
+$eventId:invcs.hasOwnProperty('eventId')?invcs.eventId:null,
+$notes:invcs.hasOwnProperty('notes')?invcs.notes:''
+    */
+    let invcs={};
+      for(let el of els){
+      let nm=getSubs(el.name,'invcs');
+      console.log(nm);
+      invcs[nm]=el.value;
+      }
+    console.log(invcs);
+    }
+
 
     /*-----------------------------------------------
     pre: none 
@@ -589,9 +626,7 @@ manage inventory and services
     document.getElementById('invcsSelectForUser').innerHTML=genUsrSlct(customers,'username','Username','uuid',state.user.uuid);
 
     //fill inventory/services items
-    //function getInvntSrv(username=null, excldNull=false, ord=null, desc='desc'){
     this.invntSrvItems=getInvntSrv(null, false, 'name', 'asc');
-    //function genSlct(arr, vlProp=null, nmProp=null, slctVl=null, dfltVl=null){
     document.getElementsByName('invcsNewItem')[0].innerHTML=genSlctHsh(this.invntSrvItems, 'uuid', 'name');
     }
 
@@ -706,7 +741,6 @@ manage inventory and services
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
     this.typesIdHsh=sepTypesIdHsh(this.types);
-    console.log(this.typesIdHsh);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
     this.genRghtMod();
