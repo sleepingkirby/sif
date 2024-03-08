@@ -61,11 +61,7 @@ manage inventory and services
       </div>
       <div id="invcsNewFormInfo">
         <div id="invcsNewFormInvcsStts" class="row">
-          <div class="flexLeft" style="align-items:center;">
-            <div class="lbl" style="margin-right:6px; margin-bottom:0px;">due:</div>
-            <input type="datetime-local" name="invcs[due_date]" title="Due Date" value="${toInptValFrmt()}"/>
-          </div>
-          <div class="flexRight flexCol">
+          <div class="flexLeft flexCol">
             <div class="flexRight" style="margin-bottom:6px;">
               <select id="invcsSelectStatus" name="invcs[status_id]" title="Invoice Status">
                 <option>status</option>
@@ -73,25 +69,35 @@ manage inventory and services
             </div>
             <div class="flexRight">create: <span name="invcs[create_date]" style="margin-left:6px;">1234-01-23</span></div>
           </div>
+          <div class="flexRight" style="align-items:center;">
+            <div class="lbl" style="margin-right:6px; margin-bottom:0px;">due:</div>
+            <input type="datetime-local" name="invcs[due_date]" title="Due Date" value="${toInptValFrmt()}"/>
+          </div>
         </div>
-        <div class="row">
-          <div class="flexLeft" style="align-items:center;">
+        <div class="row" style="justify-content: flex-end;">
+          <div style="align-items:center;">
             <div class="lbl" style="margin-right:6px; margin-bottom:0px;">paid:</div>
             <input type="datetime-local" name="invcs[paid_date]" title="Paid Date" value=""/>
           </div>
         </div>
         <div class="row">
-          <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
-            <option>by user</option>
-          </select>
           <div>
-            <div style="font-weight:600; align-items:center;">$</div>
+            <div style="font-weight:600; align-items:center;">Total: $</div>
             <div class="inptNumNumRszWrap inptNumPrc">
               <input class="inptNumRsz" type="number" name="invcs[total]" step=".2" title="invoice total"/>
             </div>
           </div>
+          <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
+            <option>by user</option>
+          </select>
         </div>
         <div class="row">
+          <div>
+            <div style="font-weight:600; align-items:center;">Paid: $</div>
+            <div class="inptNumNumRszWrap inptNumPrc">
+              <input class="inptNumRsz" type="number" name="invcs[total_paid]" step=".2" title="invoice amount paid"/>
+            </div>
+          </div>
           <select id="invcsSelectForUser" name="invcs[forUser_id]" title="User created for">
             <option>for user</option>
           </select>
@@ -565,7 +571,7 @@ manage inventory and services
     fill the right modal
     -----------------------------------------------*/
     fillRghtMod(){
-
+    
     }
 
     /*-----------------------------------------------
