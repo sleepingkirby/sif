@@ -8,6 +8,7 @@ manage inventory and services
     constructor(){
 
     this.invcsList=null;
+    this.invcsListHsh=null;
 //CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invntSrv_id text null, ord int null, name text not null, price real, price_type_id text null, notes null, foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(price_type_id) references type(uuid));
     //this.invcsNewItemsList=null;
     this.invcsNewItemsList=[];
@@ -201,8 +202,12 @@ manage inventory and services
     getInvcsList(){
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
-    let invcsList=getInvcs({},this.invcsSrtCol,this.invcsSrtDir);
-    return invcsList;
+    this.invcsList=getInvcs({},this.invcsSrtCol,this.invcsSrtDir);
+    this.invcsListHsh={};
+      for(let invcs of this.invcsList){
+      this.invcsListHsh[invcs.uuid]=invcs;
+      }
+    return this.invcsList;
     }
 
     /*-----------------------------------------------
@@ -575,6 +580,17 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: this.fillRghtMod() 
+    post: html drawn
+    -----------------------------------------------*/
+    updtInvcsRghtMod(uuid=null){
+      if(!uuid||!this.invcsListHsh.hasOwnProperty(uuid)){
+      return null;
+      }
+    console.log(this.invcsListHsh[uuid]);  
+    }
+
+    /*-----------------------------------------------
     pre: createInvcs()
     post: db updated. main table redrawn. rghtMod closed
     gathers data, writes to db. 
@@ -588,7 +604,6 @@ manage inventory and services
       invcs[nm]=el.value;
       }
       if(createInvcs(invcs, this.invcsNewItemsList)){
-      this.getInvcsList();
       this.drawTbl();
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       mainObj.modPrcClsCall(el);
@@ -686,7 +701,7 @@ manage inventory and services
       hdrs+=this.tmpl.invcsTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invcsTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invcsTblHdCll[1];
       }
 
-    this.invcsList=this.getInvcsList();
+    this.getInvcsList();
     let invcsArr=this.fltrInvcs();
 
     let cntnt='';
