@@ -8,6 +8,19 @@ var timeStr=dt.getHours().toString().padStart(2,'0')+dt.getMinutes().toString().
 return dateStr+'-'+timeStr; 
 }
 
+//date time database format
+//2023-11-09 09:17:43
+function dtTmDbFrmt(dateTime=null){
+var dt=new Date();
+  if(Number.isFinite(dateTime)){
+  dt=new Date(dateTime);
+  }
+var dateStr=dt.getFullYear().toString()+'-'+(dt.getMonth()+1).toString().padStart(2,'0')+'-'+dt.getDate().toString().padStart(2,'0');
+var timeStr=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
+return dateStr+' '+timeStr; 
+}
+
+
 function epochTime(date){
 var epch=Date.parse(date.toISOString())/1000;
 return Math.floor(epch);

@@ -9,21 +9,22 @@ function createInvcs(invcs, invcsItems){
   }
 
 let invcsId=createUUID();
-let query=`insert into invcs(uuid, due_date, paid_date, status_id, sub_total, total_dscntd, total, total_paid, forUser_id, byUser_id, event_id, notes) values($uuid, $dueDate, $paidDate, $statusId, $subTtl, $totalDscntd, $ttl, $ttlPaid, $forUserId, $byUserId, $eventId, $notes)`;
-let qObj={
-$uuid:invcsId,
-$dueDate:invcs.hasOwnProperty('dueDate')?invcs.dueDate:null,
-$paidDate:invcs.hasOwnProperty('paidDate')?invcs.paidDate:null,
-$statusId:invcs.hasOwnProperty('statusId')?invcs.statusId:null,
-$subTtl:invcs.hasOwnProperty('subTtl')?invcs.subTtl:null,
-$totalDscntd:invcs.hasOwnProperty('totalDscntd')?invcs.totalDscntd:null,
-$ttl:invcs.hasOwnProperty('ttl')?invcs.ttl:null,
-$ttlPaid:invcs.hasOwnProperty('ttlPaid')?invcs.ttlPaid:null,
-$forUserId:invcs.hasOwnProperty('forUserId')?invcs.forUserId:null,
-$byUserId:invcs.hasOwnProperty('byUserId')?invcs.byUserId:null,
-$eventId:invcs.hasOwnProperty('eventId')?invcs.eventId:null,
-$notes:invcs.hasOwnProperty('notes')?invcs.notes:''
-};
+let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, sub_total, total_dscntd, total, total_paid, forUser_id, byUser_id, event_id, notes) values($uuid, $createDate, $dueDate, $paidDate, $statusId, $subTtl, $totalDscntd, $ttl, $ttlPaid, $forUserId, $byUserId, $eventId, $notes)`;
+  let qObj={
+  $uuid:invcsId,
+  $createDate:invcs.hasOwnProperty('create_date')?dtTmDbFrmt(invcs.create_date):dtTmDbFrmt(),
+  $dueDate:invcs.hasOwnProperty('due_date')?dtTmDbFrmt(invcs.due_date):null,
+  $paidDate:invcs.hasOwnProperty('paid_date')?dtTmDbFrmt(invcs.paid_date):null,
+  $statusId:invcs.hasOwnProperty('status_id')?invcs.status_id:null,
+  $subTtl:invcs.hasOwnProperty('sub_total')?invcs.sub_total:invcs.total,
+  $totalDscntd:invcs.hasOwnProperty('total_dscntd')?invcs.total_dscntd:null,
+  $ttl:invcs.hasOwnProperty('total')?invcs.total:null,
+  $ttlPaid:invcs.hasOwnProperty('total_paid')?invcs.total_paid:null,
+  $forUserId:invcs.hasOwnProperty('forUser_id')?invcs.forUser_id:null,
+  $byUserId:invcs.hasOwnProperty('byUser_id')?invcs.byUser_id:null,
+  $eventId:invcs.hasOwnProperty('event_id')?invcs.event_id:null,
+  $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
+  };
   try{
   sqlObj.runQuery(query, qObj);
   }
@@ -48,7 +49,7 @@ let prntUUID=null;
     qObj={
     $uuid:itemUUID,
     $typeId:invcsItems[indx].hasOwnProperty('typeId')?invcsItems[indx].typeId:null,
-    $invcs:invcsId,
+    $invcsId:invcsId,
     $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrvId')?invcsItems[indx].invntSrvId:null,
     $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].typeId]!="discount"?null:prntUUID,
     $ord:invcsItems[indx].hasOwnProperty('ord')?invcsItems[indx].ord:null,
@@ -66,6 +67,7 @@ let prntUUID=null;
     return null;
     }
   }
+return true;
 }
 
 /*-----------------------------------------------
@@ -92,11 +94,13 @@ users.email as forUser_email,
 forUser.fName as forUser_fName,
 forUser.surName as forUser_surName,
 invcs.byUser_id as byUserId,
-invcs.event_id as event_id
+invcs.event_id as event_id,
+event.on_date as event_on_date
 from invcs
 left join status on invcs.status_id=status.uuid
 left join users on invcs.forUser_id=users.uuid
 left join contacts as forUser on users.uuid=forUser.user_id
+left join events as event on invcs.event_id=event.uuid
 `;
 
 let and='';

@@ -63,25 +63,25 @@ manage inventory and services
         <div id="invcsNewFormInvcsStts" class="row">
           <div class="flexLeft" style="align-items:center;">
             <div class="lbl" style="margin-right:6px; margin-bottom:0px;">due:</div>
-            <input type="datetime-local" name="invcs[dueDate]" title="Due Date" value="${toInptValFrmt()}"/>
+            <input type="datetime-local" name="invcs[due_date]" title="Due Date" value="${toInptValFrmt()}"/>
           </div>
           <div class="flexRight flexCol">
             <div class="flexRight" style="margin-bottom:6px;">
-              <select id="invcsSelectStatus" name="invcs[statusId]" title="Invoice Status">
+              <select id="invcsSelectStatus" name="invcs[status_id]" title="Invoice Status">
                 <option>status</option>
               </select>
             </div>
-            <div class="flexRight">create: <span style="margin-left:6px;">1234-01-23</span></div>
+            <div class="flexRight">create: <span name="invcs[create_date]" style="margin-left:6px;">1234-01-23</span></div>
           </div>
         </div>
         <div class="row">
           <div class="flexLeft" style="align-items:center;">
             <div class="lbl" style="margin-right:6px; margin-bottom:0px;">paid:</div>
-            <input type="datetime-local" name="invcs[paidDate]" title="Paid Date" value=""/>
+            <input type="datetime-local" name="invcs[paid_date]" title="Paid Date" value=""/>
           </div>
         </div>
         <div class="row">
-          <select id="invcsSelectByUser" name="invcs[byUserId]" title="User created">
+          <select id="invcsSelectByUser" name="invcs[byUser_id]" title="User created">
             <option>by user</option>
           </select>
           <div>
@@ -92,7 +92,7 @@ manage inventory and services
           </div>
         </div>
         <div class="row">
-          <select id="invcsSelectForUser" name="invcs[ForUserId]" title="User created for">
+          <select id="invcsSelectForUser" name="invcs[forUser_id]" title="User created for">
             <option>for user</option>
           </select>
         </div>
@@ -576,29 +576,20 @@ manage inventory and services
     newInvcs(){
     //invcsNewForm
     let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
-    console.log(els);
-    /*
-CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
-
-$dueDate:invcs.hasOwnProperty('dueDate')?invcs.dueDate:null,
-$paidDate:invcs.hasOwnProperty('paidDate')?invcs.paidDate:null,
-$statusId:invcs.hasOwnProperty('statusId')?invcs.statusId:null,
-$subTtl:invcs.hasOwnProperty('subTtl')?invcs.subTtl:null,
-$totalDscntd:invcs.hasOwnProperty('totalDscntd')?invcs.totalDscntd:null,
-$ttl:invcs.hasOwnProperty('ttl')?invcs.ttl:null,
-$ttlPaid:invcs.hasOwnProperty('ttlPaid')?invcs.ttlPaid:null,
-$forUserId:invcs.hasOwnProperty('forUserId')?invcs.forUserId:null,
-$byUserId:invcs.hasOwnProperty('byUserId')?invcs.byUserId:null,
-$eventId:invcs.hasOwnProperty('eventId')?invcs.eventId:null,
-$notes:invcs.hasOwnProperty('notes')?invcs.notes:''
-    */
     let invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
-      console.log(nm);
       invcs[nm]=el.value;
       }
-    console.log(invcs);
+      if(createInvcs(invcs, this.invcsNewItemsList)){
+      this.getInvcsList();
+      this.drawTbl();
+      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      mainObj.modPrcClsCall(el);
+      }
+      else{
+      
+      }
     }
 
 
@@ -637,14 +628,14 @@ $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
     -----------------------------------------------*/
     fltrInvcs(){
       if(!this.fltrStr){
-      return this.invntSrvList;
+      return this.invcsList;
       }
 
     let invcsArr=[];
-      for(let invntSrv of this.invntSrvList){
+      for(let invcs of this.invcsList){
         for(let prop of this.fltrProps){
-          if(invntSrv[prop]&&invntSrv[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
-          invntSrvs.push({...invntSrv});
+          if(invcs[prop]&&invcs[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
+          invcs.push({...invcs});
           break;
           }
         }
@@ -690,33 +681,32 @@ $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
       }
 
     this.invcsList=this.getInvcsList();
-    let invcsArr=this.fltrInvcs(this.invcsList);
+    let invcsArr=this.fltrInvcs();
 
     let cntnt='';
-    /*
-      cntnt+=`
-      <tr>
-        <td>`+invntSrv.create_date+`</td>
-        <td>`+invntSrv.mod_date+`</td>
-        <td>`+invntSrv.name+`</td>
-        <td>`+invntSrv.type+`</td>
-        <td>`+statusColor(invntSrv.status_name)+`</td>
-        <td>`+dur+`</td>
-        <td>`+Number(invntSrv.amnt).toString()+`</td>
-        <td>`+invntSrvPrcFormat(Number(invntSrv.buy).toString(),buyType)+`</td>
-        <td>`+invntSrvPrcFormat(Number(invntSrv.sell).toString(),invntSrv.price_type_name)+`</td>
-        <td>
-          <div class="moduleTblCellActns">
-            <div name="invntSrvEdit" class="menuIcon" onclick=invntSrvObj.updtInvntSrvRghtMod("`+invntSrv.uuid+`"); title="Edit Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtInvntSrvStts("`+invntSrv.uuid+`","active"); title="Activate Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
-            <div name="invntSrvDisable" class="menuIcon" onclick=invntSrvObj.updtInvntSrvStts("`+invntSrv.uuid+`","disabled"); title="Disable Inventory/Service">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
-          </div>
-        </td>
-      </tr>
-      `;
+      for(let invcs of invcsArr){
+      let evnt=invcs.event_on_date||'';
+        cntnt+=`
+        <tr>
+          <td>`+invcs.create_date+`</td>
+          <td>`+invcs.due_date+`</td>
+          <td>`+evnt+`</td>
+          <td>`+invcs.forUser_fName+`</td>
+          <td>`+invcs.forUser_surName+`</td>
+          <td>`+invcs.forUser_email+`</td>
+          <td>`+statusColor(invcs.status_name)+`</td>
+          <td>`+Number(invcs.total).toString()+`</td>
+          <td>`+Number(invcs.total_paid).toString()+`</td>
+          <td>
+            <div class="moduleTblCellActns">
+              <div name="invcsEdit" class="menuIcon" onclick=invcsObj.updtInvcsRghtMod("`+invcs.uuid+`"); title="Edit Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvntSrvStts("`+invcs.uuid+`","active"); title="Mark Invoice as Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvntSrvStts("`+invcs.uuid+`","disabled"); title="Mark Invoice as Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+            </div>
+          </td>
+        </tr>
+        `;
       }
-    */
-
     rtrn+=this.tmpl.invcsTblStrt+hdrs+this.tmpl.invcsTblHdEnd+cntnt+this.tmpl.invcsTblEnd;
     document.getElementById(this.mainTblId).innerHTML=rtrn;
     }
