@@ -406,6 +406,7 @@ padding-left: 12px;
 padding-right: 12px;
 overflow: hidden;
 text-align:center;
+z-index: 99;
 }
 
 .fadeOut{

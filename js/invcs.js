@@ -516,7 +516,7 @@ manage inventory and services
 
     let ttlEl=document.getElementsByName("invcs[total]");
       if(ttlEl&&ttlEl.length>=1){
-      ttlEl[0].value=Number(ttl).toFixed(2);
+      ttlEl[0].value=Number(ttl||0).toFixed(2);
       }
 
     let tmp=`
@@ -571,12 +571,28 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
-    pre: none 
+    pre: this.invcsListHsh
     post: html drawn
     fill the right modal
     -----------------------------------------------*/
-    fillRghtMod(){
+    fillRghtMod(uuid=null){
+      if(!uuid){
+      return null;
+      }
+
+    console.log(this.invcsListHsh[uuid]);
+    this.invcsNewItemsList=getInvcItems(uuid);
+    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
     
+    let invcs={};
+      for(let el of els){
+      let nm=getSubs(el.name,'invcs');
+      invcs[nm]=el.value;
+      }
+    console.log(invcs);
+    console.log(this.invcsNewItemsList);
+
+
     }
 
     /*-----------------------------------------------
@@ -587,7 +603,11 @@ manage inventory and services
       if(!uuid||!this.invcsListHsh.hasOwnProperty(uuid)){
       return null;
       }
-    console.log(this.invcsListHsh[uuid]);  
+    //fill right mod
+    this.fillRghtMod(uuid);
+    //open right modal
+    //let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+    //mainObj.modPrcClsCall(el);
     }
 
     /*-----------------------------------------------
@@ -609,7 +629,7 @@ manage inventory and services
       mainObj.modPrcClsCall(el);
       }
       else{
-      
+      mainObj.setFloatMsg('Error in creating new invoice.');
       }
     }
 
@@ -734,8 +754,8 @@ manage inventory and services
           <td>`+invcs.forUser_surName+`</td>
           <td>`+invcs.forUser_email+`</td>
           <td>`+statusColor(invcs.status_name)+`</td>
-          <td>`+Number(invcs.total).toString()+`</td>
-          <td>`+Number(invcs.total_paid).toString()+`</td>
+          <td>`+invntSrvPrcFormat(Number(invcs.total).toString(),"static")+`</td>
+          <td>`+invntSrvPrcFormat(Number(invcs.total_paid).toString(),"static")+`</td>
           <td>
             <div class="moduleTblCellActns">
               <div name="invcsEdit" class="menuIcon" onclick=invcsObj.updtInvcsRghtMod("`+invcs.uuid+`"); title="Edit Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>

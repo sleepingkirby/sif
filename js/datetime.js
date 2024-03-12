@@ -15,6 +15,9 @@ var dt=new Date();
   if(Number.isFinite(dateTime)){
   dt=new Date(dateTime);
   }
+  else if(typeof dateTime=="string"){
+  dt=new Date(dateTime);
+  }
 var dateStr=dt.getFullYear().toString()+'-'+(dt.getMonth()+1).toString().padStart(2,'0')+'-'+dt.getDate().toString().padStart(2,'0');
 var timeStr=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
 return dateStr+' '+timeStr; 
