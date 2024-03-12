@@ -41,21 +41,23 @@ let typesIdHsh=sepTypesIdHsh(types);
 let prntUUID=null;
   for(let indx in invcsItems){
   itemUUID=createUUID();
-  query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $notes)`;
+  query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, amnt, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $amnt, $notes)`;
     if(typesIdHsh.invntSrv[""][invcsItems[indx].typeId]!="discount"){
     prntUUID=itemUUID;
     }
 
     qObj={
     $uuid:itemUUID,
-    $typeId:invcsItems[indx].hasOwnProperty('typeId')?invcsItems[indx].typeId:null,
+    $typeId:invcsItems[indx].hasOwnProperty('type_id')?invcsItems[indx].type_id:null,
     $invcsId:invcsId,
-    $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrvId')?invcsItems[indx].invntSrvId:null,
-    $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].typeId]!="discount"?null:prntUUID,
-    $ord:invcsItems[indx].hasOwnProperty('ord')?invcsItems[indx].ord:null,
+    $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrv_id')?invcsItems[indx].invntSrv_id:null,
+    $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].type_id]!="discount"?null:prntUUID,
+    $ord:indx,
     $name:invcsItems[indx].hasOwnProperty('name')?invcsItems[indx].name:'',
     $price:invcsItems[indx].hasOwnProperty('price')?invcsItems[indx].price:0,
-    $priceTypeId:invcsItems[indx].hasOwnProperty('priceTypeId')?invcsItems[indx].priceTypeId:null,
+    $priceTypeId:invcsItems[indx].hasOwnProperty('price_type_id')?invcsItems[indx].price_type_id:null,
+    $ovrrdPrice:invcsItems[indx].hasOwnProperty('ovrrdPrice')?invcsItems[indx].ovrrdPrice:null,
+    $amnt:invcsItems[indx].hasOwnProperty('amnt')?invcsItems[indx].amnt:null,
     $notes:invcsItems[indx].hasOwnProperty('notes')?invcsItems[indx].notes:''
     }
     try{
@@ -175,3 +177,105 @@ let csStr='';
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
+
+/*-----------------------------------------------
+pre: runQuery(), selectType()
+post: none
+gets 
+-----------------------------------------------*/
+function updtInvcs(uuid=null, obj=null, items=null){
+  if(!uuid){
+  return null;
+  }
+/*
+CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, notes text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
+*/
+let query='update invcs set ';
+let qObj={};
+let cm='';
+let allowCol=[
+'due_date',
+'paid_date',
+'status_id',
+'status_name',
+'sub_total',
+'total_dscntd',
+'total',
+'total_paid',
+'forUser_id',
+'byUser_id',
+'event_id',
+'notes',
+];
+
+  for(let col of allowCol){
+    if(obj.hasOwnProperty(col)){
+      if(col==="status_name"){
+      query+=cm+" status_id=(select uuid from status where name=$status_name)";
+      qObj['$status_name']=obj[col];
+      }
+      else{
+      query+=cm+" "+col+"=$"+col;
+      qObj['$'+col]=obj[col];
+      cm=',';
+      }
+    }
+  }
+
+query+=" where uuid=$uuid";
+qObj['$uuid']=uuid;
+  try{
+  sqlObj.runQuery(query,qObj);
+  }
+  catch(e){
+  console.log('Unable to update entry to "invcs" table. query: '+query+', binds: '+JSON.stringify(qObj));
+  console.log(e);
+  return null;
+  }
+
+/*
+CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invcs_id text not null, invntSrv_id text null, prntInvcsItemId text null, ord int null, name text not null, price real, price_type_id text null, ovrrdPrice real, notes null, foreign key(invcs_id) references invcs(uuid), foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(prntInvcsItemId) references invcs_items(prntInvcsItemId), foreign key(price_type_id) references type(uuid));
+*/
+  if(items && Array.isArray(items)){
+  query=`delete from invcs_items where invcs_id=$invcs_id`;
+  qObj={'$invcs_id':uuid};
+    try{
+    sqlObj.runQuery(query,qObj);
+    }
+    catch(e){
+    console.log('Unable to delete items from "invcs_items" table. query: '+query+', binds: '+JSON.stringify(qObj));
+    console.log(e);
+    return null;
+    }
+
+    for(let i in items){
+    query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, amnt, notes)
+    values($uuid, $type_id, $invcs_id, $invntSrv_id, $prntInvcsItemId $ord, $name, $price, $price_type_id, $ovrrdPrice, $amnt, $notes)`;
+      qObj={
+      '$uuid':createUUID(),
+      '$type_id':items[i].type_id,
+      '$invcs_id':uuid,
+      '$invntSrv_id':items[i].hasOwnProperty('invntSrv')?items[i].invntSrv:null,
+      '$prntInvcsItemId':typesIdHsh.invntSrv[""][invcsItems[indx].type_id]!="discount"?null:prntUUID,
+      '$ord':i,
+      '$name':items[i].hasOwnProperty('name')?items[i].name:null,
+      '$price':items[i].hasOwnProperty('price')?items[i].price:null,
+      '$price_type_id':items[i].hasOwnProperty('price_type_id')?items[i].price_type_id:null,
+      '$ovrrdPrice':items[i].hasOwnProperty('ovrrdPrice')?items[i].ovrrdPrice:null,
+      '$amnt':invcsItems[indx].hasOwnProperty('amnt')?invcsItems[indx].amnt:null,
+      '$notes':items[i].hasOwnProperty('notes')?items[i].notes:null
+      };
+      try{
+      sqlObj.runQuery(query,qObj);
+      }
+      catch(e){
+      console.log('Unable to add items from "invcs_items" table for invcs uuid: '+uuid+'. query: '+query+', binds: '+JSON.stringify(qObj));
+      console.log(e);
+      return null;
+      }
+    }
+  }
+return true;
+}
+
+

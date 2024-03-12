@@ -665,6 +665,24 @@ manage inventory and services
     return invcsArr;
     }
 
+    /*-----------------------------------------------
+    pre: invcsLib
+    post: database updated
+    updates the database for that invoice and status
+    -----------------------------------------------*/
+    updtInvcsStts(uuid=null, stts=null){
+      if(!uuid||!stts){
+      return null;
+      }
+
+      if(updtInvcs(uuid, {'status_name':stts})){
+      this.drawTbl();
+      }
+      else{
+      mainObj.setFloatMsg(`updating invoice failed. `);
+      }
+    }
+
     /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modPrcClsCall()
     post: event hook added
@@ -721,8 +739,8 @@ manage inventory and services
           <td>
             <div class="moduleTblCellActns">
               <div name="invcsEdit" class="menuIcon" onclick=invcsObj.updtInvcsRghtMod("`+invcs.uuid+`"); title="Edit Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
-              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvntSrvStts("`+invcs.uuid+`","active"); title="Mark Invoice as Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
-              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvntSrvStts("`+invcs.uuid+`","disabled"); title="Mark Invoice as Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
+              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvcsStts("`+invcs.uuid+`","active"); title="Mark Invoice as Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+              <div name="invcsDisable" class="menuIcon" onclick=invcsObj.updtInvcsStts("`+invcs.uuid+`","disabled"); title="Mark Invoice as Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
             </div>
           </td>
         </tr>
