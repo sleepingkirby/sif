@@ -226,6 +226,10 @@ manage inventory and services
       if(propNm=='type_id'){
       this.invcsNewItemsList[indx]["type"]=this.typesIdHsh['invntSrv'][""][ths.value];
       }
+      //if item price or amount is modified, get rid of override price.
+      if(propNm=='sell'||propNm=='addAmnt'){
+      delete this.invcsNewItemsList[indx]["ovrrdPrice"];
+      }
     }
 
     /*-----------------------------------------------
@@ -377,9 +381,11 @@ manage inventory and services
       sellRaw=this.invcsNewItemsList[i].hasOwnProperty('sell')?this.invcsNewItemsList[i].sell:this.invcsNewItemsList[i].price;
         switch(this.invcsNewItemsList[i].price_type_name){
           case 'percentage':
+          console.log(lastSubTtl);
             if(lastSubTtl!==null){
               if(this.invcsNewItemsList[i].type=='discount'){
               subTtl=Number(lastSubTtl * (1 - (Number(sellRaw) / 100)));
+              console.log(subTtl);
               }
               else if(this.invcsNewItemsList[i].type=='service'){
               //subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);

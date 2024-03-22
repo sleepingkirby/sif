@@ -192,7 +192,7 @@ let query=`
 select
 invcs_items.uuid as uuid,
 invcs_items.type_id as type_id,
-type.name as type_name,
+type.name as type,
 invcs_items.invcs_id as invcs_id,
 invcs_items.invntSrv_id as invntSrv_id,
 invcs_items.prntInvcsItemId as prntInvcsItemId,
