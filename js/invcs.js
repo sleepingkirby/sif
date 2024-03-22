@@ -637,6 +637,28 @@ manage inventory and services
       }
     }
 
+    /*-----------------------------------------------
+    pre: updtInvcs()
+    post: db updated. main table redrawn. rghtMod closed
+    gathers data, writes to db. 
+    -----------------------------------------------*/
+    updtInvcs(){
+    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    let invcs={};
+      for(let el of els){
+      let nm=getSubs(el.name,'invcs');
+      invcs[nm]=el.value;
+      }
+    console.log(invcs);
+    console.log(this.invcsNewItemsList);
+      if(updtInvcs(this.invcsNewApptId, invcs, this.invcsNewItemsList)){
+      this.drawTbl();
+      mainObj.modRghtOpenClose();
+      }
+      else{
+      mainObj.setFloatMsg('Error in update invoice.');
+      }
+    }
 
     /*-----------------------------------------------
     pre: none 

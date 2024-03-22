@@ -285,6 +285,10 @@ qObj['$uuid']=uuid;
 CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invcs_id text not null, invntSrv_id text null, prntInvcsItemId text null, ord int null, name text not null, price real, price_type_id text null, ovrrdPrice real, notes null, foreign key(invcs_id) references invcs(uuid), foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(prntInvcsItemId) references invcs_items(prntInvcsItemId), foreign key(price_type_id) references type(uuid));
 */
   if(items && Array.isArray(items)){
+  let types=selectType('invntSrv');
+  let typesIdHsh=sepTypesIdHsh(types);
+  let prntUUID=null;
+
   query=`delete from invcs_items where invcs_id=$invcs_id`;
   qObj={'$invcs_id':uuid};
     try{
@@ -298,19 +302,24 @@ CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invc
 
     for(let i in items){
     query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, amnt, notes)
-    values($uuid, $type_id, $invcs_id, $invntSrv_id, $prntInvcsItemId $ord, $name, $price, $price_type_id, $ovrrdPrice, $amnt, $notes)`;
+    values($uuid, $type_id, $invcs_id, $invntSrv_id, $prntInvcsItemId, $ord, $name, $price, $price_type_id, $ovrrdPrice, $amnt, $notes)`;
+    let itemUUID=createUUID();
+      if(typesIdHsh.invntSrv[""][items[i].typeId]!="discount"){
+      prntUUID=itemUUID;
+      }
+
       qObj={
-      '$uuid':createUUID(),
+      '$uuid':itemUUID,
       '$type_id':items[i].type_id,
       '$invcs_id':uuid,
       '$invntSrv_id':items[i].hasOwnProperty('invntSrv')?items[i].invntSrv:null,
-      '$prntInvcsItemId':typesIdHsh.invntSrv[""][invcsItems[indx].type_id]!="discount"?null:prntUUID,
+      '$prntInvcsItemId':typesIdHsh.invntSrv[""][items[i].type_id]!="discount"?null:prntUUID,
       '$ord':i,
       '$name':items[i].hasOwnProperty('name')?items[i].name:null,
       '$price':items[i].hasOwnProperty('price')?items[i].price:null,
       '$price_type_id':items[i].hasOwnProperty('price_type_id')?items[i].price_type_id:null,
       '$ovrrdPrice':items[i].hasOwnProperty('ovrrdPrice')?items[i].ovrrdPrice:null,
-      '$amnt':invcsItems[indx].hasOwnProperty('amnt')?invcsItems[indx].amnt:null,
+      '$amnt':items[i].hasOwnProperty('addAmnt')?items[i].addAmnt:null,
       '$notes':items[i].hasOwnProperty('notes')?items[i].notes:null
       };
       try{
