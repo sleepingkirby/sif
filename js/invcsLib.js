@@ -10,11 +10,12 @@ function createInvcs(invcs, invcsItems){
 
 let invcsId=createUUID();
 let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, sub_total, total_dscntd, total, total_paid, forUser_id, byUser_id, event_id, notes) values($uuid, $createDate, $dueDate, $paidDate, $statusId, $subTtl, $totalDscntd, $ttl, $ttlPaid, $forUserId, $byUserId, $eventId, $notes)`;
+
   let qObj={
   $uuid:invcsId,
   $createDate:invcs.hasOwnProperty('create_date')?dtTmDbFrmt(invcs.create_date):dtTmDbFrmt(),
-  $dueDate:invcs.hasOwnProperty('due_date')?dtTmDbFrmt(invcs.due_date):null,
-  $paidDate:invcs.hasOwnProperty('paid_date')?dtTmDbFrmt(invcs.paid_date):null,
+  $dueDate:invcs.hasOwnProperty('due_date')&&invcs.paid_date!=""?dtTmDbFrmt(invcs.due_date):null,
+  $paidDate:invcs.hasOwnProperty('paid_date')&&invcs.paid_date!=""?dtTmDbFrmt(invcs.paid_date):null,
   $statusId:invcs.hasOwnProperty('status_id')?invcs.status_id:null,
   $subTtl:invcs.hasOwnProperty('sub_total')?invcs.sub_total:invcs.total,
   $totalDscntd:invcs.hasOwnProperty('total_dscntd')?invcs.total_dscntd:null,
@@ -25,6 +26,7 @@ let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, 
   $eventId:invcs.hasOwnProperty('event_id')?invcs.event_id:null,
   $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
   };
+console.log(qObj);
   try{
   sqlObj.runQuery(query, qObj);
   }
@@ -39,6 +41,7 @@ let types=selectType('invntSrv');
 let typesIdHsh=sepTypesIdHsh(types);
 
 let prntUUID=null;
+console.log(invcsItems);
   for(let indx in invcsItems){
   itemUUID=createUUID();
   query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, amnt, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $amnt, $notes)`;
@@ -54,10 +57,10 @@ let prntUUID=null;
     $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].type_id]!="discount"?null:prntUUID,
     $ord:indx,
     $name:invcsItems[indx].hasOwnProperty('name')?invcsItems[indx].name:'',
-    $price:invcsItems[indx].hasOwnProperty('price')?invcsItems[indx].price:0,
+    $price:invcsItems[indx].hasOwnProperty('sell')?invcsItems[indx].sell:0,
     $priceTypeId:invcsItems[indx].hasOwnProperty('price_type_id')?invcsItems[indx].price_type_id:null,
     $ovrrdPrice:invcsItems[indx].hasOwnProperty('ovrrdPrice')?invcsItems[indx].ovrrdPrice:null,
-    $amnt:invcsItems[indx].hasOwnProperty('amnt')?invcsItems[indx].amnt:null,
+    $amnt:invcsItems[indx].hasOwnProperty('addAmnt')?invcsItems[indx].addAmnt:null,
     $notes:invcsItems[indx].hasOwnProperty('notes')?invcsItems[indx].notes:''
     }
     try{
@@ -77,7 +80,6 @@ pre: runQuery()
 post: none
 gets invoices
 -----------------------------------------------*/
-//function getInvntSrvArr(paramObj, ord, desc=false, limit=null, offset=null){
 function getInvcs(paramObj, ord, desc=false, limit=null, offset=null){
 let query=`
 select
@@ -177,6 +179,52 @@ let csStr='';
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
+
+/*-----------------------------------------------
+pre: runQuery()
+post: none
+gets invoices items
+-----------------------------------------------*/
+function getInvcItems(uuid){
+/*CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invcs_id text not null, invntSrv_id text null, prntInvcsItemId text null, ord int null, name text not null, price real, price_type_id text null, ovrrdPrice real, notes null, foreign key(invcs_id) references invcs(uuid), foreign key(invntSrv_id) references invntSrv(uuid), foreign key(type_id) references type(uuid), foreign key(prntInvcsItemId) references invcs_items(prntInvcsItemId), foreign key(price_type_id) references type(uuid));
+*/
+let query=`
+select
+invcs_items.uuid as uuid,
+invcs_items.type_id as type_id,
+type.name as type_name,
+invcs_items.invcs_id as invcs_id,
+invcs_items.invntSrv_id as invntSrv_id,
+invcs_items.prntInvcsItemId as prntInvcsItemId,
+invcs_items.ord as ord,
+invcs_items.name as name,
+invcs_items.price as price,
+invcs_items.price as sell,
+invcs_items.price_type_id as price_type_id,
+priceType.name as price_type_name,
+invcs_items.ovrrdPrice as ovrrdPrice,
+invcs_items.amnt as addAmnt,
+invcs_items.notes as notes
+from invcs_items
+left join type on invcs_items.type_id=type.uuid
+left join type as priceType on invcs_items.price_type_id=priceType.uuid
+where invcs_id=$invcs_id
+`;
+
+let obj={'$invcs_id':uuid};
+
+  try{
+  tmp=sqlObj.runQuery(query,obj);
+  return tmp;
+  }
+  catch(e){
+  console.log('Unable to get entry to "invcs_items" table. query: '+query+', binds: '+JSON.stringify(obj));
+  console.log(e);
+  return null;
+  }
+}
+
+
 
 /*-----------------------------------------------
 pre: runQuery(), selectType()

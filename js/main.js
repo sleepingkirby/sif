@@ -290,12 +290,22 @@ class sif{
   }
 
   /*-------------------------------------------------------
+  pre: lftMod element exists, modPrcClsCall()
+  post: lfttMod modal opened or closed
+  open/close left modal
+  -------------------------------------------------------*/
+  modLftOpenClose(){
+  let el=document.getElementById('lftMod').getElementsByClassName('close')[0];
+  this.modPrcClsCall(el);
+  }
+
+  /*-------------------------------------------------------
   pre: rghtMod element exists, modPrcClsCall()
   post: rghtMod modal opened or closed
   open/close right modal
   -------------------------------------------------------*/
-  modLftOpenClose(){
-  let el=document.getElementById('lftMod').getElementsByClassName('close')[0];
+  modRghtOpenClose(){
+  let el=document.getElementById('rghtMod').getElementsByClassName('close')[0];
   this.modPrcClsCall(el);
   }
 

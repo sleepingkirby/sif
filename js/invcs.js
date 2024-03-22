@@ -108,7 +108,7 @@ manage inventory and services
             <select name="invcsNewItem" title="New Invoice Item">
               <option>new item</option>
             </select>
-            <div class="midBtn" title="Add New Invoice Item" style="margin-left: 12px;" onclick=invcsObj.addInvcsNewItemsListRedrw()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+            <div class="midBtn" title="Add New Invoice Item" style="margin-left: 12px; width:30px;" onclick=invcsObj.addInvcsNewItemsListRedrw()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
           </div>
           <div id="invcsNewItems">
           table
@@ -223,7 +223,7 @@ manage inventory and services
       if(propNm=='price_type_id'){
       this.invcsNewItemsList[indx]["price_type_name"]=this.typesIdHsh['invntSrv']["price_type"][ths.value];
       }
-      if(propNm=='type_uuid'){
+      if(propNm=='type_id'){
       this.invcsNewItemsList[indx]["type"]=this.typesIdHsh['invntSrv'][""][ths.value];
       }
     }
@@ -310,6 +310,8 @@ manage inventory and services
     this.invcsNewItemsList.push({'addAmnt':1, ...this.invntSrvItems[els[0].value]});
     this.newInvcsTblTtlRedrw();
 
+    console.log(this.invcsNewItemsList);
+
       if(this.invcsNewItemsList.length>0){
       let mode=this.invcsNewApptId?'update':'create';
       this.flipNewInvcsBtn(mode, false);
@@ -364,22 +366,24 @@ manage inventory and services
     let prcSlct=null;
     let subTtl=null;
     let lastSubTtl=null;
+    let sellRaw=null;
     let sell=null;
     let ttl=0;
 
       for(let i in this.invcsNewItemsList){
       let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
-      prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_uuid);
+      prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_id);
       prcSlct=genSlctHshIndx(prcTypeHsh, this.invcsNewItemsList[i].price_type_id);
+      sellRaw=this.invcsNewItemsList[i].hasOwnProperty('sell')?this.invcsNewItemsList[i].sell:this.invcsNewItemsList[i].price;
         switch(this.invcsNewItemsList[i].price_type_name){
           case 'percentage':
             if(lastSubTtl!==null){
               if(this.invcsNewItemsList[i].type=='discount'){
-              subTtl=Number(lastSubTtl * (1 - Number(this.invcsNewItemsList[i].sell) / 100));
+              subTtl=Number(lastSubTtl * (1 - (Number(sellRaw) / 100)));
               }
               else if(this.invcsNewItemsList[i].type=='service'){
               //subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
-              subTtl=Number(lastSubTtl * Number(this.invcsNewItemsList[i].sell) / 100);
+              subTtl=Number(lastSubTtl * Number(sellRaw) / 100);
               //a service with a percentage price type is its own item in invoice. Hence add lastSubTtl to ttl so this one can be counted as own item.
               ttl+=Number(lastSubTtl);
               }
@@ -394,15 +398,15 @@ manage inventory and services
           //static
             if(this.invcsNewItemsList[i].type=='discount'&&lastSubTtl!==null){
             //discount with a static price. ex. 5 dollar coupon
-            subTtl=Number(lastSubTtl) - (Number(this.invcsNewItemsList[i].sell) * Number(addAmnt));
+            subTtl=Number(lastSubTtl) - (Number(sellRaw) * Number(addAmnt));
             lastSubTtl=Number(subTtl);
             }
             else{
-              if(this.invcsNewItemsList[i].hasOwnProperty('subTtl')){
-              subTtl=Number(this.invcsNewItemsList[i].subTtl);
+              if(this.invcsNewItemsList[i].hasOwnProperty('ovrrdPrice')){
+              subTtl=Number(this.invcsNewItemsList[i].ovrrdPrice);
               }
               else{
-              subTtl=(Number(this.invcsNewItemsList[i].sell) * Number(addAmnt)).toFixed(2);
+              subTtl=(Number(sellRaw) * Number(addAmnt)).toFixed(2);
               }
 
               //======== need to figure out how to calculate total
@@ -455,7 +459,7 @@ manage inventory and services
         prcHtml=`
                <div class="inptNumNumRszWrap minInptNumWarp">
                  `+dlrSgn+`
-                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${this.invcsNewItemsList[i].sell}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"sell",this) />
+                 <input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${sell}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"sell",this) />
                  `+prcntSgn+`
                </div>
         `;
@@ -466,7 +470,7 @@ manage inventory and services
         `;
         subTtlHtml=`
                <div class="invcsNewItemsSubTtl inptNumNumRszWrap minInptNumWarp">
-                 $<input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"subTtl",this) />
+                 $<input class="inptNumRsz minInptNum" type="number" name="invcsNewItems[0][prc]" step=".2" value="${subTtl}" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"ovrrdPrice",this) />
                </div>
         `;
         }
@@ -486,7 +490,7 @@ manage inventory and services
              <textarea class="smallTAInpt" name="invcsNewItems[0][name]" type="text" placeholder="Name">${this.invcsNewItemsList[i].name}</textarea>
            </td>
            <td>
-             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"type_uuid",this) >
+             <select class="invcsNewItemsSlct" name="invcsNewItems[0][type]" onchange=invcsObj.updtInvcsNewItemsTblRdrw(${i},"type_id",this) >
              `+prdSlct+`
              </select>
            </td>
@@ -587,10 +591,9 @@ manage inventory and services
     let invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
-      invcs[nm]=el.value;
+      el.value=this.invcsListHsh[uuid][nm];
       }
-    console.log(invcs);
-    console.log(this.invcsNewItemsList);
+    this.newInvcsTblTtlRedrw();
 
 
     }
@@ -605,9 +608,8 @@ manage inventory and services
       }
     //fill right mod
     this.fillRghtMod(uuid);
-    //open right modal
-    //let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-    //mainObj.modPrcClsCall(el);
+
+    mainObj.modRghtOpenClose();
     }
 
     /*-----------------------------------------------
@@ -625,8 +627,7 @@ manage inventory and services
       }
       if(createInvcs(invcs, this.invcsNewItemsList)){
       this.drawTbl();
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       }
       else{
       mainObj.setFloatMsg('Error in creating new invoice.');

@@ -29,7 +29,7 @@ manage inventory and services
               <label class="inptLbl" for="invntSrvNewType" title="Product, service or discount">
               Type:
               </label>
-              <select id="invntSrvNewType" name="invntSrv[type_uuid]" title="Is this an item, service or discount?">
+              <select id="invntSrvNewType" name="invntSrv[type_id]" title="Is this an item, service or discount?">
                 <option>type</option>
               </select>
             </div>
@@ -424,7 +424,7 @@ manage inventory and services
         for(let fld of formInpt){
         let nm=getSubs(fld.name,'invntSrv');
         fld.value=curIs[nm];
-          if(nm=='type_uuid'){
+          if(nm=='type_id'){
             if(fld.options[fld.selectedIndex].text=='service'){
             this.typeDurtnHide(false);
             }
@@ -532,7 +532,7 @@ manage inventory and services
       for(let fld of formInpt){
       obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
       }
-    createInvntSrv(obj.name, obj.type_uuid, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", this.invntSrvLnkList);
+    createInvntSrv(obj.name, obj.type_id, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", this.invntSrvLnkList);
     let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
     mainObj.modPrcClsCall(el);
     mainObj.setFloatMsg("Inventory/Service Created");
@@ -588,7 +588,7 @@ manage inventory and services
       pObj['status']=this.rghtMdlTblStatusStr;
       }
       if(this.rghtMdlTblTypeStr){
-      pObj['type_uuid']=this.rghtMdlTblTypeStr;
+      pObj['type_id']=this.rghtMdlTblTypeStr;
       }
     this.invntSrvLnkList=getInvntSrvLnkArr(pObj, this.rghtMdlTblCol, this.rghtMdlTblColDir);
     this.hshInvntSrvLnkList();
@@ -1009,7 +1009,7 @@ manage inventory and services
         pObj['status']=this.rghtMdlTblStatusStr;
         }
         if(this.rghtMdlTblTypeStr){
-        pObj['type_uuid']=this.rghtMdlTblTypeStr;
+        pObj['type_id']=this.rghtMdlTblTypeStr;
         }
 
       let invntSrvLnkList=this.fltrInvntSrvsMdl(this.invntSrvLnkList,pObj,this.rghtMdlTblCol,this.rghtMdlTblColDir);
@@ -1050,7 +1050,7 @@ manage inventory and services
       pObj['status']=this.rghtMdlTblStatusStr;
       }
       if(this.rghtMdlTblTypeStr){
-      pObj['type_uuid']=this.rghtMdlTblTypeStr;
+      pObj['type_id']=this.rghtMdlTblTypeStr;
       }
 
 
@@ -1111,7 +1111,7 @@ manage inventory and services
       }
 
       if(this.typeStr){
-      pObj['type_uuid']=this.typeStr;
+      pObj['type_id']=this.typeStr;
       }
 
     this.invntSrvList=getInvntSrvArr(pObj,this.sortCol,this.sortColDir);

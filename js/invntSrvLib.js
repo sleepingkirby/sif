@@ -12,8 +12,8 @@ create new inventory/service
 function createInvntSrv(name, typeId, statusId, durtn, sku, amnt, buy, sell, priceTypeId, notes, isLnkArr){
 let evnt_uuid=createUUID();
 
-let query='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), $status_id, $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)' ;
-let queryDfltStts='insert into invntSrv(uuid, name, type_uuid, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), (select uuid from status where name="active"), $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)';
+let query='insert into invntSrv(uuid, name, type_id, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), $status_id, $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)' ;
+let queryDfltStts='insert into invntSrv(uuid, name, type_id, create_date, mod_date, status, srv_durtn, sku, amnt, buy, sell, price_type_id, notes) values($uuid, $name, $type_id, datetime("now"), datetime("now"), (select uuid from status where name="active"), $durtn, $sku, $amnt, $buy, $sell, $price_type_id, $notes)';
 let uuid=createUUID();
 let obj={$uuid:uuid, $name:name, $type_id:typeId, $status_id:statusId, $durtn:durtn, $sku:sku, $amnt:amnt, $buy:buy, $sell:sell, $price_type_id:priceTypeId, $notes:notes};
 sqlObj.runQuery(statusId==null?queryDfltStts:query,obj);
@@ -42,7 +42,6 @@ function updateInvntSrv(uuid, hsh, lnkArr){
   if(!uuid){
   return null;
   }
-//CREATE TABLE invntSrv(uuid text primary key, name text not null, type_uuid text null, create_date int not null, mod_date int not null, status text not null, srv_durtn int null, sku text, amnt int, buy real, sell real, price_type_id text not null, notes text, foreign key(status) references status(uuid), foreign key(type_uuid) references type(uuid), foreign key(price_type_id) references type(uuid));
 let query='update invntSrv set mod_date=datetime("now")';
 let obj={};
   if(hsh.hasOwnProperty('name')&&hsh.name){
@@ -132,7 +131,7 @@ let q=`
 select
 invntSrv.uuid,
 invntSrv.name,
-invntSrv.type_uuid as type_uuid,
+invntSrv.type_id as type_id,
 invntSrvTyp.name as type,
 invntSrv.create_date,
 invntSrv.mod_date,
@@ -152,7 +151,7 @@ invntSrv.price_type_id,
 prcTyp.name as price_type_name,
 invntSrv.notes
 from invntSrv
-left join type as invntSrvTyp on invntSrv.type_uuid=invntSrvTyp.uuid
+left join type as invntSrvTyp on invntSrv.type_id=invntSrvTyp.uuid
 left join status on invntSrv.status=status.uuid
 left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
@@ -202,7 +201,7 @@ let query=`
 select
 invntSrv.uuid as uuid,
 invntSrv.name as name,
-invntSrv.type_uuid as type_uuid,
+invntSrv.type_id as type_id,
 invntSrvTyp.name as type,
 invntSrv.create_date as create_date,
 invntSrv.mod_date as mod_date,
@@ -221,7 +220,7 @@ invntSrv.price_type_id as price_type_id,
 prcTyp.name as price_type_name,
 invntSrv.notes as notes
 from invntSrv
-left join type as invntSrvTyp on invntSrv.type_uuid=invntSrvTyp.uuid
+left join type as invntSrvTyp on invntSrv.type_id=invntSrvTyp.uuid
 left join status on invntSrv.status=status.uuid
 left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
@@ -314,7 +313,7 @@ select
 isl.uuid as uuid,
 invSrv.uuid as invntSrvuuid,
 invSrv.name as name,
-invSrv.type_uuid as type_uuid,
+invSrv.type_id as type_id,
 invntSrvTyp.name as type,
 invSrv.create_date as create_date,
 invSrv.mod_date as mod_date,
@@ -335,7 +334,7 @@ prcTyp.name as price_type_name,
 invSrv.notes as notes
 from invntSrvLnk as isl
 left join invntSrv as invSrv on isl.invntSrvLnkItm=invSrv.uuid
-left join type as invntSrvTyp on invSrv.type_uuid=invntSrvTyp.uuid
+left join type as invntSrvTyp on invSrv.type_id=invntSrvTyp.uuid
 left join status on invSrv.status=status.uuid
 left join invntSrv_users on invSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
