@@ -592,6 +592,8 @@ manage inventory and services
     let idEl=document.getElementById('invcsNewFormInfoUUID').value=uuid;
 
     let invcs={};
+    console.log(els);
+    console.log(this.invcsListHsh[uuid]);
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
       el.value=this.invcsListHsh[uuid][nm];
@@ -647,6 +649,9 @@ manage inventory and services
     let invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
+      console.log(nm);
+      console.log(el);
+      console.log(el.value);
       invcs[nm]=el.value;
       }
     console.log(invcs);

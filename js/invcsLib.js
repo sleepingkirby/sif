@@ -93,11 +93,11 @@ invcs.sub_total as sub_total,
 invcs.total_dscntd as total_dscntd,
 invcs.total as total,
 invcs.total_paid as total_paid,
-invcs.forUser_id as forUserId,
+invcs.forUser_id as forUser_id,
 users.email as forUser_email,
 forUser.fName as forUser_fName,
 forUser.surName as forUser_surName,
-invcs.byUser_id as byUserId,
+invcs.byUser_id as byUser_id,
 invcs.event_id as event_id,
 event.on_date as event_on_date
 from invcs
