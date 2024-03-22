@@ -314,8 +314,6 @@ manage inventory and services
     this.invcsNewItemsList.push({'addAmnt':1, ...this.invntSrvItems[els[0].value]});
     this.newInvcsTblTtlRedrw();
 
-    console.log(this.invcsNewItemsList);
-
       if(this.invcsNewItemsList.length>0){
       let mode=this.invcsNewApptId?'update':'create';
       this.flipNewInvcsBtn(mode, false);
@@ -381,11 +379,9 @@ manage inventory and services
       sellRaw=this.invcsNewItemsList[i].hasOwnProperty('sell')?this.invcsNewItemsList[i].sell:this.invcsNewItemsList[i].price;
         switch(this.invcsNewItemsList[i].price_type_name){
           case 'percentage':
-          console.log(lastSubTtl);
             if(lastSubTtl!==null){
               if(this.invcsNewItemsList[i].type=='discount'){
               subTtl=Number(lastSubTtl * (1 - (Number(sellRaw) / 100)));
-              console.log(subTtl);
               }
               else if(this.invcsNewItemsList[i].type=='service'){
               //subTtl=Number(lastSubTtl * (Number(this.invcsNewItemsList[i].sell) / 100).toFixed(2)).toFixed(2);
@@ -590,18 +586,17 @@ manage inventory and services
       return null;
       }
 
-    console.log(this.invcsListHsh[uuid]);
     this.invcsNewItemsList=getInvcItems(uuid);
     let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
-    
+
+    let idEl=document.getElementById('invcsNewFormInfoUUID').value=uuid;
+
     let invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
       el.value=this.invcsListHsh[uuid][nm];
       }
     this.newInvcsTblTtlRedrw();
-
-
     }
 
     /*-----------------------------------------------
@@ -612,9 +607,11 @@ manage inventory and services
       if(!uuid||!this.invcsListHsh.hasOwnProperty(uuid)){
       return null;
       }
+    this.invcsNewApptId=uuid;
     //fill right mod
     this.fillRghtMod(uuid);
-
+    this.flipNewInvcsBtn('update', false);
+    this.flipCrtUpdtBtn('update');
     mainObj.modRghtOpenClose();
     }
 
@@ -709,6 +706,30 @@ manage inventory and services
       mainObj.setFloatMsg(`updating invoice failed. `);
       }
     }
+
+    /*----------------------------------
+    pre: 
+    post:
+    ----------------------------------*/
+    flipCrtUpdtBtn(mode=null){
+    let crt=document.getElementById('invcsNewFormAddBtn');
+    let updt=document.getElementById('invcsNewFormUpdtBtn');
+      if(!mode){
+      crt.style.display!=''?crt.style.removeProperty('display'):crt.style.display='none';
+      updt.style.display!=''?updt.style.removeProperty('display'):updt.style.display='none';
+      }
+
+      if(mode='create'){
+      crt.style.removeProperty('display');
+      updt.style.display='none';
+      }
+
+      if(mode='update'){
+      crt.style.display='none';
+      updt.style.removeProperty('display');
+      }
+    }
+
 
     /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modPrcClsCall()
