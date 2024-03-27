@@ -13,9 +13,11 @@ manage inventory and services
     //this.invcsNewItemsList=null;
     this.invcsNewItemsList=[];
     this.statuses=null;
+    this.statusStr=null;
     this.types=null;
     this.typesHsh=null;
     this.typesIdHsh=null;
+    this.fltrStr=null;
     this.users=null;
     this.customers=null;
     this.invntSrvItems=null;
@@ -41,14 +43,6 @@ manage inventory and services
           <option>all</option>
           </select>
         </div>
-        <div class="">
-          <div class="fltrRowCellLbl">
-          Type Filter:
-          </div>
-          <select id="invcFilterType" name="invcFilter[type]" class="fltrSlct" title="Type Filter">
-          <option>all</option>
-          </select>
-        </div>
       </div>
       <div id="invcMain" class="moduleTblMain">
       </div>
@@ -68,7 +62,7 @@ manage inventory and services
                 <option>status</option>
               </select>
             </div>
-            <div class="flexRight">create: <span name="invcs[create_date]" style="margin-left:6px;">1234-01-23</span></div>
+            <div class="flexRight">create: <span name="invcs[create_date]" style="margin-left:6px;">0000-00-00</span></div>
           </div>
           <div class="flexRight" style="align-items:center;">
             <div class="lbl" style="margin-right:6px; margin-bottom:0px;">due:</div>
@@ -168,7 +162,6 @@ manage inventory and services
     </table>
     `;
 
-    //CREATE TABLE invcs(uuid text not null primary key, create_date int not null, due_date int null, paid_date int null, status_id text not null, sub_total real not null, total_dscntd real null, total real not null, total_paid real null, forUser_id text not null, byUser_id text not null, event_id text null, foreign key(forUser_id) references users(uuid), foreign key(byUser_id) references users(uuid), foreign key(event_id) references events(uuid), foreign key(status_id) references type(uuid));
     this.tmpl.invcsTblHdArr=[
     {'name':'create_date','title':'created date', 'sort':true},
     {'name':'due_date','title':'due date', 'sort':true},
@@ -181,6 +174,8 @@ manage inventory and services
     {'name':'total_paid','title':'amnt paid', 'sort':true},
     {'name':'actions','title':'actions', 'sort':false}
     ];
+
+    this.fltrProps=['forUser_email','forUser_fName', 'forUser_surName'];
 
     this.mainTblId='invcMain';
     }
@@ -202,12 +197,32 @@ manage inventory and services
     getInvcsList(){
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
-    this.invcsList=getInvcs({},this.invcsSrtCol,this.invcsSrtDir);
+    console.log(this.statusStr);
+    console.log(this.statuses);
+
+    let pObj={};
+      if(this.statusStr){
+      pObj['status']=this.statusStr;
+      }
+
+    this.invcsList=getInvcs(pObj,this.invcsSrtCol,this.invcsSrtDir);
     this.invcsListHsh={};
       for(let invcs of this.invcsList){
       this.invcsListHsh[invcs.uuid]=invcs;
       }
     return this.invcsList;
+    }
+
+    /*----------------------------------
+    pre: invntSrvFilterStatus element
+    post: event hook added
+    addes event hook to invntSrvFilterStatus element
+    ----------------------------------*/
+    hookFltrStts(){
+      document.getElementById("invcFilterStatus").onchange=(e)=>{
+      this.statusStr=e.target.value!='null'?e.target.value:null;
+      this.drawTbl();
+      }
     }
 
     /*-----------------------------------------------
@@ -565,7 +580,6 @@ manage inventory and services
     document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     }
 
-
     /*-----------------------------------------------
     pre: none
     post: none
@@ -573,6 +587,18 @@ manage inventory and services
     -----------------------------------------------*/
     genSttsSlct(){
     let html=genSttsSlct(this.statuses);
+    return html;
+    }
+
+    /*-----------------------------------------------
+    pre: none
+    post: none
+    generate status dropdown
+    -----------------------------------------------*/
+    genFltrSttsSlct(){
+    let tmpStts=[...this.statuses];
+    tmpStts.unshift({'uuid':'null','name':'all'});
+    let html=genSttsSlct(tmpStts);
     return html;
     }
 
@@ -593,10 +619,17 @@ manage inventory and services
 
     let invcs={};
     console.log(els);
-    console.log(this.invcsListHsh[uuid]);
       for(let el of els){
-      let nm=getSubs(el.name,'invcs');
-      el.value=this.invcsListHsh[uuid][nm];
+      let nm=getSubs(el.getAttribute('name'),'invcs');
+        if(el.tagName=="SPAN"){
+        console.log(el);
+        console.log(nm);
+        console.log(this.invcsListHsh[uuid][nm]);
+        el.innerText=this.invcsListHsh[uuid][nm];
+        }
+        else{
+        el.value=this.invcsListHsh[uuid][nm];
+        }
       }
     this.newInvcsTblTtlRedrw();
     }
@@ -649,13 +682,19 @@ manage inventory and services
     let invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
-      console.log(nm);
-      console.log(el);
-      console.log(el.value);
       invcs[nm]=el.value;
       }
-    console.log(invcs);
-    console.log(this.invcsNewItemsList);
+   
+      //formats the dates 
+      if(invcs.hasOwnProperty('paid_date')){
+      invcs.paid_date=dtTmDbFrmt(invcs.paid_date);
+      }
+
+      //formats teh dates
+      if(invcs.hasOwnProperty('due_date')){
+      invcs.due_date=dtTmDbFrmt(invcs.due_date);
+      }
+
       if(updtInvcs(this.invcsNewApptId, invcs, this.invcsNewItemsList)){
       this.drawTbl();
       mainObj.modRghtOpenClose();
@@ -671,7 +710,6 @@ manage inventory and services
     drawn right modal
     -----------------------------------------------*/
     genRghtMod(){
-    console.log("genRghtMod");
     document.getElementById('rghtMod').getElementsByClassName("content")[0].innerHTML=this.tmpl.rghtMod;
     document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
 
@@ -707,7 +745,7 @@ manage inventory and services
       for(let invcs of this.invcsList){
         for(let prop of this.fltrProps){
           if(invcs[prop]&&invcs[prop].toString().toLocaleLowerCase().search(this.fltrStr.toLocaleLowerCase())>=0){
-          invcs.push({...invcs});
+          invcsArr.push({...invcs});
           break;
           }
         }
@@ -770,6 +808,21 @@ manage inventory and services
       };
     }
 
+
+    /*----------------------------------
+    pre: invntSrvFltrInptWrap element
+    post: event hook added
+    addes event hook to invntSrvFltrInptWrap element
+    ----------------------------------*/
+    hookFltrInpt(){
+      //why the wrapper and not the input itself? Keyup/down/press is fired BEFORE the input value is set by the key press. The event bubbles up AFTER the input value is pressed
+      document.getElementById("invcFltrInpt").onkeyup=(e)=>{
+      this.fltrStr=e.target.value;
+      this.drawTbl();
+      };
+    }
+
+
     /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
@@ -777,6 +830,8 @@ manage inventory and services
     ----------------------------------*/
     hookEl(){
     this.hookNewInvntBtn();
+    this.hookFltrStts();
+    this.hookFltrInpt();
     }
 
 
@@ -842,6 +897,11 @@ manage inventory and services
     -----------------------------------------------*/
     run(){
     this.statuses=selectStatus();
+    let actveStts=this.statuses.find((e)=>{return e.name=="active"});
+      //set the initial this.statusStr
+      if(actveStts){
+      this.statusStr=actveStts.uuid;
+      }
     this.types=selectType('invntSrv');
     this.typesHsh=sepTypesHsh(this.types);
     this.typesIdHsh=sepTypesIdHsh(this.types);
@@ -850,7 +910,8 @@ manage inventory and services
     this.genRghtMod();
     //document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     this.drawTbl();
-    this.hookNewInvntBtn()
+    document.getElementById('invcFilterStatus').innerHTML=this.genFltrSttsSlct();
+    this.hookEl();
     }
   }
 

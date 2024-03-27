@@ -87,7 +87,7 @@ invcs.uuid as uuid,
 invcs.create_date as create_date,
 invcs.due_date as due_date,
 invcs.paid_date as paid_date,
-invcs.status_id as status_id,
+invcs.status_id as status,
 status.name as status_name,
 invcs.sub_total as sub_total,
 invcs.total_dscntd as total_dscntd,
@@ -175,6 +175,9 @@ let csStr='';
   query+=' offset $offset';
   obj['$offset']=offset;
   }
+
+console.log(query);
+console.log(obj);
 
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
