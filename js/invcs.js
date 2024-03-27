@@ -190,11 +190,22 @@ manage inventory and services
     }
 
     /*-----------------------------------------------
+    pre: none
+    post: none 
+    -----------------------------------------------*/
+    repopInvcsListHsh(){
+    this.invcsListHsh={};
+      for(let invcs of this.invcsList){
+      this.invcsListHsh[invcs.uuid]=invcs;
+      }
+    }
+
+    /*-----------------------------------------------
     pre: this.invcsList
     post: none
     returns invoices with sorting
     -----------------------------------------------*/
-    getInvcsList(){
+    getInvcsList(rehsh=true){
     this.invcsSrtCol='create_date';
     this.invcsSrtDir='desc';
     console.log(this.statusStr);
@@ -206,9 +217,8 @@ manage inventory and services
       }
 
     this.invcsList=getInvcs(pObj,this.invcsSrtCol,this.invcsSrtDir);
-    this.invcsListHsh={};
-      for(let invcs of this.invcsList){
-      this.invcsListHsh[invcs.uuid]=invcs;
+      if(rehsh){
+      this.repopInvcsListHsh();
       }
     return this.invcsList;
     }
@@ -797,6 +807,35 @@ manage inventory and services
 
 
     /*----------------------------------
+    pre:this.setColSrt()
+    post:none
+    function to set to hook for table header sort
+    ----------------------------------*/
+    setColSrtHookFunc(e){
+    let nm=e.getAttribute("name");
+      if(nm){
+      this.setColSrt(nm);
+      }
+    this.drawTbl();
+    }
+
+    /*----------------------------------
+    pre:this.sortCol,this.sortColDir
+    post:figure out sorting and sets variables
+    function to set proper variables
+    ----------------------------------*/
+    setColSrt(srt){
+      if(this.sortCol!=srt){
+      this.sortCol=srt;
+      this.sortColDir="asc";
+      return null;
+      }
+
+      this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
+    }
+
+
+    /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modPrcClsCall()
     post: event hook added
     addes event hook to apptAddBtn element
@@ -849,8 +888,10 @@ manage inventory and services
       hdrs+=this.tmpl.invcsTblHdCll[0]+sortTblHdrTmplng(this.tmpl.invcsTblHdCllIcn,hdr,this.sortCol==hdr.name?this.sortColDir:null)+this.tmpl.invcsTblHdCll[1];
       }
 
-    this.getInvcsList();
+    this.getInvcsList(false);
     let invcsArr=this.fltrInvcs();
+    this.repopInvcsListHsh();
+
 
     let cntnt='';
       for(let invcs of invcsArr){
