@@ -91,7 +91,6 @@ sqlObj.runQuery(query,obj);
 
 query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm, amnt) values($uuid, $prnt, $itm, $amnt)';
 obj={};
-console.log(lnkArr);
   for(let lnk of lnkArr){
   obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk.invntSrvuuid,$amnt:lnk.addAmnt};
   sqlObj.runQuery(query,obj);

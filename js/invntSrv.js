@@ -552,7 +552,6 @@ manage inventory and services
       }
 
     let uuid=document.getElementById(this.newInvntSrvFormUUID);
-    console.log(this.invntSrvLnkList);
     updateInvntSrv(uuid.value, obj, this.invntSrvLnkList);
     let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
     mainObj.modPrcClsCall(el);
