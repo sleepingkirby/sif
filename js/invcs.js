@@ -72,7 +72,7 @@ manage inventory and services
         <div class="row" style="justify-content: flex-end;">
           <div style="align-items:center;">
             <div class="lbl" style="margin-right:6px; margin-bottom:0px;">paid:</div>
-            <input type="datetime-local" name="invcs[paid_date]" title="Paid Date" value=""/>
+            <input type="datetime-local" name="invcs[paid_date]" title="Paid Date" value="${toInptValFrmt()}"/>
           </div>
         </div>
         <div class="row">
@@ -647,7 +647,6 @@ manage inventory and services
       for(let el of els){
       let nm=getSubs(el.getAttribute('name'),'invcs');
         if(el.tagName=="SPAN"){
-        console.log(el);
         el.innerText=dtTmDbFrmt();
         }
         else if(el.tagName=="SELECT"){
