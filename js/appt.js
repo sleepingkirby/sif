@@ -672,6 +672,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let rtrn='';
     let cntnt='';
     let appts=this.fltrAppts();
+    console.log(appts);
       for(const appt of appts){
       let doneDate=appt.done_date||'';
       cntnt+=`
@@ -762,6 +763,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: none
     -----------------------------------------------*/
     genInvntSrvListEls(){
+    console.log(this.invntSrvAddedArr);
+    console.log(this.invntSrvList);
       let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'apptObj')};
       document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
       document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
@@ -827,6 +830,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.users=getUsers();
     
     this.invntSrvList=getInvntSrv();
+    console.log(this.invntSrvList);
     const {customer:customers, '':users}=spltUsr(this.users);
     this.usrHsh=arrOfHshToHshHsh('uuid',users);
     this.customers=[...customers];

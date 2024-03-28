@@ -692,6 +692,7 @@ manage inventory and services
       if(createInvcs(invcs, this.invcsNewItemsList)){
       this.drawTbl();
       mainObj.modRghtOpenClose();
+      mainObj.setFloatMsg('Invoice Created');
       }
       else{
       mainObj.setFloatMsg('Error in creating new invoice.');
@@ -724,6 +725,7 @@ manage inventory and services
       if(updtInvcs(this.invcsNewApptId, invcs, this.invcsNewItemsList)){
       this.drawTbl();
       mainObj.modRghtOpenClose();
+      mainObj.setFloatMsg('Invoice Updated');
       }
       else{
       mainObj.setFloatMsg('Error in update invoice.');

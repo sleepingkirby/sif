@@ -48,13 +48,18 @@ let total=0;
 let rtrn={'html':'','total':0};
   if(invntSrvList&&invntSrvAddedArr){
     for(const uuid of invntSrvAddedArr){
-    html+=`
-    <div class="multiBoxListItem">
-      <div class="multiBoxListItemName">${invntSrvList[uuid].name}</div>
-      <div class="multiBoxListItemDel" onclick='${objNm}.delFromInvntSrvAddedArr("${uuid}");${objNm}.genInvntSrvListEls();'>x</div>
-    </div>
-    `;
-    total+=invntSrvList[uuid]&&Number.isFinite(invntSrvList[uuid].srv_durtn)?invntSrvList[uuid].srv_durtn:0;
+      if(invntSrvList.hasOwnProperty(uuid)){
+      html+=`
+      <div class="multiBoxListItem">
+        <div class="multiBoxListItemName">${invntSrvList[uuid].name}</div>
+        <div class="multiBoxListItemDel" onclick='${objNm}.delFromInvntSrvAddedArr("${uuid}");${objNm}.genInvntSrvListEls();'>x</div>
+      </div>
+      `;
+      total+=invntSrvList[uuid]&&Number.isFinite(invntSrvList[uuid].srv_durtn)?invntSrvList[uuid].srv_durtn:0;
+      }
+      else{
+
+      }
     }
   rtrn['html']=html;
   rtrn['total']=total;
