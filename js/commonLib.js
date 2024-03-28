@@ -250,9 +250,10 @@ function slctToDefault(slct=null){
   for(let opt of slct.options){
     if(opt.hasAttribute('selected')){
     slct.value=opt.value;
-    break;
+    return;
     }
   }
+slct.value=slct.options[0].value;
 }
 
 /*-----------------------------------------------

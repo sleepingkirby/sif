@@ -16,7 +16,7 @@ let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, 
   $createDate:invcs.hasOwnProperty('create_date')?dtTmDbFrmt(invcs.create_date):dtTmDbFrmt(),
   $dueDate:invcs.hasOwnProperty('due_date')&&invcs.paid_date!=""?dtTmDbFrmt(invcs.due_date):null,
   $paidDate:invcs.hasOwnProperty('paid_date')&&invcs.paid_date!=""?dtTmDbFrmt(invcs.paid_date):null,
-  $statusId:invcs.hasOwnProperty('status_id')?invcs.status_id:null,
+  $statusId:invcs.hasOwnProperty('invcs_status_id')?invcs.invcs_status_id:null,
   $subTtl:invcs.hasOwnProperty('sub_total')?invcs.sub_total:invcs.total,
   $totalDscntd:invcs.hasOwnProperty('total_dscntd')?invcs.total_dscntd:null,
   $ttl:invcs.hasOwnProperty('total')?invcs.total:0,
@@ -87,7 +87,7 @@ invcs.uuid as uuid,
 invcs.create_date as create_date,
 invcs.due_date as due_date,
 invcs.paid_date as paid_date,
-invcs.status_id as status,
+invcs.status_id as invcs_status_id,
 status.name as status_name,
 invcs.sub_total as sub_total,
 invcs.total_dscntd as total_dscntd,
@@ -176,9 +176,6 @@ let csStr='';
   obj['$offset']=offset;
   }
 
-console.log(query);
-console.log(obj);
-
 tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
@@ -248,6 +245,7 @@ let allowCol=[
 'due_date',
 'paid_date',
 'status_id',
+'invcs_status_id',
 'status_name',
 'sub_total',
 'total_dscntd',
@@ -264,6 +262,10 @@ let allowCol=[
       if(col==="status_name"){
       query+=cm+" status_id=(select uuid from status where name=$status_name)";
       qObj['$status_name']=obj[col];
+      }
+      else if(col=='invcs_status_id'){
+      query+=cm+" status_id=$invcs_status_id";
+      qObj['$invcs_status_id']=obj[col];
       }
       else{
       query+=cm+" "+col+"=$"+col;

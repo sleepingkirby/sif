@@ -21,8 +21,8 @@ manage inventory and services
     this.users=null;
     this.customers=null;
     this.invntSrvItems=null;
-    this.invcsSrtCol='create_date';
-    this.invcsSrtDir='desc';
+    this.sortCol='create_date';
+    this.sortColDir='desc';
     this.invcsNewApptId=null;
     this.invcsNewFrmId='invcsNewForm';
 
@@ -58,7 +58,7 @@ manage inventory and services
         <div id="invcsNewFormInvcsStts" class="row">
           <div class="flexLeft flexCol">
             <div class="flexRight" style="margin-bottom:6px;">
-              <select id="invcsSelectStatus" name="invcs[status_id]" title="Invoice Status">
+              <select id="invcsSelectStatus" name="invcs[invcs_status_id]" title="Invoice Status">
                 <option>status</option>
               </select>
             </div>
@@ -206,17 +206,14 @@ manage inventory and services
     returns invoices with sorting
     -----------------------------------------------*/
     getInvcsList(rehsh=true){
-    this.invcsSrtCol='create_date';
-    this.invcsSrtDir='desc';
-    console.log(this.statusStr);
-    console.log(this.statuses);
-
     let pObj={};
       if(this.statusStr){
-      pObj['status']=this.statusStr;
+      pObj['invcs_status_id']=this.statusStr;
       }
 
-    this.invcsList=getInvcs(pObj,this.invcsSrtCol,this.invcsSrtDir);
+    
+
+    this.invcsList=getInvcs(pObj,this.sortCol,this.sortColDir);
       if(rehsh){
       this.repopInvcsListHsh();
       }
@@ -628,19 +625,39 @@ manage inventory and services
     let idEl=document.getElementById('invcsNewFormInfoUUID').value=uuid;
 
     let invcs={};
-    console.log(els);
       for(let el of els){
       let nm=getSubs(el.getAttribute('name'),'invcs');
         if(el.tagName=="SPAN"){
-        console.log(el);
-        console.log(nm);
-        console.log(this.invcsListHsh[uuid][nm]);
         el.innerText=this.invcsListHsh[uuid][nm];
         }
         else{
         el.value=this.invcsListHsh[uuid][nm];
         }
       }
+    this.newInvcsTblTtlRedrw();
+    }
+
+    /*-----------------------------------------------
+    pre: getSub(), right modal
+    post: clears the right Modal
+    clears the right modal
+    -----------------------------------------------*/
+    clearRghtMod(){
+    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+      for(let el of els){
+      let nm=getSubs(el.getAttribute('name'),'invcs');
+        if(el.tagName=="SPAN"){
+        console.log(el);
+        el.innerText=dtTmDbFrmt();
+        }
+        else if(el.tagName=="SELECT"){
+        slctToDefault(el);
+        }
+        else{
+        el.value='';
+        }
+      }
+    this.invcsNewItemsList=[];
     this.newInvcsTblTtlRedrw();
     }
 
@@ -695,13 +712,13 @@ manage inventory and services
       invcs[nm]=el.value;
       }
    
-      //formats the dates 
-      if(invcs.hasOwnProperty('paid_date')){
+      //formats the dates
+      if(invcs.hasOwnProperty('paid_date')&&invcs.paid_date){
       invcs.paid_date=dtTmDbFrmt(invcs.paid_date);
       }
 
       //formats teh dates
-      if(invcs.hasOwnProperty('due_date')){
+      if(invcs.hasOwnProperty('due_date')&&invcs.due_date){
       invcs.due_date=dtTmDbFrmt(invcs.due_date);
       }
 
@@ -843,6 +860,7 @@ manage inventory and services
     hookNewInvntBtn(){
       document.getElementById("invcAddBtn").onclick=(e)=>{
       let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
+      this.clearRghtMod();
       mainObj.modPrcClsCall(el);
       };
     }
