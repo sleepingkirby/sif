@@ -57,7 +57,7 @@ manage inventory and services
       <div id="invcsNewFormInfo">
         <div id="invcsNewFormInvcsStts" class="row">
           <div class="flexLeft flexCol">
-            <div class="flexRight" style="margin-bottom:6px;">
+            <div style="margin-bottom:6px;">
               <select id="invcsSelectStatus" name="invcs[invcs_status_id]" title="Invoice Status">
                 <option>status</option>
               </select>
