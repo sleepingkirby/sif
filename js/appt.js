@@ -763,8 +763,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: none
     -----------------------------------------------*/
     genInvntSrvListEls(){
-    console.log(this.invntSrvAddedArr);
-    console.log(this.invntSrvList);
       let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'apptObj')};
       document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
       document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
