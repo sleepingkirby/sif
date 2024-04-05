@@ -143,6 +143,7 @@ c.surName as surName,
 c.mName as mName,
 invntSrv.srv_durtn,
 invntSrv.sku,
+sum(isBff.amount) as rsrv_amnt,
 invntSrv.amnt,
 invntSrv.buy,
 invntSrv.sell,
@@ -157,7 +158,9 @@ left join users on invntSrv_users.users_id=users.uuid
 left join contacts as c on users.uuid=c.user_id
 left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
 left join invntSrvLnk as isLnk on invntSrv.uuid=isLnk.invntSrvLnkItm
+left join invntSrvBuff as isBff on invntSrv.uuid=isBff.invntSrv_uuid
 ${whereUsr}
+group by invntSrv.uuid
 `;
 
   switch(ord){
@@ -212,6 +215,7 @@ c.surName as surName,
 c.mName as mName,
 invntSrv.srv_durtn as srv_durtn,
 invntSrv.sku as sku,
+sum(isBff.amount) as rsrv_amnt,
 invntSrv.amnt as amnt,
 invntSrv.buy as buy,
 invntSrv.sell as sell,
@@ -225,6 +229,7 @@ left join invntSrv_users on invntSrv.uuid=invntSrv_users.invntSrv_uuid
 left join users on invntSrv_users.users_id=users.uuid
 left join contacts as c on users.uuid=c.user_id
 left join type as prcTyp on invntSrv.price_type_id=prcTyp.uuid
+left join invntSrvBuff as isBff on invntSrv.uuid=isBff.invntSrv_uuid
 `;
 
 let and='';
@@ -241,6 +246,8 @@ let obj={};
       }
     }
   }
+
+  query+=' group by invntSrv.uuid';
 
   switch(ord){
   case 'name':
@@ -294,6 +301,7 @@ let obj={};
   obj['$offset']=offset;
   }
 tmp=sqlObj.runQuery(query,obj);
+console.log(tmp);
 return tmp;
 }
 
