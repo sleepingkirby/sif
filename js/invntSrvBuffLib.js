@@ -99,7 +99,7 @@ let obj={};
 let c='';
 let cols=['event_uuid', 'invcs_uuid', 'invntSrv_uuid', 'invntSrvPrnt_uuid', 'amount'];
 
-  while(let col of cols){
+  for(let col of cols){
     if(hsh.hasOwnProperty(col)&&hsh[col]){
     query+=`${c} ${col}=$${col}`;
     obj[`$${col}`]=hsh[col];
@@ -160,5 +160,6 @@ let obj={};
   console.log('Unable to update entry in "invntSrvBuff" table. query: '+q+', binds: '+JSON.stringify(obj));
   console.log(e);
   }
+
 }
 

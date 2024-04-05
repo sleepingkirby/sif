@@ -1,3 +1,4 @@
+
 /*-----------------------------------------------
 pre: runQuery(), selectType()
 post: none
@@ -26,7 +27,7 @@ let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, 
   $eventId:invcs.hasOwnProperty('event_id')?invcs.event_id:null,
   $notes:invcs.hasOwnProperty('notes')?invcs.notes:''
   };
-console.log(qObj);
+
   try{
   sqlObj.runQuery(query, qObj);
   }
@@ -39,6 +40,8 @@ console.log(qObj);
 
 let types=selectType('invntSrv');
 let typesIdHsh=sepTypesIdHsh(types);
+let statuses=selectStatus();
+let actv=statuses.find((s)=>s.name=="active");
 
 let prntUUID=null;
   for(let indx in invcsItems){
@@ -69,6 +72,9 @@ let prntUUID=null;
     console.log('Unable to add entry to "invcs_items" table. query: '+query+', binds: '+JSON.stringify(qObj));
     console.log(e);
     return null;
+    }
+    if(actv){
+    createInvntSrvBuff(null, invcsId, invntSrv_id, null, addAmount); 
     }
   }
 return true;
