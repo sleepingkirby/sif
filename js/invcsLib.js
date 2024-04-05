@@ -41,7 +41,6 @@ let types=selectType('invntSrv');
 let typesIdHsh=sepTypesIdHsh(types);
 
 let prntUUID=null;
-console.log(invcsItems);
   for(let indx in invcsItems){
   itemUUID=createUUID();
   query=`insert into invcs_items(uuid, type_id, invcs_id, invntSrv_id, prntInvcsItemId, ord, name, price, price_type_id, ovrrdPrice, amnt, notes) values($uuid, $typeId, $invcsId, $invntSrvId, $prntInvcsItemId, $ord, $name, $price, $priceTypeId, $ovrrdPrice, $amnt, $notes)`;
