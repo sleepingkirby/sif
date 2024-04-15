@@ -123,19 +123,19 @@ query+=' where uuid=$uuid';
 
 sqlObj.runQuery(query,obj);
 
-  if(stts=="active"){
-  updateInvntSrvBuffStatesEvntId(evnt_uuid);
-  }
-  else if(stts!="incomplete"||stts!="on hold"){
-  updateInvntSrvBuffStatesEvntId(evnt_uuid,0);
-  }
-  else{
-  /*
-  statues like done/disabled/cancelled 
-  do not remove invntSrvBuff items. Leave that until invoice generation.
-  */
-  //delInvntSrvBuff(null, evnt_uuid);
-  }
+let delQ='delete from invntSrvBuff where event_uuid=$eventId';
+let delQObj={$eventId:evnt_uuid};
+sqlObj.runQuery(delQ, delQObj);
+
+let invntSrvs=selectEventInvntSrv(evnt_uuid);
+  invntSrvs.forEach((invnt)=>{
+    if(stts=="active"){
+    createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
+    }
+    else if(stts=="incomplete"||stts=="on hold"){
+    createInvntSrvBuff(evnt_uuid, null, invnt, null, 1, 0);
+    }
+  });
 }
  
 
@@ -189,7 +189,7 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
         if(sttsHsh[stts].name=="active"){
         createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
         }
-        else if(sttsHsh[stts].name!="incomplete"||sttsHsh[stts].name!="on hold"){
+        else if(sttsHsh[stts].name=="incomplete"||sttsHsh[stts].name=="on hold"){
         createInvntSrvBuff(evnt_uuid, null, invnt, null, 1, 0);
         }
       }
