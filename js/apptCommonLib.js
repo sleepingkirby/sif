@@ -12,8 +12,14 @@ let html='';
   return html;
   }
 
+let t='';
+
   for(const uuid of keys){
-    html+=`<option value="${uuid}"${selectedUUID==uuid?" selected":""}>${invntSrv[uuid].name}</option>`;
+    if(invntSrv[uuid].type){
+    t=invntSrv[uuid].type?' ('+invntSrv[uuid].type.replaceAll(/[aeiou]/g,'')+')':'';
+    }
+
+    html+=`<option value="${uuid}"${selectedUUID==uuid?" selected":""}>${invntSrv[uuid].name}${t}</option>`;
   }
 return html;
 }

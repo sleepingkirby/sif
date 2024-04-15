@@ -60,7 +60,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <select id="apptNewApptFormApptInfoSrv" name="event[invntSrv]">
             <option>service</option>
 	        </select>
-          <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Service"/>
+          <input id="apptNewApptFormApptInfoAddSrv" type="submit" value="Add Srv/Invnt" title="Add Inventory/Service"/>
         </div>
         <div class="row apptFormMultiBox">
           <div id="apptNewApptFormApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">

@@ -125,7 +125,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <select id="apptNewApptFormFullApptInfoSrv" name="event[invntSrv]">
             <option>service</option>
           </select>
-          <input id="apptNewApptFormFullApptInfoAddSrv" type="submit" value="Add Service"/>
+          <input id="apptNewApptFormFullApptInfoAddSrv" type="submit" value="Add Srv/Invnt" title="Add Inventory/Service"/>
         </div>
         <div class="row apptFormMultiBox">
           <div id="apptNewApptFormFullApptInfoSrvLstLbl" class="row apptFormMultiBoxLbl" title="Services Added">
@@ -795,6 +795,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormFullUserFirstName').innerHTML=genUsrSlct(this.customers,'fName','First Name');
     document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
     document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
+    console.log(this.invntSrvList);
     document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
     document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
     this.hookUsrTyp();
