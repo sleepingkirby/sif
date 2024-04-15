@@ -130,7 +130,11 @@ sqlObj.runQuery(query,obj);
   updateInvntSrvBuffStatesEvntId(evnt_uuid,0);
   }
   else{
-  delInvntSrvBuff(null, evnt_uuid);
+  /*
+  statues like done/disabled/cancelled 
+  do not remove invntSrvBuff items. Leave that until invoice generation.
+  */
+  //delInvntSrvBuff(null, evnt_uuid);
   }
 }
  
