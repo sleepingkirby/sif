@@ -764,6 +764,11 @@ width:100%;
 justify-content: space-between;
 }
 
+.redBold{
+color:red;
+font-weight:900;
+}
+
 @keyframes opac{
 0%{max-height: 0px; margin-bottom: 0px; padding-top: 4px; padding-bottom: 4px;}
 20%{max-height: 600px; margin-bottom: 4px;}

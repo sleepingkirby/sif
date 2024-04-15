@@ -1020,6 +1020,12 @@ manage inventory and services
           buyType=isl.price_type_name;
           }
 
+        let rsrved='';
+          if(invntSrv.rsrv_amnt){
+          rsrved=invntSrv.rsrv_amnt>=invntSrv.amnt?` (<span class="redBold" title="reserved amount">${invntSrv.rsrv_amnt}</span>)`:` (${invntSrv.rsrv_amnt})`;
+          }
+
+
         lnkedRow+=`
         <tr class="mdlTblSlct">
           <td>*</td>
@@ -1027,7 +1033,7 @@ manage inventory and services
           <td>${isl.type}</td>
           <td>`+statusColor(isl.status_name)+`</td>
           <td>${dur}</td>
-          <td>${isl.amnt}</td>
+          <td>${isl.amnt}${rsrved}</td>
           <td>`+invntSrvPrcFormat(isl.buy,buyType)+`</td>
           <td>`+invntSrvPrcFormat(isl.sell,buyType)+`</td>
           <td>
@@ -1068,7 +1074,12 @@ manage inventory and services
         if(is.type=='product'){
         buyType=is.price_type_name;
         }
-    
+   
+      let rsrved='';
+        if(invntSrv.rsrv_amnt){
+        rsrved=invntSrv.rsrv_amnt>=invntSrv.amnt?` (<span class="redBold" title="reserved amount">${invntSrv.rsrv_amnt}</span>)`:` (${invntSrv.rsrv_amnt})`;
+        }
+ 
       invntSrvsRow+=`
       <tr class="invntSrvsNA">
         <td>&nbsp;</td>
@@ -1076,7 +1087,7 @@ manage inventory and services
         <td>${is.type}</td>
         <td>`+statusColor(is.status_name)+`</td>
         <td>${dur}</td>
-        <td>${is.amnt}</td>
+        <td>${is.amnt}${rsrved}</td>
         <td>`+invntSrvPrcFormat(is.buy,buyType)+`</td>
         <td>`+invntSrvPrcFormat(is.sell,buyType)+`</td>
         <td>
@@ -1124,6 +1135,10 @@ manage inventory and services
         if(invntSrv.type=='product'){
         buyType=invntSrv.price_type_name;
         }
+      let rsrved='';
+        if(invntSrv.rsrv_amnt){
+        rsrved=invntSrv.rsrv_amnt>=invntSrv.amnt?` (<span class="redBold" title="reserved amount">${invntSrv.rsrv_amnt}</span>)`:` (${invntSrv.rsrv_amnt})`;
+        }
       cntnt+=`
       <tr>
         <td>`+invntSrv.create_date+`</td>
@@ -1132,7 +1147,7 @@ manage inventory and services
         <td>`+invntSrv.type+`</td>
         <td>`+statusColor(invntSrv.status_name)+`</td>
         <td>`+dur+`</td>
-        <td>`+Number(invntSrv.amnt).toString()+`</td>
+        <td>`+Number(invntSrv.amnt).toString()+rsrved+`</td>
         <td>`+invntSrvPrcFormat(Number(invntSrv.buy).toString(),buyType)+`</td>
         <td>`+invntSrvPrcFormat(Number(invntSrv.sell).toString(),invntSrv.price_type_name)+`</td>
         <td>
