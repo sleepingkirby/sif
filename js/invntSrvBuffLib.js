@@ -9,16 +9,16 @@ pre: sqlObj
 post: created new item for inventory/service buffer
 create new inventory/service buffer item
 -----------------------------------------------*/
-function createInvntSrvBuff(event_uuid=null, invcs_uuid=null, invntSrv_uuid=null, invntSrvPrnt_uuid=null, amount=0){
+function createInvntSrvBuff(event_uuid=null, invcs_uuid=null, invntSrv_uuid=null, invntSrvPrnt_uuid=null, amount=0, state=1){
   if(!invntSrv_uuid||invntSrv_uuid==""||!(event_uuid||invcs_uuid)){
   return null;
   }
 
 let uuid=createUUID();
 
-let query='insert into invntSrvBuff(uuid, event_uuid, invcs_uuid, invntSrv_uuid, invntSrvPrnt_uuid, amount) values($uuid, $event_uuid, $invcs_uuid, $invntSrv_uuid, $invntSrvPrnt_uuid, $amount)';
+let query='insert into invntSrvBuff(uuid, event_uuid, invcs_uuid, invntSrv_uuid, invntSrvPrnt_uuid, amount, state) values($uuid, $event_uuid, $invcs_uuid, $invntSrv_uuid, $invntSrvPrnt_uuid, $amount, $state)';
 
-let obj={$uuid:uuid, $event_uuid:event_uuid, $invcs_uuid:invcs_uuid, $invntSrv_uuid:invntSrv_uuid, $invntSrvPrnt_uuid:invntSrvPrnt_uuid, $amount:amount}
+let obj={$uuid:uuid, $event_uuid:event_uuid, $invcs_uuid:invcs_uuid, $invntSrv_uuid:invntSrv_uuid, $invntSrvPrnt_uuid:invntSrvPrnt_uuid, $amount:amount, $state:state}
   try{
   sqlObj.runQuery(query,obj);
   }
@@ -27,6 +27,7 @@ let obj={$uuid:uuid, $event_uuid:event_uuid, $invcs_uuid:invcs_uuid, $invntSrv_u
   console.log(e);
   }
 }
+
 
 /*----------------------------------------------
 pre: sqlObj
@@ -45,7 +46,8 @@ event_uuid,
 invcs_uuid,
 invntSrv_uuid,
 invntSrvPrnt_uuid,
-amount
+amount,
+state
 from invntSrvBuff
 `;
 let obj={};
@@ -88,7 +90,6 @@ pre: sqlObj
 post: update database with new inventory/service buff
 update invntSrvBuff
 -----------------------------------------------*/
-//CREATE TABLE invntSrvBuff(uuid text not null primary key, event_uuid text null, invcs_uuid text null, invntSrv_uuid text not null, invntSrvPrnt_uuid null, amount real null, foreign key(event_uuid) references events(uuid), foreign key(invcs_uuid) references invcs(uuid), foreign key(invntSrv_uuid) references invntSrv(uuid), foreign key(invntSrvPrnt_uuid) references invntSrv(uuid));
 function updateInvntSrvBuff(uuid, hsh){
   if(!uuid){
   return null;
@@ -121,10 +122,32 @@ obj['$uuid']=uuid;
 
 /*-----------------------------------------------
 pre: sqlObj
+post: update database
+update invntSrvBuff items with new state by evntId
+-----------------------------------------------*/
+function updateInvntSrvBuffStatesEvntId(evntId=null, state=1){
+  if(!evntId){
+  return null;
+  }
+
+  let q='update invntSrvBuff set state=$state where event_uuid=$eid';
+  let obj={$state:state, $eid:evntId}
+
+  try{
+  sqlObj.runQuery(q,obj);
+  }
+  catch(e){
+  console.log('Unable to update entry state in "invntSrvBuff" table. query: '+q+', binds: '+JSON.stringify(obj));
+  console.log(e);
+  }
+  
+}
+
+/*-----------------------------------------------
+pre: sqlObj
 post: removes invntSrvBuff item 
 deletes invntSrvBuff item from db
 -----------------------------------------------*/
-//CREATE TABLE invntSrvBuff(uuid text not null primary key, event_uuid text null, invcs_uuid text null, invntSrv_uuid text not null, invntSrvPrnt_uuid null, amount real null, foreign key(event_uuid) references events(uuid), foreign key(invcs_uuid) references invcs(uuid), foreign key(invntSrv_uuid) references invntSrv(uuid), foreign key(invntSrvPrnt_uuid) references invntSrv(uuid));
 function delInvntSrvBuff(uuid, event_uuid, invcs_uuid, invntSrv_uuid){
   if(!uuid&&!event_uuid&&!invcs_uuid&&!invntSrv_uuid){
   return null;

@@ -39,9 +39,7 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
     let evntTyp_uuid=createUUID();
     query='insert into events_type(uuid, event_uuid, type_uuid) values($uuid, $event_uuid, (select uuid from type where categ="events" and name=$type))';
     obj={$uuid:evntTyp_uuid, $event_uuid:evnt_uuid, $type:type};
-    sqlObj.runQuery(query,obj);
 
-    /*
       try{
       sqlObj.runQuery(query,obj);
       }
@@ -50,7 +48,6 @@ CREATE TABLE events_type(uuid text not null primary key, event_uuid text not nul
       console.log(e);
       return null;
       }
-    */  
   }
 
 /*
@@ -59,16 +56,15 @@ CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, event
   //set what services or products are involved in this event
   let subQ='';
   let subObj='';
+  let subQB='';
+  let subObjB=null;
 
   if(invntSrvs&&typeof invntSrvs=="object"&&invntSrvs.length>0){
     invntSrvs.forEach((invnt)=>{
     subQ='insert into events_invntSrv(uuid, create_date, events_id, invntSrv_id) values($uuid, datetime("now"), $evntId, $invntId)';
     subObj={$uuid:createUUID(), $evntId:evnt_uuid, $invntId:invnt};
-    sqlObj.runQuery(subQ,subObj);
-      /*
+
       try{
-      subQ='insert into events_invntSrv(uuid, create_date, events_id, invntSrv_id) values($uuid, datetime("now"), $evntId, $invntId)';
-      subObj={$uuid:createUUID(), $evntId:evnt_uuid, $invntId:invnt};
       sqlObj.runQuery(subQ,subObj);
       }
       catch(e){
@@ -76,22 +72,24 @@ CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, event
       console.log(e);
       return null;
       }
-      */
+
+      try{
+      createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
+      }
+      catch(e){
+      console.log('Unable to add entry to "invntSrvBuff" table. Query: '+subQ+', binds: '+JSON.stringify(subObj));
+      console.log(e);
+      return null;
+      }
+
     });
   }
 
-/*
-CREATE TABLE events_users(uuid text not null primary key, events_id text not null, users_id text not null, foreign key(events_id) references events(uuid), foreign key(users_id) references users(uuid));
-*/
   if(users&&typeof users=="object"&&users.length>0){
     users.forEach((user)=>{
     subQ='insert into events_users(uuid, events_id, users_id) values($uuid, $evntId, $user)';
     subObj={$uuid:createUUID(), $evntId:evnt_uuid, $user:user};
-    sqlObj.runQuery(subQ,subObj);
-      /*
       try{
-      subQ='insert into events_users(uuid, events_id, users_id) values($uuid, $evntId, $user)';
-      subObj={$uuid:createUUID(), $evntId:evnt_uuid, $user:user};
       sqlObj.runQuery(subQ,subObj);
       }
       catch(e){
@@ -99,7 +97,6 @@ CREATE TABLE events_users(uuid text not null primary key, events_id text not nul
       console.log(e);
       return null;
       }
-      */
     });
   }
 }
@@ -125,6 +122,16 @@ let obj={$uuid:evnt_uuid, $stts:stts};
 query+=' where uuid=$uuid';
 
 sqlObj.runQuery(query,obj);
+
+  if(stts=="active"){
+  updateInvntSrvBuffStatesEvntId(evnt_uuid);
+  }
+  else if(stts!="incomplete"||stts!="on hold"){
+  updateInvntSrvBuffStatesEvntId(evnt_uuid,0);
+  }
+  else{
+  delInvntSrvBuff(null, evnt_uuid);
+  }
 }
  
 
@@ -137,6 +144,7 @@ function updateEvent(evnt_uuid=null, forUser, byUser, onDt, doneDt, dur=30, type
   if(!evnt_uuid){
   return null;
   }
+
 let nullStts=stts?'$stts':'(select uuid from status where name=$stts)';
 let query='update events set uuid=$uuid, forUser_id=$forUser_id, byUser_id=$byUser_id, status_id='+nullStts+', on_date=datetime($on_date), done_date=datetime($done_date), duration=$dur where uuid=$uuid';
 
@@ -159,14 +167,30 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
   delQ='delete from events_invntSrv where events_id=$eventId';
   delQObj={$eventId:evnt_uuid};
   sqlObj.runQuery(delQ, delQObj);
-    
+
+  delQ='delete from invntSrvBuff where event_uuid=$eventId';
+  delQObj={$eventId:evnt_uuid};
+  sqlObj.runQuery(delQ, delQObj);
+
+
+  let sttsHsh=arrOfHshToHshHsh('uuid',selectStatus());
     invntSrvs.forEach((invnt)=>{
     subQ='';
     subObj='';
     subQ='insert into events_invntSrv(uuid, create_date, events_id, invntSrv_id) values($uuid, datetime("now"), $evntId, $invntId)';
     subObj={$uuid:createUUID(), $evntId:evnt_uuid, $invntId:invnt};
     sqlObj.runQuery(subQ,subObj);
+
+      if(sttsHsh.hasOwnProperty(stts)){
+        if(sttsHsh[stts].name=="active"){
+        createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
+        }
+        else if(sttsHsh[stts].name!="incomplete"||sttsHsh[stts].name!="on hold"){
+        createInvntSrvBuff(evnt_uuid, null, invnt, null, 1, 0);
+        }
+      }
     });
+
   }
 
   //update users for event
