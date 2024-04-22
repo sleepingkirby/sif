@@ -466,10 +466,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
         createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
         mainObj.setFloatMsg("Appointment Created");
-        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-          if(el){
-          mainObj.modPrcClsCall(el);
-          }
+        mainObj.modRghtOpenClose();
         }
       this.invntSrvAddedArr=[];
       this.usrAddedArr=[];
@@ -498,10 +495,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
         updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
         mainObj.setFloatMsg("Appointment Updated");
-        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-          if(el){
-          mainObj.modPrcClsCall(el);
-          }
+        mainObj.modRghtOpenClose();
         }
       this.invntSrvAddedArr=[];
       this.usrAddedArr=[];
@@ -540,7 +534,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
-    pre: apptAddBtn element exists, mainObj.modPrcClsCall()
+    pre: apptAddBtn element exists, mainObj.modRghtOpenClose();
     post: event hook added
     addes event hook to apptAddBtn element
     ----------------------------------*/
@@ -550,8 +544,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       this.cleanRghtModForm();
 
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       };
     }
 
@@ -658,8 +651,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.apptsHsh[uuid];
       this.fillRghtMod(this.apptsHsh[uuid]);
       this.addUpdtBtnFlip(true);
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       }
     }
 
@@ -687,6 +679,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <div class="moduleTblCellActns">
             <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
             <div name="apptDone" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div name="apptDoneInvcs" class="menuIcon" onclick=mainObj.setState("pageVars",{...state.pageVars,appt:"`+appt.event_id+`"});mainObj.setState("pos","invcs"); title="Mark Appoint As Done And Generate Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div name="apptCancel" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
             <div name="apptDisable" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","disabled"); title="Disable Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>

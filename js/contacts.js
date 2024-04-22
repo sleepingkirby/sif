@@ -169,8 +169,7 @@ if(typeof contacts==='undefined'){
       if(this.custHsh.hasOwnProperty(uuid)&&this.custHsh[uuid]){
       this.fillRghtMod(this.custHsh[uuid]);
       this.addUpdtBtnFlip(true);
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       }
     } 
 
@@ -196,8 +195,7 @@ if(typeof contacts==='undefined'){
       document.getElementById("contactsAddBtn").onclick=(e)=>{
       this.addUpdtBtnFlip(false);
       this.clearRghtMod();
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       };
 
     this.hookElFltr();   
@@ -217,7 +215,7 @@ if(typeof contacts==='undefined'){
 
       //closes modal
       // let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      // mainObj.modPrcClsCall(el);
+      // mainObj.modRghtOpenClose();
 
       //redraw mainEl
       this.draw();
@@ -236,8 +234,7 @@ if(typeof contacts==='undefined'){
         updateCustUser(el_uuid[0].value,hsh);
         mainObj.setFloatMsg(`User updated`);
         this.draw();
-        let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-        mainObj.modPrcClsCall(el);
+        mainObj.modRghtOpenClose();
         }
       }
     } 

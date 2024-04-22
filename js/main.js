@@ -191,6 +191,8 @@ class sif{
       case "pos":
       this.draw(val);
       break;
+      case "pageVars":
+      break;
       default:
       break;
     }

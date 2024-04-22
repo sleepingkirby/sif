@@ -179,10 +179,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         if(cust&&byUser&&cust.value&&byUser.value){
         createEvent(cust.value,byUser.value,onDt?.value,dur?.value,null,null,this.invntSrvAddedArr);
         mainObj.setFloatMsg("Quick Appointment Created");
-        let el=document.getElementById('lftMod').getElementsByClassName("close")[0];
-          if(el){
-          mainObj.modPrcClsCall(el);
-          }
+        mainObj.modLftOpenClose();
         }
         this.invntSrvAddedArr=[];
         if(state.pos=="appt"){

@@ -533,8 +533,7 @@ manage inventory and services
       obj[getSubs(fld.name,'invntSrv')]=fld.value||'';
       }
     createInvntSrv(obj.name, obj.type_id, null, obj.srv_durtn, obj.sku, obj.amnt, obj.buy, obj.sell, obj.price_type_id, "", this.invntSrvLnkList);
-    let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-    mainObj.modPrcClsCall(el);
+    mainObj.modRghtOpenClose();
     mainObj.setFloatMsg("Inventory/Service Created");
     this.drawTbl();
     }
@@ -553,8 +552,7 @@ manage inventory and services
 
     let uuid=document.getElementById(this.newInvntSrvFormUUID);
     updateInvntSrv(uuid.value, obj, this.invntSrvLnkList);
-    let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-    mainObj.modPrcClsCall(el);
+    mainObj.modRghtOpenClose();
     mainObj.setFloatMsg("Inventory/Service Updated");
     this.drawTbl();
     }
@@ -677,8 +675,7 @@ manage inventory and services
 
       this.drawRghtMdlTbl();
       btnFlip(this.newInvntSrvAddBtnId,this.newInvntSrvUpdtBtnId,this.invntSrvId?true:false);
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       }
     }
 
@@ -814,7 +811,7 @@ manage inventory and services
     }
 
     /*----------------------------------
-    pre: apptAddBtn element exists, mainObj.modPrcClsCall()
+    pre: apptAddBtn element exists, mainObj.modRghtOpenClose();
     post: event hook added
     addes event hook to apptAddBtn element
     ----------------------------------*/
@@ -829,8 +826,7 @@ manage inventory and services
       this.invntSrvLnkList=[];
       this.drawRghtMdlTbl();
 
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       };
     }
 

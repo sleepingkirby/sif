@@ -852,17 +852,28 @@ manage inventory and services
       this.sortColDir=this.sortColDir=="desc"?"asc":"desc";
     }
 
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    apptToInvcs(){
+    console.log(state);
+      if(state.pageVars.hasOwnProperty['appt']){
+      console.log(state.pageVars.hasOwnProperty['appt']);
+      apptLib.selectViewEventUser({'event_id':state.pageVars.appt});
+      }
+    mainObj.modRghtOpenClose();
+    }
 
     /*----------------------------------
-    pre: apptAddBtn element exists, mainObj.modPrcClsCall()
+    pre: apptAddBtn element exists, mainObj.modRghtOpenClose()
     post: event hook added
     addes event hook to apptAddBtn element
     ----------------------------------*/
     hookNewInvntBtn(){
       document.getElementById("invcAddBtn").onclick=(e)=>{
-      let el=document.getElementById('rghtMod').getElementsByClassName("close")[0];
       this.clearRghtMod();
-      mainObj.modPrcClsCall(el);
+      mainObj.modRghtOpenClose();
       };
     }
 
@@ -972,6 +983,8 @@ manage inventory and services
     this.drawTbl();
     document.getElementById('invcFilterStatus').innerHTML=this.genFltrSttsSlct();
     this.hookEl();
+    //start making invoice from appointment
+    this.apptToInvcs();
     }
   }
 
