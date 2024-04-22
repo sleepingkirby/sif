@@ -756,7 +756,7 @@ manage inventory and services
 
     //fill inventory/services items
     this.invntSrvItems=getInvntSrv(null, false, 'name', 'asc');
-    document.getElementsByName('invcsNewItem')[0].innerHTML=genSlctHsh(this.invntSrvItems, 'uuid', 'name');
+    document.getElementsByName('invcsNewItem')[0].innerHTML=genInvntSrv(this.invntSrvItems);
     }
 
     /*-----------------------------------------------
@@ -853,16 +853,53 @@ manage inventory and services
     }
 
     /*----------------------------------
-    pre:
-    post:
+    pre: state, selectEventInvntSrv(), this.invntSrvItems, this.newInvcsTblTtlRedrw(), mainObj.modRghtOpenClose()
+    post: page updated
+    populate and open rght modal with appointment info
     ----------------------------------*/
     apptToInvcs(){
-    console.log(state);
-      if(state.pageVars.hasOwnProperty['appt']){
-      console.log(state.pageVars.hasOwnProperty['appt']);
-      apptLib.selectViewEventUser({'event_id':state.pageVars.appt});
+      if(state.pageVars.hasOwnProperty('appt')&&state.pageVars.appt.hasOwnProperty('id')&&state.pageVars.appt.id){
+      let appt=selectViewEventUser({'event_id':state.pageVars.appt.id});
+        if(!appt||appt.length<=0){
+        return null;
+        }
+      console.log(appt);
+      let apptInvntSrv=selectEventInvntSrv(state.pageVars.appt.id);
+        for(let ais of apptInvntSrv){
+        //this.invcsNewItemsList.push(this.invntSrvItems[ais.invntSrv_id]);
+          if(this.invntSrvItems.hasOwnProperty(ais.invntSrv_id)){
+          this.invcsNewItemsList.push({...this.invntSrvItems[ais.invntSrv_id],addAmnt:1});
+          }
+        }
+
+      //sets users and datetime
+      let el=document.getElementsByName("invcs[byUser_id]");
+      el[0].value=appt[0].byUser_uuid;
+      el=document.getElementsByName("invcs[forUser_id]");
+      el[0].value=appt[0].cust_uuid;
+      el=document.getElementsByName("invcs[due_date]");
+      el[0].value=toInptValFrmt();
+      el=document.getElementsByName("invcs[paid_date]");
+      el[0].value=toInptValFrmt();
+
+      //updates invoice total_paid to total.
+      state.pageVars.appt.id=null;
+      this.newInvcsTblTtlRedrw();
+      el=document.getElementsByName("invcs[total]");
+      let total=el[0].value;
+      el=document.getElementsByName("invcs[total_paid]");
+      el[0].value=total;
+      
+      //set status
+      //invcs[invcs_status_id]
+      el=document.getElementsByName("invcs[invcs_status_id]");
+      let dn=this.statuses.find((e)=>{return e.name=="done"});
+      el[0].value=dn.uuid;
+      console.log(dn);
+
+      this.flipNewInvcsBtn();
+      mainObj.modRghtOpenClose();
       }
-    mainObj.modRghtOpenClose();
     }
 
     /*----------------------------------

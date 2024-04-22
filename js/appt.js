@@ -679,7 +679,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <div class="moduleTblCellActns">
             <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
             <div name="apptDone" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
-            <div name="apptDoneInvcs" class="menuIcon" onclick=mainObj.setState("pageVars",{...state.pageVars,appt:"`+appt.event_id+`"});mainObj.setState("pos","invcs"); title="Mark Appoint As Done And Generate Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
+            <div name="apptDoneInvcs" class="menuIcon" onclick=(function(){state.pageVars.appt.id="`+appt.event_id+`"})();mainObj.setState("pos","invcs"); title="Mark Appoint As Done And Generate Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div name="apptCancel" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
             <div name="apptDisable" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","disabled"); title="Disable Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'disable')+`</div>
           </div>
