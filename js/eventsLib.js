@@ -132,9 +132,6 @@ let invntSrvs=selectEventInvntSrv(evnt_uuid);
     if(stts=="active"){
     createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
     }
-    else if(stts=="incomplete"||stts=="on hold"){
-    createInvntSrvBuff(evnt_uuid, null, invnt, null, 1, 0);
-    }
   });
 }
  
@@ -188,9 +185,6 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
       if(sttsHsh.hasOwnProperty(stts)){
         if(sttsHsh[stts].name=="active"){
         createInvntSrvBuff(evnt_uuid, null, invnt, null, 1);
-        }
-        else if(sttsHsh[stts].name=="incomplete"||sttsHsh[stts].name=="on hold"){
-        createInvntSrvBuff(evnt_uuid, null, invnt, null, 1, 0);
         }
       }
     });
