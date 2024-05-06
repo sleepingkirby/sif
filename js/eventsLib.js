@@ -123,9 +123,7 @@ query+=' where uuid=$uuid';
 
 sqlObj.runQuery(query,obj);
 
-let delQ='delete from invntSrvBuff where event_uuid=$eventId';
-let delQObj={$eventId:evnt_uuid};
-sqlObj.runQuery(delQ, delQObj);
+delInvntSrvBuff(null, evnt_uuid, null, null);
 
 let invntSrvs=selectEventInvntSrv(evnt_uuid);
   invntSrvs.forEach((invnt)=>{
@@ -169,10 +167,7 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
   delQObj={$eventId:evnt_uuid};
   sqlObj.runQuery(delQ, delQObj);
 
-  delQ='delete from invntSrvBuff where event_uuid=$eventId';
-  delQObj={$eventId:evnt_uuid};
-  sqlObj.runQuery(delQ, delQObj);
-
+  delInvntSrvBuff(null, evnt_uuid, null, null);
 
   let sttsHsh=arrOfHshToHshHsh('uuid',selectStatus());
     invntSrvs.forEach((invnt)=>{
@@ -188,7 +183,6 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
         }
       }
     });
-
   }
 
   //update users for event

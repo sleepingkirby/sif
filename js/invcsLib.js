@@ -37,6 +37,11 @@ let query=`insert into invcs(uuid, create_date, due_date, paid_date, status_id, 
   return null;
   }
 
+  //remove inventory/service buffer items.
+  if(invcs.hasOwnProperty('event_id')&&invcs.event_id){
+  delInvntSrvBuff(null, invcs.event_id, null, null);
+  }
+
 
 let types=selectType('invntSrv');
 let typesIdHsh=sepTypesIdHsh(types);
@@ -55,7 +60,7 @@ let prntUUID=null;
     $uuid:itemUUID,
     $typeId:invcsItems[indx].hasOwnProperty('type_id')?invcsItems[indx].type_id:null,
     $invcsId:invcsId,
-    $invntSrvId:invcsItems[indx].hasOwnProperty('invntSrv_id')?invcsItems[indx].invntSrv_id:null,
+    $invntSrvId:invcsItems[indx].hasOwnProperty('uuid')?invcsItems[indx].uuid:null,
     $prntInvcsItemId:typesIdHsh.invntSrv[""][invcsItems[indx].type_id]!="discount"?null:prntUUID,
     $ord:indx,
     $name:invcsItems[indx].hasOwnProperty('name')?invcsItems[indx].name:'',
@@ -73,8 +78,16 @@ let prntUUID=null;
     console.log(e);
     return null;
     }
-    if(actv){
-    createInvntSrvBuff(null, invcsId, invntSrv_id, null, addAmount); 
+
+    //decrement items in inventory/services
+    if(invcsItems[indx].hasOwnProperty('uuid')&&invcsItems[indx].uuid&&invcsItems[indx].hasOwnProperty('addAmnt')&&invcsItems[indx].addAmnt){
+      try{
+      chngInvntSrvNum(invcsItems[indx].uuid, invcsItems[indx].addAmnt);
+      }
+      catch(e){
+      console.log('Unable to decrement item from inventory/service amount: '+JSON.stringify(qObj));
+      console.log(e);
+      }
     }
   }
 return true;

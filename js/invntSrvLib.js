@@ -38,7 +38,7 @@ pre: sqlObj
 post: update database with new inventory/service
 update inventory/service
 -----------------------------------------------*/
-function updateInvntSrv(uuid, hsh, lnkArr){
+function updateInvntSrv(uuid, hsh, lnkArr=null){
   if(!uuid){
   return null;
   }
@@ -84,19 +84,54 @@ query+=" where uuid=$uuid";
 obj['$uuid']=uuid;
 sqlObj.runQuery(query,obj);
 
-//CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
-query='delete from invntSrvLnk where invntSrvLnkPrnt=$uuid';
-obj={$uuid:uuid};
-sqlObj.runQuery(query,obj);
-
-query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm, amnt) values($uuid, $prnt, $itm, $amnt)';
-obj={};
-  for(let lnk of lnkArr){
-  obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk.invntSrvuuid,$amnt:lnk.addAmnt};
+  if(lnkArr&&lnkArr.length>0){
+  //CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
+  query='delete from invntSrvLnk where invntSrvLnkPrnt=$uuid';
+  obj={$uuid:uuid};
   sqlObj.runQuery(query,obj);
+  
+  query='insert into invntSrvLnk(uuid, invntSrvLnkPrnt, invntSrvLnkItm, amnt) values($uuid, $prnt, $itm, $amnt)';
+  obj={};
+    for(let lnk of lnkArr){
+    obj={$uuid:createUUID(),$prnt:uuid,$itm:lnk.invntSrvuuid,$amnt:lnk.addAmnt};
+    sqlObj.runQuery(query,obj);
+    }
   }
 }
 
+/*-----------------------------------------------
+pre: sqlObj
+post: update database with new inventory/service
+update inventory/service
+-----------------------------------------------*/
+function updateInvntSrvLnk(uuid, isUuid, hsh){
+  if(!uuid&&!isUuid){
+  return null;
+  }
+//CREATE TABLE invntSrvLnk(uuid text primary key, invntSrvLnkPrnt text not null, invntSrvLnkItm text not null, amnt float null default 0, foreign key(invntSrvLnkPrnt) references invntSrv(uuid), foreign key(invntSrvLnkItm) references invntSrv(uuid));
+
+let query='update invntSrvLnk set';
+let obj={};
+  if(hsh.hasOwnProperty('invntSrvLnkPrnt')&&hsh.invntSrvLnkPrnt){
+  query+=", invntSrvLnkPrnt=$invntSrvLnkPrnt";
+  obj['$invntSrvLnkPrnt']=hsh.invntSrvLnkPrnt;
+  }
+  if(hsh.hasOwnProperty('amnt')&&hsh.amnt){
+  query+=", amnt=$amnt";
+  obj['$amnt']=hsh.amnt;
+  }
+
+  if(uuid){
+  query+=" where uuid=$uuid";
+  obj['$uuid']=uuid;
+  }
+  else if(isUuid){
+  query+=" where invntSrvLnkItm=$isUuid";
+  obj['$isUuid']=isUuid;
+  }
+
+sqlObj.runQuery(query,obj);
+}
 
 /*-----------------------------------------------
 pre: sqlObj
@@ -236,6 +271,7 @@ let and='';
 let tmp=null;
 let obj={};
 
+  /*
   if(paramObj&&Object.keys(paramObj).length>0){
   query+='where ';
     for(let param of Object.keys(paramObj)){
@@ -246,6 +282,20 @@ let obj={};
       }
     }
   }
+  */
+obj=[];
+  if(paramObj&&Object.keys(paramObj).length>0){
+  query+='where ';
+    for(let param of Object.keys(paramObj)){
+      if(paramObj[param]){
+      query+=`${and} ${param}=?`;
+      obj.push(paramObj[param]);
+      and=' and';
+      }
+    }
+  }
+
+
 
   query+=' group by invntSrv.uuid';
 
@@ -418,6 +468,29 @@ let obj={};
 
 tmp=sqlObj.runQuery(query, obj);
 return tmp;
+}
+
+
+/*-----------------------------------------------
+pre: sqlObj
+post: update database with new inventory/service
+update inventory/service
+-----------------------------------------------*/
+function chngInvntSrvNum(uuid, addAmnt, op='-'){
+console.log(`<==============chngInvntSrvNum uuid: ${uuid}, op: ${op}`);
+  if(!uuid){
+  return null;
+  }
+let is=getInvntSrvArr({'invntSrv.uuid':uuid});
+let amnt=is[0].amnt;
+  if(op=='+'){
+  amnt=amnt+addAmnt;
+  }
+  else if(op=='-'){
+  amnt=amnt-addAmnt;
+  }
+
+updateInvntSrv(uuid, {'amnt':amnt});
 }
 
 /*----------------------------------------------

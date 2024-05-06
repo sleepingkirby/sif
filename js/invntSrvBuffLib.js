@@ -153,7 +153,7 @@ function delInvntSrvBuff(uuid, event_uuid, invcs_uuid, invntSrv_uuid){
   return null;
   }
 
-let q=`delete from invntSrvBuff`;
+let q=`delete from invntSrvBuff `;
 let obj={};
 
   if(uuid){
