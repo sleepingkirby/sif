@@ -477,7 +477,6 @@ post: update database with new inventory/service
 update inventory/service
 -----------------------------------------------*/
 function chngInvntSrvNum(uuid, addAmnt, op='-'){
-console.log(`<==============chngInvntSrvNum uuid: ${uuid}, op: ${op}`);
   if(!uuid){
   return null;
   }

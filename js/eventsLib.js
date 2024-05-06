@@ -331,6 +331,72 @@ let tmp=sqlObj.runQuery(query,obj);
 return tmp;
 }
 
+/*-----------------------------------------------
+pre: sqlObj
+post: none 
+get invntSrv for event via userId, from Date and to Date 
+-----------------------------------------------*/
+function selectEventDateRngUser(userId, dtFro, dtTo){
+  if(!userId||!dtFro||!dtTo){
+  return [];
+  }
+
+let query=`
+select
+e.uuid as event_id,
+cust.uuid as cust_uuid,
+cust.username as cust_username,
+cust.status_id as cust_status_id,
+custStatus.name as cust_status_name,
+cust.email as cust_email,
+cntcts.phone as cust_phone,
+cntcts.cellphone as cust_cellphone,
+cntcts.fName as cust_fName,
+cntcts.surName as cust_surName,
+cntcts.nickName as cust_nickName,
+byUser.uuid as byUser_uuid,
+byUser.username as byUser_username,
+byUser.status_id as byUser_status_id,
+byUserStatus.name as byUserStatus_status_name,
+byUser.email as byUser_email,
+s.uuid as status_uuid,
+s.name as status,
+e.create_date as create_date,
+e.on_date as on_date,
+e.done_date as done_date,
+e.duration as duration
+from events as e
+left join status as s on e.status_id=s.uuid
+left join users as cust on e.forUser_id=cust.uuid
+left join users as byUser on e.byUser_id=byUser.uuid
+left join status as custStatus on cust.status_id=custStatus.uuid
+left join status as byUserStatus on byUser.status_id=byUserStatus.uuid
+left join contacts as cntcts on cntcts.user_id=cust.uuid
+where byUser_uuid=?
+`;
+let obj=[userId];
+
+query+=` and e.on_date>=?`;
+obj.push(dtFro);
+
+query+=` and e.on_date<?`;
+obj.push(dtTo);
+
+query+=` order by e.on_date asc`;
+
+let tmp=null;
+
+  try{
+  tmp=sqlObj.runQuery(query,obj);
+  }
+  catch(e){
+  console.log(`Unable to get appointments in selectEventDateRngUser(), userId: ${userId}, dtFro: ${dtFro}, dtTo: ${dtTo}`);
+  console.log(e);
+  }
+
+return tmp;
+}
+
 
 function delEvent(uuid){
 console.log("<<+++++++++++++=============== delEvent() "+uuid);

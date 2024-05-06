@@ -21,6 +21,8 @@ if(typeof cal==='undefined'){
 
     this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    this.appts=[];
+
     this.tmpl={};
     this.tmpl['leftNav']=[];
     this.tmpl.leftNav[0]='<div class="calNav"><div id="calYear"><div name="calNavYear" class="calNavNum" contenteditable="true" oninput=calObj.modDate()>';
@@ -148,6 +150,13 @@ if(typeof cal==='undefined'){
     var rtrn="";
     var end=false;
     var i=0; //thnis always starts as 0 because we're always starting on a sunday.
+    var endDt=new Date(year, mon+1, 0);
+    endDt.setFullYear(endDt.getFullYear(), endDt.getMonth(), endDt.getDate()+(7-endDt.getDay()));//last day of calendar +1 day
+    console.log(ptrDt);
+    console.log(endDt);
+    console.log(state.user.uuid);
+    this.appts=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(ptrDt.toISOString()), dtTmDbFrmt(endDt.toISOString()));
+    console.log(this.appts);
 
       while(!end){
         //if start of week.
@@ -156,12 +165,12 @@ if(typeof cal==='undefined'){
         }
 
         //set day
-        let tdy="";
+      let tdy="";
         if(curDy==today.getDate()&&ptrDt.getMonth()==today.getMonth()&&ptrDt.getFullYear()==today.getFullYear()){
         tdy=' name="today"';
         }
         //set fade days outside the current month to fade
-        let cls="";
+      let cls="";
         if(ptrDt.getMonth()!=mon){
         cls=' class="fade"';
         }
@@ -201,10 +210,8 @@ if(typeof cal==='undefined'){
     document.getElementById('mainEl').innerHTML=this.genCal();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavCal();
     }
-    testFunc(){
-    console.log("asfasdfds");
-    }
   }
+
 var calObj=new cal(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 state.depModuleObjs['cal']=calObj;
 }
