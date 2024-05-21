@@ -157,6 +157,7 @@ if(typeof cal==='undefined'){
     console.log(state.user.uuid);
     this.appts=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(ptrDt.toISOString()), dtTmDbFrmt(endDt.toISOString()));
     console.log(this.appts);
+    let apptI=0;
 
       while(!end){
         //if start of week.
@@ -175,7 +176,35 @@ if(typeof cal==='undefined'){
         cls=' class="fade"';
         }
       
-      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+      let dayAppts=[];
+      let ptrDtT=new Date(ptrDt.toISOString())
+      ptrDtT.setDate(ptrDtT.getDate()+1)
+        while(apptI<this.appts.length){
+          //if appointment exists and on_date for said appointment is valid and it's within the day in question
+          if(this.appts[apptI].hasOwnProperty('on_date') && this.appts[apptI].on_date && Date.parse(this.appts[apptI].on_date)>=Date.parse(ptrDt) && Date.parse(this.appts[apptI].on_date)<Date.parse(ptrDtT)){
+          dayAppts.push(this.appts[apptI]);
+          }
+          else if(Date.parse(this.appts[apptI].on_date)>=Date.parse(ptrDtT)){
+          break;
+          }
+        apptI++;
+        }
+      let dayNum=dayAppts.length>0?'<div class="calApptNum">'+dayAppts.length+'</div>':'';
+      let dayApptsStr='';
+      let tmpDt='';
+      let tmpNm='';
+        for(let apptIn in dayAppts){
+          if(apptIn>1){
+          dayApptsStr+='<div>...</div>';
+          break;
+          }
+          tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
+          tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
+          tmpNm=dayAppts[apptIn].cust_fName;
+          tmpNm=tmpNm.length>=9?tmpNm.substr(0,6)+'...':tmpNm;
+          dayApptsStr+='<div class="calApptSum"><span>'+tmpDt+'</span><span>'+tmpNm+'</span></div>';
+        }
+      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div class="calAppts">'+dayNum+dayApptsStr+'</div></td>';
 
         //set end of week.
         if(i%7>=6){
@@ -209,6 +238,7 @@ if(typeof cal==='undefined'){
     run(){
     document.getElementById('mainEl').innerHTML=this.genCal();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavCal();
+    //eventsLib.selectEventDateRngUser(state.user.uuid,)
     }
   }
 
