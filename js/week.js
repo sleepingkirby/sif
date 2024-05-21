@@ -11,6 +11,7 @@ if(typeof week==='undefined'){
       }
 
     this.mon=mn;
+    console.log(mn);
       if(!mn||mn==null){
       this.mon=state['shwDate']['mon']=date.getMonth();
       }
@@ -220,8 +221,8 @@ if(typeof week==='undefined'){
           tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
           tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
           tmpNm=dayAppts[apptIn].cust_fName;
-          tmpNm=tmpNm.length>=9?tmpNm.substr(0,6)+'...':tmpNm;
-          dayApptsStr+='<div class="calApptSum"><span>'+tmpDt+'</span><span>'+tmpNm+'</span></div>';
+          tmpNm=tmpNm.length>=10?tmpNm.substr(0,7)+'...':tmpNm;
+          dayApptsStr+='<div class="calApptSum"><div>'+tmpDt+'</div><div>'+tmpNm+'</div></div>';
         }
       console.log(dayApptsStr);     
  

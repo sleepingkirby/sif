@@ -129,7 +129,7 @@ if(typeof cal==='undefined'){
     used for moving from monthly calendar to weekly calendar on click
     sets the shwDate on state and then sets the state for pos
     ----------------------------------------------*/
-    setDteGoWk(yr, mn='1', dy='1'){
+    setDteGoWk(yr, mn='0', dy='1'){
     state.shwDate={year: yr, mon: mn, day: dy};
     mainObj.setState('pos', 'week');
     }
@@ -198,7 +198,7 @@ if(typeof cal==='undefined'){
           tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
           tmpNm=dayAppts[apptIn].cust_fName;
           tmpNm=tmpNm.length>=8?tmpNm.substr(0,5)+'...':tmpNm;
-          dayApptsStr+='<div class="calApptSum"><span>'+tmpDt+'</span><span>'+tmpNm+'</span></div>';
+          dayApptsStr+='<div class="calApptSum"><div>'+tmpDt+'</div><div>'+tmpNm+'</div></div>';
         }
       rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div><div>'+ptrDt.getDate()+'</div><div class="calAppts">'+dayNum+dayApptsStr+'</div></div></td>';
 
