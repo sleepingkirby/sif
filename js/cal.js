@@ -152,11 +152,7 @@ if(typeof cal==='undefined'){
     var i=0; //thnis always starts as 0 because we're always starting on a sunday.
     var endDt=new Date(year, mon+1, 0);
     endDt.setFullYear(endDt.getFullYear(), endDt.getMonth(), endDt.getDate()+(7-endDt.getDay()));//last day of calendar +1 day
-    console.log(ptrDt);
-    console.log(endDt);
-    console.log(state.user.uuid);
     this.appts=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(ptrDt.toISOString()), dtTmDbFrmt(endDt.toISOString()));
-    console.log(this.appts);
     let apptI=0;
 
       while(!end){
@@ -201,10 +197,10 @@ if(typeof cal==='undefined'){
           tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
           tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
           tmpNm=dayAppts[apptIn].cust_fName;
-          tmpNm=tmpNm.length>=9?tmpNm.substr(0,6)+'...':tmpNm;
+          tmpNm=tmpNm.length>=8?tmpNm.substr(0,5)+'...':tmpNm;
           dayApptsStr+='<div class="calApptSum"><span>'+tmpDt+'</span><span>'+tmpNm+'</span></div>';
         }
-      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div class="calAppts">'+dayNum+dayApptsStr+'</div></td>';
+      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div><div>'+ptrDt.getDate()+'</div><div class="calAppts">'+dayNum+dayApptsStr+'</div></div></td>';
 
         //set end of week.
         if(i%7>=6){

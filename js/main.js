@@ -31,6 +31,8 @@ class sif{
       const fn='sif-'+dtFlNm()+'.db';
       this.sqlObj.writeDb(fn);
       }
+    e.preventDefault();
+    e.returnValue=true;
     return "Are you sure you want to leave?";
     }
   window.onpagehide=(e)=>{return "Are you sure you want to leave?";}

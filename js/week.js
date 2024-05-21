@@ -22,6 +22,8 @@ if(typeof week==='undefined'){
 
     this.dayOfWk=['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    this.appts=[];
+
     this.tmpl={};
     this.tmpl['leftNav']=[];
     this.tmpl.leftNav[0]=`
@@ -173,6 +175,11 @@ if(typeof week==='undefined'){
     
     var today=new Date();
     ptrDt.setDate(ptrDt.getDate()-ptrDt.getDay());
+    console.log(ptrDt);
+    var endDt=new Date(ptrDt.getFullYear(), ptrDt.getMonth(), ptrDt.getDate()+7);
+    this.appts=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(ptrDt.toISOString()), dtTmDbFrmt(endDt.toISOString()));
+    var apptI=0;
+
     var i=0;
     var rtrn="";
 
@@ -192,8 +199,33 @@ if(typeof week==='undefined'){
         if(ptrDt.getMonth()!=today.getMonth()||ptrDt.getYear()!=today.getYear()){
         cls=' class="fade"';
         }
-      
-      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div>'+ptrDt.getDate()+'</div><div></div></td>';
+
+      let dayAppts=[];
+      let ptrDtT=new Date(ptrDt.toISOString())
+      ptrDtT.setDate(ptrDtT.getDate()+1)
+        while(apptI<this.appts.length){
+          //if appointment exists and on_date for said appointment is valid and it's within the day in question
+          if(this.appts[apptI].hasOwnProperty('on_date') && this.appts[apptI].on_date && Date.parse(this.appts[apptI].on_date)>=Date.parse(ptrDt) && Date.parse(this.appts[apptI].on_date)<Date.parse(ptrDtT)){
+          dayAppts.push(this.appts[apptI]);
+          }
+          else if(Date.parse(this.appts[apptI].on_date)>=Date.parse(ptrDtT)){
+          break;
+          }
+        apptI++;
+        }
+      let dayApptsStr='';
+      let tmpDt='';
+      let tmpNm='';
+        for(let apptIn in dayAppts){
+          tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
+          tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
+          tmpNm=dayAppts[apptIn].cust_fName;
+          tmpNm=tmpNm.length>=9?tmpNm.substr(0,6)+'...':tmpNm;
+          dayApptsStr+='<div class="calApptSum"><span>'+tmpDt+'</span><span>'+tmpNm+'</span></div>';
+        }
+      console.log(dayApptsStr);     
+ 
+      rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div class="dyWrap"><div>'+ptrDt.getDate()+'</div><div class="dyAppts">'+dayApptsStr+'</div></div></td>';
 
         //set end of week.
         if(i>=6){

@@ -41,7 +41,7 @@ font-weight: 600;
 margin-right: 6px;
 }
 
-#contactsList th, td{
+#contactsList th, #contactsList td{
 border-style: solid;
 border-color: #c5c5c5;
 border-width: 1px;

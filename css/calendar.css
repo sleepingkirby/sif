@@ -27,20 +27,20 @@ vertical-align: top;
 height:100%;
 }
 
-#calendarEl td > div{
+#calendarEl td > div > div{
 box-sizing: border-box;
 word-break: break-word;
 overflow-x: hidden;
-padding: 3px;
 }
 
-#calendarEl td > div:first-child{
+#calendarEl td > div > div:first-child{
 text-align: right;
 }
 
-#calendarEl td > div:last-child{
+#calendarEl td > div > div:last-child{
 overflow-y: auto;
 min-height: 80px;
+margin-top: 4px;
 }
 
 
@@ -93,9 +93,6 @@ color: white;
 background-color: #c5c5c5;
 } 
 
-#calendarEl td[name=today] > div:first-child{
-font-weight: 900
-} 
 
 #calendarEl .fade{
 color: #d5d5d5; 
@@ -103,6 +100,23 @@ color: #d5d5d5;
 
 .calendarElWeek{
 height: 80vh;
+}
+
+.calendarElWeek .dyWrap{
+height: 100%;
+border: 1px solid red;
+overflow: hidden;
+display: flex;
+flex-direction:column;
+align-items: flex-end;
+justify-content: flex-start;
+}
+
+.calendarElWeek .dyAppts{
+overflow-x:hidden;
+overflow-y:auto;
+max-width:100%;
+width:100%;
 }
 
 #mnNav{
@@ -122,8 +136,8 @@ color: white;
 background-color: #c5c5c5;
 } 
 
-#calendarEl td[name=today] > div:first-child{
-font-weight: 900
+#calendarEl td[name=today] > div > div:first-child{
+font-weight: 900;
 } 
 
 .calNav{
@@ -209,5 +223,9 @@ display: flex;
 flex-direction: row;
 align-items: center;
 justify-content: space-between;
+}
+
+.calAppts .calApptSum span:first-child{
+margin-right: 6px;
 }
 
