@@ -182,7 +182,7 @@ if(typeof week==='undefined'){
     this.year=state['shwDate']['year']=year;
     this.mon=state['shwDate']['mon']=mon;
     this.day=state['shwDate']['day']=day;
-    document.getElementById('mainEl').innerHTML=this.genWk(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
+    this.genWk(state['shwDate']['year'], state['shwDate']['mon'], state['shwDate']['day']);
 
     return true;
     }
@@ -396,23 +396,7 @@ if(typeof week==='undefined'){
               <th class="dyOfWk">Fri</th>
               <th class="dyOfWk">Sat</th>
             </tr>`+rtrn+'</table>';
-    return rtrn;
-    }
-
-    /*-----------------------------------------------
-    pre: this.usrAddedArr, this.invntSrvAddedArr, apptNewApptFormFullApptInfoOnDate, apptNewApptFormFullApptInfoByUser
-    post:
-    enables the "add appointment" button
-    -----------------------------------------------*/
-    enblAddApptBtn(){
-    let apptDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
-    let apptByUsr=document.getElementById("apptNewApptFormFullApptInfoByUser");
-    let addApptBtn=document.getElementById(this.addApptBtnId);
-      if(this.usrAddedArr.length>0&&this.invntSrvAddedArr.length>0&&apptDt&&apptDt.value&&apptByUsr&&apptByUsr.value){
-      addApptBtn.disabled=false;
-      return null;
-      }
-    addApptBtn.disabled=true;
+    document.getElementById('mainEl').innerHTML=rtrn;
     }
 
     /*----------------------------------
@@ -427,7 +411,6 @@ if(typeof week==='undefined'){
     let i=this.usrAddedArr.findIndex(e=>e==uuid);
       this.usrAddedArr.splice(i,1);
       this.genUsrLstEls();
-      this.enblAddApptBtn();
     }
 
     /*-----------------------------------------------
@@ -441,7 +424,6 @@ if(typeof week==='undefined'){
     let i=this.invntSrvAddedArr.findIndex(el=>el===val);
       if(i>=0){
       this.invntSrvAddedArr.splice(i,1);
-      this.enblAddApptBtn();
       } 
     }
 
@@ -476,7 +458,6 @@ if(typeof week==='undefined'){
         else{
         el.innerHTML="N/A";
         }
-      this.enblAddApptBtn();
       }
     }
 
@@ -492,7 +473,6 @@ if(typeof week==='undefined'){
           if(slct&&slct.value){
           this.usrAddedArr.push(slct.value);
           this.genUsrLstEls();
-          this.enblAddApptBtn();
           }
         };
       }
@@ -513,8 +493,36 @@ if(typeof week==='undefined'){
           this.invntSrvAddedArr.push(el.value);
           }
         this.genInvntSrvListEls();
-        this.enblAddApptBtn();
         }
+      }
+    }
+
+    /*----------------------------------
+    pre: this.updtApptBtnId
+    post: sets event hooks
+    update service button hook
+    ----------------------------------*/
+    hookUpdtApptBtn(){
+    let btn=document.getElementById(this.updtApptBtnId);
+      btn.onclick=(e)=>{
+      let uuid=document.getElementById("apptNewApptFormFullApptInfoUUID");
+      let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
+      let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
+      let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
+      let stts=document.getElementById("apptNewApptFormFullApptStatus");
+        if(uuid&&uuid.value&&byUser&&byUser.value&&this.usrAddedArr.length>0){
+
+        updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
+        mainObj.setFloatMsg("Appointment Updated");
+        mainObj.modRghtOpenClose();
+        }
+      this.invntSrvAddedArr=[];
+      this.usrAddedArr=[];
+      this.genInvntSrvListEls();
+      this.genUsrLstEls();
+
+      console.log("asdfasdfsadf");
+      this.genWk();
       }
     }
 
@@ -635,6 +643,7 @@ if(typeof week==='undefined'){
     this.hookElSlctFullForm();
     this.hookElAddUserToUserLst();
     this.hookAddSrvBtn();
+    this.hookUpdtApptBtn();
     }
     
     run(){
@@ -646,7 +655,7 @@ if(typeof week==='undefined'){
     this.usrHsh=arrOfHshToHshHsh('uuid',users);
     this.custHsh=arrOfHshToHshHsh('uuid',this.customers);
 
-    document.getElementById('mainEl').innerHTML=wkObj.genWk();
+    wkObj.genWk();
     document.getElementById('leftNavMod').innerHTML=wkObj.genLeftNavWk();
     this.genRghtMod();
     this.hookEl();
