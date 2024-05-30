@@ -235,43 +235,6 @@ if(typeof week==='undefined'){
     this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
     return true;
     }
-
-    /*-----------------------------------------------
-    pre: this class
-    post: right modal filled
-    generates right modal content
-    -----------------------------------------------*/
-    fillRghtMod(appt){
-    let users=selectEventUsers(appt.event_id);
-    let invntSrv=selectEventInvntSrv(appt.event_id);
-      
-    this.usrAddedArr=users.map(e=>e.users_id);
-    this.usrAddedArr[0]=appt.cust_uuid;
-    this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
-
-    this.genUsrLstEls();
-    this.genInvntSrvListEls();
-    let evntId=document.getElementById("apptNewApptFormFullApptInfoUUID");
-      if(evntId){
-      evntId.value=appt.event_id;
-      }
-    let dt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
-      if(dt){
-      dt.value=appt.on_date;
-      }
-    let byUser=document.getElementById("apptNewApptFormFullApptInfoByUser");
-      if(byUser){
-      byUser.value=appt.byUser_uuid;
-      }
-    let byUserType=document.getElementById("apptNewApptFormFullApptInfoByUserType");
-      if(byUserType&&this.usrHsh.hasOwnProperty(appt.byUser_uuid)){
-      byUserType.innerHTML=this.usrHsh[appt.byUser_uuid].type;
-      }
-    let stts=document.getElementById("apptNewApptFormFullApptStatus");
-      if(stts){
-      stts.value=appt.status_uuid;
-      }
-    }
  
     /*-----------------------------------------------
     pre: mainObj.modRghtOpenClose(), fillRghtMod()
@@ -285,10 +248,8 @@ if(typeof week==='undefined'){
       if(!this.apptsHsh.hasOwnProperty(appt)){
       return null;
       }
-    console.log(this.apptsHsh[appt]);
     this.fillRghtMod(this.apptsHsh[appt]);
     mainObj.modRghtOpenClose();
-    console.log('test');
     }
 
     /*-----------------------------------------------
@@ -357,21 +318,40 @@ if(typeof week==='undefined'){
       let dayApptsStr='';
       let tmpDt='';
       let tmpNm='';
+      let lastDt=null;
+      let ovrlpTtl='';
         for(let apptIn in dayAppts){
-          let dt=new Date(dayAppts[apptIn].on_date);
-          tmpDt=dt.toLocaleTimeString();
-          tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
-          dt.setMinutes(dt.getMinutes()+dayAppts[apptIn].duration);
-          let nDt=dt.toLocaleTimeString().replace(/:[0-9]{2} /,'');
-          tmpNm=dayAppts[apptIn].cust_fName;
-          tmpNm=tmpNm.length>=10?tmpNm.substr(0,7)+'...':tmpNm;
-          let dur=dayAppts[apptIn]?.duration||0;
-          let eventId=dayAppts[apptIn].event_id;
-          dayApptsStr+=`
-          <div class="calApptSum" onclick="wkObj.drawRghtMod('${eventId}')">
-            <div><div>${tmpDt}&nbsp;</div><div class="calApptSumNDt">- ${nDt}</div><div class="calApptSumDur">${dur} min</div></div>
-            <div class="calApptSumNm">${tmpNm}</div>
-          </div>`;
+        let dt=new Date(dayAppts[apptIn].on_date);
+        tmpDt=dt.toLocaleTimeString();
+        tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
+
+        //sets style for when appointments overlap
+        let ovrlpClss="";
+          if(lastDt&&lastDt>dt){
+          ovrlpClss="calApptSumDtOverlap";
+          ovrlpTtl='title="Appointment overlaps with previous appointment."';
+          }
+          else{
+          ovrlpTtl='';
+          }
+
+        dt.setMinutes(dt.getMinutes()+dayAppts[apptIn].duration);
+        //updates lastDt for next loop
+          if(!lastDt||dt>lastDt){
+          lastDt=new Date(dt.toLocaleString());
+          }
+
+        let nDt=dt.toLocaleTimeString().replace(/:[0-9]{2} /,'');
+        tmpNm=dayAppts[apptIn].cust_fName;
+        tmpNm=tmpNm.length>=10?tmpNm.substr(0,7)+'...':tmpNm;
+        let dur=dayAppts[apptIn]?.duration||0;
+        let eventId=dayAppts[apptIn].event_id;
+        
+        dayApptsStr+=`
+        <div class="calApptSum" onclick="wkObj.drawRghtMod('${eventId}')" ${ovrlpTtl}>
+          <div><div class="calApptSumDtRw ${ovrlpClss}"><div>${tmpDt}&nbsp;</div><div class="calApptSumNDt">- ${nDt}</div></div><div class="calApptSumDur" title="Appointment duration: ${dur}">${dur} min</div></div>
+          <div class="calApptSumNm">${tmpNm}</div>
+        </div>`;
         }
  
       rtrn+='<td id="date-'+toTimeStr(ptrDt)+'"'+tdy+cls+'><div class="dyWrap"><div>'+ptrDt.getDate()+'</div><div class="dyAppts">'+dayApptsStr+'</div></div></td>';
@@ -521,7 +501,6 @@ if(typeof week==='undefined'){
       this.genInvntSrvListEls();
       this.genUsrLstEls();
 
-      console.log("asdfasdfsadf");
       this.genWk();
       }
     }
@@ -574,13 +553,14 @@ if(typeof week==='undefined'){
     }
 
     /*-----------------------------------------------
-    pre: this.invntSrvList filled
+    pre: this.invntSrvList filled. dur
     post: none
+    parameter: dur=override dur amount
     -----------------------------------------------*/
-    genInvntSrvListEls(){
-      let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'wkObj')};
-      document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
-      document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
+    genInvntSrvListEls(dur=null){
+    let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'wkObj')};
+    document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
+    document.getElementById("apptNewApptFormFullApptInfoDur").value=dur?dur:iSEls.total;
     } 
 
     /*-----------------------------------------------
@@ -597,7 +577,7 @@ if(typeof week==='undefined'){
     this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
     
     this.genUsrLstEls();
-    this.genInvntSrvListEls();
+    this.genInvntSrvListEls(appt.duration);
     let evntId=document.getElementById("apptNewApptFormFullApptInfoUUID");
       if(evntId){
       evntId.value=appt.event_id;

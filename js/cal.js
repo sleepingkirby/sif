@@ -185,7 +185,7 @@ if(typeof cal==='undefined'){
           }
         apptI++;
         }
-      let dayNum=dayAppts.length>0?'<div class="calApptNum">'+dayAppts.length+'</div>':'';
+      let dayNum=dayAppts.length>0?'<div class="calApptNum" title="Number of appointsments today: '+dayAppts.length+'">'+dayAppts.length+'</div>':'';
       let dayApptsStr='';
       let tmpDt='';
       let tmpNm='';

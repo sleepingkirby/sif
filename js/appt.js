@@ -615,7 +615,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.invntSrvAddedArr=invntSrv.map(e=>e.invntSrv_id);
 
     this.genUsrLstEls();
-    this.genInvntSrvListEls();
+    this.genInvntSrvListEls(appt.duration);
     let evntId=document.getElementById("apptNewApptFormFullApptInfoUUID");
       if(evntId){
       evntId.value=appt.event_id;
@@ -753,10 +753,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: this.invntSrvList filled
     post: none
     -----------------------------------------------*/
-    genInvntSrvListEls(){
-      let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'apptObj')};
-      document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
-      document.getElementById("apptNewApptFormFullApptInfoDur").value=iSEls.total;
+    genInvntSrvListEls(dur=null){
+    let iSEls={...genInvntSrvListEls(this.invntSrvList,this.invntSrvAddedArr,'apptObj')};
+    document.getElementById("apptNewApptFormFullApptInfoSrvLst").innerHTML=iSEls.html;
+    document.getElementById("apptNewApptFormFullApptInfoDur").value=dur?dur:iSEls.total;
     }
 
     /*-----------------------------------------------

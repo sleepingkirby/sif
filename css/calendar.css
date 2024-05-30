@@ -257,8 +257,16 @@ flex-wrap:wrap;
 .calApptSum div:last-child{
 }
 
-.calApptSum .calApptSumNDt{
+.calApptSum .calApptSumDtRw{
+display:flex;
+flex-direction:row;
+align-items:center;
+justify-content:flex-start;
+flex-wrap:wrap;
 margin-right: 6px;
+}
+
+.calApptSum .calApptSumNDt{
 }
 
 .calApptSum .calApptSumDur{
@@ -271,4 +279,10 @@ padding: 1px 3px 1px 3px;
 
 .calApptSum .calApptSumNm{
 margin-top:1px;
+}
+
+.calApptSum .calApptSumDtOverlap{
+background-color: var(--default-red);
+border-radius:3px;
+padding:0px 2px 0px 2px;
 }
