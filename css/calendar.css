@@ -219,9 +219,9 @@ padding: 2px 6px 2px 6px;
 .calApptSum{
 width:100%;
 display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-between;
+flex-direction: column;
+align-items:flex-start;
+justify-content:flex-start;
 flex-wrap:wrap;
 }
 
@@ -243,8 +243,32 @@ border-color:rgba(144, 144, 144, 0.4);
 font-weight: 900;
 }
 
+.calApptSum > div{
+display:flex;
+flex-direction: row;
+align-items: center;
+justify-content:flex-start;
+flex-wrap:wrap;
+}
 
 .calApptSum div:first-child{
+}
+
+.calApptSum div:last-child{
+}
+
+.calApptSum .calApptSumNDt{
 margin-right: 6px;
 }
 
+.calApptSum .calApptSumDur{
+font-size: smaller;
+color: white;
+background-color:rgba(144, 144, 144, 0.4);
+border-radius:6px;
+padding: 1px 3px 1px 3px;
+}
+
+.calApptSum .calApptSumNm{
+margin-top:1px;
+}
