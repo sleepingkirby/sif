@@ -35,7 +35,23 @@ class sif{
     e.returnValue=true;
     return "Are you sure you want to leave?";
     }
-  window.onpagehide=(e)=>{return "Are you sure you want to leave?";}
+    window.onpagehide=(e)=>{
+    return "Are you sure you want to leave?";
+    }
+  }
+
+  /*-------------------------------------
+  pre: this.mod, state.depModuleObjs
+  post: module's destructor ran.
+  run module's destructor function
+  -------------------------------------*/
+  destructModule(modNm=null){
+  let moduleNm=modNm?modNm:state.pos
+    if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
+      if(state.depModuleObjs[moduleNm].hasOwnProperty("destruct")){
+      state.depModuleObjs[moduleNm].destruct();
+      }
+    }
   }
 
   /*-------------------------------------
@@ -54,9 +70,7 @@ class sif{
     //remove previous module from depMdulesObjs
     let moduleNm=scrpt.getAttribute('module');
       if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
-        if(state.depModuleObjs[moduleNm].hasOwnProperty("destruct")){
-        state.depModuleObjs[moduleNm].destruct();
-        }
+      this.destructModule(moduleNm);
       delete state.depModuleObjs[moduleNm];
       }
     }
@@ -271,6 +285,7 @@ class sif{
   var el=document.getElementById("logout");
     if(el){
       el.onclick=(e)=>{
+      this.destructModule();
         if(state.dbModded){
         const fn='sif-'+dtFlNm()+'.db';
         this.sqlObj.writeDb(fn);

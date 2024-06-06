@@ -16,6 +16,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.photo = null;
     this.startbutton = null;
 
+    this.dl = null;
+
     this.destruct=this.destructor;//hook for destructor to run on module change.
     }
 
@@ -41,7 +43,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         },
         false,
       );
-      document.getElementById('startbutton').addEventListener(
+      this.startbutton.addEventListener(
         "click",
         (ev) => {
           this.takepicture();
@@ -56,6 +58,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           for(const stream of streams){
           stream.stop();
           }
+        },
+        false,
+      );
+      this.dl.addEventListener("click",
+        (ev) => {
+        const a=document.getElementById('picDL');
+        a.download="test.png";
         },
         false,
       );
@@ -85,6 +94,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       } else {
         this.clearphoto();
       }
+      const a=document.getElementById('picDL');
+      if(a){
+      a.href=canvas.toDataURL("image/png");
+      }
     }
 
     /*-----------------------------------------------
@@ -102,6 +115,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     <canvas id="canvas"> </canvas>
     <div class="output">
       <img id="photo" alt="The screen capture will appear in this box." />
+      <a id="picDL" />
+      <button id="dlbutton">download</button>
     </div>
     `;
 
@@ -110,7 +125,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.photo = document.getElementById('photo');
     this.startbutton = document.getElementById('startbutton');
     this.closebutton = document.getElementById('closebutton');
-
+    this.dl = document.getElementById('dlbutton');
 
       if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
