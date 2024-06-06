@@ -182,7 +182,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         mainObj.modLftOpenClose();
         }
         this.invntSrvAddedArr=[];
-        if(state.pos=="appt"){
+        if(state.pos=="appt"||state.pos=="week"||state.pos=="cal"){
         state.depModuleObjs[state.pos].run();
         }
        
