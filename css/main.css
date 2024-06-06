@@ -770,6 +770,40 @@ color:red;
 font-weight:900;
 }
 
+.overMod{
+position: fixed;
+left: 0px;
+top: 0px;
+width:100vw;
+height:100vh;
+background-color: rgba(0,0,0,0.3);
+z-index: 72;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 12px;
+box-sizing: border-box;
+}
+
+.overMod .overContent{
+background-color: white;
+box-sizing: border-box;
+border-radius: 6px;
+display: flex;
+height: 100%;
+width: 100%;
+padding: 6px 12px 6px 12px;
+}
+
+.overMod .overContent .head{
+display:flex;
+width:100%;
+justify-content: flex-end;
+height: fit-content;
+font-size: xxx-large;
+}
+
 @keyframes opac{
 0%{max-height: 0px; margin-bottom: 0px; padding-top: 4px; padding-bottom: 4px;}
 20%{max-height: 600px; margin-bottom: 4px;}

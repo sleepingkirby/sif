@@ -11,11 +11,13 @@ class sif{
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.cssFadeOut="fadeOut";
   this.msgFloatId="msgFloat";
+  this.overModId="overModCloseId";
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
 
   this.hookEl();
   this.modOpenClose("lftMod");
   this.modOpenClose("rghtMod");
+  this.openCloseOverModHook();
 
   this.tmpl={};
   this.tmpl['rightNav']=[];
@@ -242,6 +244,31 @@ class sif{
   let el=document.getElementById(this.msgFloatId);
     if(el&&el.classList&&el.classList.contains(this.cssFadeOut)){
     el.classList.remove(this.cssFadeOut);
+    }
+  }
+
+  /*-------------------------------------------------------
+  pre: element this.overModId
+  post: overMod display changes
+  toggles the display on overMod, hiding it or showing it
+  -------------------------------------------------------*/
+  openCloseOverMod(el){
+  let cEl=el?el:document.getElementById(this.overModId);
+  let prntEl=document.getElementById(cEl.getAttribute('hideel'));
+    if(prntEl){
+    prntEl.style.display=prntEl.style.display=='none'?'flex':'none';
+    }
+  }
+
+  /*-------------------------------------------------------
+  pre: openCloseOverMod()
+  post: hook set for overMod close button
+  sets hook for overMod close button to close the modal on click
+  -------------------------------------------------------*/
+  openCloseOverModHook(){
+  let el=document.getElementById(this.overModId);
+    el.onclick=(e)=>{
+    this.openCloseOverMod(e.target);
     }
   }
 
