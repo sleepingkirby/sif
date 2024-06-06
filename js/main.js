@@ -54,7 +54,10 @@ class sif{
     //remove previous module from depMdulesObjs
     let moduleNm=scrpt.getAttribute('module');
       if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
-      delete state.depModuleObjs[scrpt.getAttribute('module')];
+        if(state.depModuleObjs[moduleNm].hasOwnProperty("destruct")){
+        state.depModuleObjs[moduleNm].destruct();
+        }
+      delete state.depModuleObjs[moduleNm];
       }
     }
 

@@ -15,6 +15,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.canvas = null;
     this.photo = null;
     this.startbutton = null;
+
+    this.destruct=this.destructor;//hook for destructor to run on module change.
     }
 
     testFunc(e){
@@ -126,6 +128,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           });
       }
       this.hookEls();
+    }
+
+    
+    /*-----------------------------------------------
+    pre: this.destruct
+    post: close/stops the streams
+    destructor to run closing any streams when changing modules.
+    -----------------------------------------------*/
+    destructor() {
+    const streams=this.video.srcObject.getTracks();
+      for(const stream of streams){
+      stream.stop();
+      }
     }
   }
 
