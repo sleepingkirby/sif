@@ -1,6 +1,7 @@
 :root{
 --default-blue: #71AEEC;
 --default-gray: #787878;
+--default-gray-a6:rgba(120,120,120,0.6);
 --default-mid-gray: #c5c5c5;
 --default-light-gray: #f0f0f0;
 --default-red: #f44;

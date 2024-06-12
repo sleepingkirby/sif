@@ -34,7 +34,7 @@ class sif{
 
   this.tmpl={};
   this.tmpl['rightNav']=[];
-  this.tmpl['rightNav'].push(`<div class="rightNavActns"><div class="menuIcon" title="Settings" tabindex=0>`);
+  this.tmpl['rightNav'].push(`<div class="rightNavActns" onclick=mainObj.setState("pos","config")><div class="menuIcon" title="Settings" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);
   this.tmpl['rightNav'].push(`<div id="saveDB" class="menuIcon" title="Save" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);

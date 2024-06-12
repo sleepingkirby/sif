@@ -1,0 +1,63 @@
+.configWrap{
+padding:10px 10px 10px 10px;
+width:100%;
+height:fit-content;
+box-sizing:border-box;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+
+.configArea{
+padding:6px 6px 6px 6px;
+width:100%;
+color:var(--default-gray);
+box-sizing: border-box;
+display:flex;
+flex-direction:column;
+align-items:flex-start;
+justify-content:flex-start;
+background-color:var(--default-light-gray);
+border-color:var(--default-mid-gray);
+border-radius:6px;
+}
+
+.configArea > *{
+display:flex;
+color:var(--default-gray);
+margin-bottom: 12px;
+}
+
+.configArea input[type="time"]{
+
+}
+
+.configArea textarea{
+border-color:var(--default-mid-gray);
+}
+
+.configArea textarea::placeholder{
+color:var(--default-gray-a6);
+}
+
+.configRow{
+display:flex;
+flex-direction:row;
+justify-content:flex-start;
+align-items:center;
+}
+
+.configRow .configRowLabel{
+margin-left:8px;
+margin-right:12px;
+}
+
+.configRowButton{
+width:100%;
+display:flex;
+flex-direction:row;
+justify-content:flex-end;
+align-items:center;
+margin-top:24px;
+}
