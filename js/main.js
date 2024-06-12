@@ -13,6 +13,19 @@ class sif{
   this.msgFloatId="msgFloat";
   this.overModId="overModCloseId";
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
+  this.defaultConfig={
+    "iconSet":"default",
+    'shift':{
+      'start': {
+      'hour':10,
+      'minute':0
+      },
+      'end':{
+      'hour':20,
+      'minute':0
+      }
+    }
+  }
 
   this.hookEl();
   this.modOpenClose("lftMod");
@@ -186,7 +199,7 @@ class sif{
           where 
           type.name="global"
           `);
-          state.user.config=defaultConfig;
+          state.user.config=this.defaultConfig;
             if(config&&config.length>0){
             state.user.config=JSON.parse(config[0].json);
             }
