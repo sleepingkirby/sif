@@ -182,6 +182,7 @@ class sif{
           // ----- this is, essentially, the initialization for the app once the user provides the database -----
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";
+          //global configuration
           var config=this.sqlObj.runQuery(`
           select
           config.uuid,
@@ -203,6 +204,36 @@ class sif{
             if(config&&config.length>0){
             state.user.config=JSON.parse(config[0].json);
             }
+
+          if(state?.user?.uuid){
+            let profile=this.sqlObj.runQuery(`
+            select
+            users.uuid,
+            users.username,
+            users.email,
+            users.notes,
+            ut.name as userType,
+            config.json
+            from users
+            left join users_type as u_t
+            on u_t.user_uuid=users.uuid
+            left join type as ut
+            on ut.uuid=u_t.type_uuid
+            left join config
+            on config.users_id=users.uuid
+            where users.uuid=?
+            `,[state.user.uuid]);
+
+            if(profile){
+            state.user.username=profile[0].username;
+            state.user.type=profile[0].userType;
+            state.user.email=profile[0].email;
+              if(profile.json){
+              state.user.config=profile[0].email;
+              }
+            }
+          }
+
           document.getElementById('rightNav').innerHTML=this.genRightNav();
           this.afterHookEl();
           this.saveHookEl();

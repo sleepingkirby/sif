@@ -41,6 +41,10 @@ border-color:var(--default-mid-gray);
 color:var(--default-gray-a6);
 }
 
+.configArea select{
+color:var(--default-gray);
+}
+
 .configRow{
 display:flex;
 flex-direction:row;
