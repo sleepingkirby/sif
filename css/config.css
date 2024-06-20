@@ -65,3 +65,14 @@ justify-content:flex-end;
 align-items:center;
 margin-top:24px;
 }
+
+.configRowButton input{
+color:var(--default-gray);
+border-color:var(--default-gray);
+}
+
+.configRowButton input:hover{
+background-color:var(--default-gray);
+color:white;
+border-color:white;
+}

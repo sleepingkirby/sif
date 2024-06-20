@@ -16,16 +16,11 @@ class sif{
   this.defaultConfig={
     "iconSet":"default",
     'shift':{
-      'start': {
-      'hour':10,
-      'minute':0
-      },
-      'end':{
-      'hour':20,
-      'minute':0
-      }
+      'start':"10:00",
+      'end':"20:00"
     }
   }
+  this.defaultConfig=this.defaultConfig?this.defaultConfig:defaultConfig;
 
   this.hookEl();
   this.modOpenClose("lftMod");
@@ -201,7 +196,7 @@ class sif{
           type.name="global"
           `);
           state.user.config=this.defaultConfig;
-            if(config&&config.length>0){
+            if(config&&config.length>0&&config[0].json){
             state.user.config=JSON.parse(config[0].json);
             }
 
@@ -213,6 +208,7 @@ class sif{
             users.email,
             users.notes,
             ut.name as userType,
+            ut.uuid as userTypeId,
             config.json
             from users
             left join users_type as u_t
@@ -227,9 +223,12 @@ class sif{
             if(profile){
             state.user.username=profile[0].username;
             state.user.type=profile[0].userType;
+            state.user.typeId=profile[0].userTypeId;
             state.user.email=profile[0].email;
-              if(profile.json){
-              state.user.config=profile[0].email;
+
+            console.log(profile);
+              if(profile[0].json){
+              state.user.config=JSON.parse(profile[0].json);
               }
             }
           }

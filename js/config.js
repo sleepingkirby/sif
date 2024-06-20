@@ -7,32 +7,91 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
   class config{
     constructor(){
     this.tmpl={};
-/*
-uuid text primary key, username text null, password text null, salt text null, pin text null, status_id text not null, email text null, create_dt integer not null, mod_dt integer not null, failLgn_dt integer null, lastLgn_dt integer null, role_id text, parent_user_id text, notes text, foreign key(status_id) references status(uuid), foreign key(role_id) references roles(uuid), foreign key(parent_user_id) references users(uuid));
-
-*/
       this.tmpl.main=`
       <div class="configWrap">
         <div class="configArea">
           <textarea name="config[email]" type="text" placeholder="email"></textarea>
           <div class="configRow">
             <span class="configRowLabel">Shift Start:</span>
-            <input type="time" name="config[shift][start]"></input>
+            <input type="time" name="config[shift-start]"></input>
           </div>
           <div class="configRow">
             <span class="configRowLabel">Shift End:</span>
-            <input type="time" name="config[shift][end]"></input>
+            <input type="time" name="config[shift-end]"></input>
+          </div>
+          <div class="configRow">
+             <span class="configRowLabel">User type:</span>
+            <select name="config[typeId]">
+              <option>none</option>
+            </select>
           </div>
           <div class="configRow">
             <span class="configRowLabel">Icon set:</span>
             <select name="config[iconSet]">
-              <option>test</option>
+              <option>none</option>
             </select>
           </div>
-          <div class="configRowButton"><button>test</button></div>
+          <div class="configRowButton">
+            <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()"/>
+          </div>
         </div>
       </div>
       `;
+    let types=[];
+    }
+
+
+    /*-----------------------------------------------
+    pre: none
+    post: db saved 
+    -----------------------------------------------*/
+    save(){
+    let els=document.querySelectorAll('*[name^="config"]');
+      let config={
+      'iconSet':null,
+        'shift':{
+          'start':null,
+          'end':null
+        }
+      };
+    let user={'email':null, 'typeId':null, 'type':null};
+      for(let el of els){
+        switch(getSubs(el.name,'config')){
+        case 'shift-start':
+        config.shift.start=el.value;
+        break;
+        case 'shift-end':
+        config.shift.end=el.value;
+        break;
+        case 'iconSet':
+        config.iconSet=el.value;
+        break;
+        case 'email':
+        user.email=el.value;
+        break;
+        case 'typeId':
+        user.typeId=el.value;
+        break;
+        default:
+        break;
+        }
+      }
+
+      if(els){
+      updtConfig(JSON.stringify(config));
+      //state.user.config=config;
+      mainObj.setState('config', config);
+
+      }
+
+      if(user.email&&user.typeId){
+      let type=this.types.find((e)=>e.uuid==user.typeId);
+      user.type=type?type.name:null;
+      updtCurUser(state.user.uuid, user);
+      state.user.email=user.email;
+      state.user.typeId=user.typeId;
+      state.user.type=user.type;
+      }
     }
 
  
@@ -75,22 +134,30 @@ uuid text primary key, username text null, password text null, salt text null, p
       return null;
       }
     slct.innerHTML=this.genSelectIcon(iconSets);
+    slct.value=state.user.config.iconSet;
 
-    let shftStrt=document.getElementsByName('config[shift][start]');
+    let shftStrt=document.getElementsByName('config[shift-start]');
     shftStrt=shftStrt?shftStrt[0]:null;
       if(shftStrt){
-      shftStrt.value=String(state.user.config.shift.start.hour).padStart(2, '0')+":"+String(state.user.config.shift.start.minute).padStart(2, '0');
+      shftStrt.value=String(state.user.config.shift.start);
       }
-    let shftEnd=document.getElementsByName('config[shift][end]');
+    let shftEnd=document.getElementsByName('config[shift-end]');
     shftEnd=shftEnd?shftEnd[0]:null;
       if(shftEnd){
-      shftEnd.value=String(state.user.config.shift.end.hour).padStart(2, '0')+":"+String(state.user.config.shift.end.minute).padStart(2, '0');
+      shftEnd.value=String(state.user.config.shift.end);
       }
     let email=document.getElementsByName('config[email]');
     email=email?email[0]:null;
       if(email){
       email.value=state.user.email;
-      } 
+      }
+    this.types=selectType('users');
+    let typeEl=document.getElementsByName('config[typeId]');
+    typeEl=typeEl?typeEl[0]:null;
+      if(typeEl){
+      this.types=selectType('users');
+      typeEl.innerHTML=genSlct(this.types,'uuid','name', state.user.typeId,null);
+      }
     }
 
     /*-----------------------------------------------
