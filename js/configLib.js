@@ -52,17 +52,13 @@ let query=null;
   where uuid=?
   `;
     try{
-    console.log(query);
-    console.log(arr);
     sqlObj.runQuery(query,arr);
     }
     catch(err){
     console.log(err);
+    return false;
     }
   }
-/*
-CREATE TABLE users_type(uuid text not null primary key, user_uuid text not null, type_uuid text not null, foreign key(user_uuid) references users(uuid), foreign key(type_uuid) references type(uuid));
-*/
 
   if(hsh.hasOwnProperty('typeId')){
   arr=[hsh.typeId,id];
@@ -72,12 +68,11 @@ CREATE TABLE users_type(uuid text not null primary key, user_uuid text not null,
   where user_uuid=?
   `;
     try{
-    console.log(query);
-    console.log(arr);
     sqlObj.runQuery(query,arr);
     }
     catch(err){
     console.log(err);
+    return false;
     }
   }
    

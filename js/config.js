@@ -10,26 +10,29 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.tmpl.main=`
       <div class="configWrap">
         <div class="configArea">
-          <textarea name="config[email]" type="text" placeholder="email"></textarea>
+          <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
           <div class="configRow">
             <span class="configRowLabel">Shift Start:</span>
-            <input type="time" name="config[shift-start]"></input>
+            <input type="time" name="config[shift-start]" title="Start of shift time"></input>
           </div>
           <div class="configRow">
             <span class="configRowLabel">Shift End:</span>
-            <input type="time" name="config[shift-end]"></input>
+            <input type="time" name="config[shift-end]" title="End of shift time"></input>
           </div>
           <div class="configRow">
              <span class="configRowLabel">User type:</span>
-            <select name="config[typeId]">
+            <select name="config[typeId]" title="Type for user">
               <option>none</option>
             </select>
           </div>
           <div class="configRow">
             <span class="configRowLabel">Icon set:</span>
-            <select name="config[iconSet]">
+            <select name="config[iconSet]" title="Icon set for app. (Requires restart)">
               <option>none</option>
             </select>
+          </div>
+          <div class="configRow">
+            <span class="configRowLabel redBold">Icon set change requires restart</span>
           </div>
           <div class="configRowButton">
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()"/>
@@ -77,21 +80,33 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         }
       }
 
-      if(els){
-      updtConfig(JSON.stringify(config));
-      //state.user.config=config;
-      mainObj.setState('config', config);
+    let success=false;
 
+      if(els){
+      success=updtConfig(JSON.stringify(config));
+      state.user.config=config;
+      }
+    
+      if(success===false){
+      mainObj.setFloatMsg("Update to configuration failed");
       }
 
       if(user.email&&user.typeId){
       let type=this.types.find((e)=>e.uuid==user.typeId);
       user.type=type?type.name:null;
-      updtCurUser(state.user.uuid, user);
+      success=updtCurUser(state.user.uuid, user);
       state.user.email=user.email;
       state.user.typeId=user.typeId;
       state.user.type=user.type;
       }
+
+      if(success===false){
+      mainObj.setFloatMsg("Update to profile failed");
+      }
+      else{
+      mainObj.setFloatMsg("Configuration updated");
+      }
+
     }
 
  

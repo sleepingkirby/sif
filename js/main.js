@@ -226,7 +226,6 @@ class sif{
             state.user.typeId=profile[0].userTypeId;
             state.user.email=profile[0].email;
 
-            console.log(profile);
               if(profile[0].json){
               state.user.config=JSON.parse(profile[0].json);
               }
