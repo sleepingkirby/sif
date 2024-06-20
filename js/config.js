@@ -32,7 +32,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             </select>
           </div>
           <div class="configRow">
-            <span class="configRowLabel redBold">Icon set change requires restart</span>
+            <span class="configRowLabel redBold" style="font-size:small">Icon set change requires restart</span>
           </div>
           <div class="configRowButton">
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()"/>

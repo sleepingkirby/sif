@@ -18,7 +18,7 @@ if(typeof home==='undefined'){
     ----------------------------------*/
     hookEl(){
     } 
-
+  
 
     /*----------------------------------
     pre: this.rghtModForm 
@@ -34,7 +34,7 @@ if(typeof home==='undefined'){
     generates contacts table
     ----------------------------------*/
     draw(){
-    document.getElementById('contactsMain').innerHTML=this.drawTbl();
+    document.getElementById('mainEl').innerHTML="";
     }
 
     /*-------------------------------------
@@ -50,10 +50,13 @@ if(typeof home==='undefined'){
     That panel should also have the option to take pictures of that customer. The interface thereof should be a overlay modal so the page doesn't have to change.
     The appoints liste item should also change color/status/whatever depending on current time. 
     */
+    document.getElementById('leftNavMod').innerHTML="Home";
+
+    this.draw();
     }
 
   }
 
-var homeObj=new contacts();
+var homeObj=new home();
 state.depModuleObjs['home']=homeObj;
 }
