@@ -28,6 +28,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <input type="number" name="config[lunch-dur]" title="Lunch duration" size="3"></input>
           </div>
           <div class="configRow">
+            <span class="configRowLabel">Home Page Interval(sec):</span>
+            <input type="number" name="config[clockInterval]" title="The interval which the home page will check to see which appointments is/are the current appointments." size="3"></input>
+          </div>
+          <div class="configRow">
              <span class="configRowLabel">User type:</span>
             <select name="config[typeId]" title="Type for user">
               <option>none</option>
@@ -60,7 +64,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let els=document.querySelectorAll('*[name^="config"]');
       let config={
       'iconSet':null,
-      'clockInterval':1000,
+      'clockInterval':60000,
         'shift':{
           'start':null,
           'end':null,
@@ -82,6 +86,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         break;
         case 'lunch-dur':
         config.shift.lunchDur=el.value;
+        break;
+        case 'clockInterval':
+        config.clockInterval=Number(el.value) * 1000;
         break;
         case 'iconSet':
         config.iconSet=el.value;
@@ -192,6 +199,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     lunchDur=lunchDur?lunchDur[0]:null;
       if(lunchDur){
       lunchDur.value=state.user.config.shift.lunchDur;
+      }
+    let clockInterval=document.getElementsByName('config[clockInterval]');
+    clockInterval=clockInterval?clockInterval[0]:null;
+      if(clockInterval){
+      clockInterval.value=Number(state.user.config.clockInterval) / 1000;
       }
 
     this.types=selectType('users');

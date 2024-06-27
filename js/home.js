@@ -23,11 +23,23 @@ if(typeof home==='undefined'){
       this.rghtModForm=``;
       this.mainElHtml=[];
       this.timerObj=null;
+      this.destruct=this.destructor;
     }
 
-    
-    runOnInterval(){
 
+    /*---------------------------------
+    pre: this.destruct
+    post: stops setInterval() 
+    destructor to run closing any streams when changing modules.
+    ---------------------------------*/
+    destructor(){
+    console.log("asfasdf");
+    clearTimeout(this.timerObj);
+    }
+    
+    runOnInterval(e){
+    console.log("<----------runOnInterval()");
+    console.log(e);
     }
    
     /*----------------------------------
@@ -36,8 +48,7 @@ if(typeof home==='undefined'){
     setInterval
     ----------------------------------*/
     setsTimer(){
-    
-
+    this.timerObj=setInterval(this.runOnInterval, state.user?.config?.clockInterval||60000);
     }
 
 
@@ -110,6 +121,7 @@ if(typeof home==='undefined'){
 
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
+    this.setsTimer();
     }
 
   }
