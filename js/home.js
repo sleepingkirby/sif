@@ -7,16 +7,26 @@ if(typeof home==='undefined'){
   class home{
 
     constructor(){
+      this.today=new Date();
       this.lftNavHead=`
       <div class="homeClockWrap">
-        <div>
-        Home
+        <div id="homeCalMon" class="">
+          <div name="homeCalMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">
+          Mon
+          </div>
+          <div class="calNavMod">
+            <div for="homeCalMon" onclick="">+</div>
+            <div for="homeCalMon" onclick="">-</div>
+          </div>
         </div>
-        <div id="homeClockDate">
-        Date
-        </div>
-        <div id="homeClockTime">
-        Time
+        <div id="homeCalDay">
+          <div name="homeCalDay" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">
+          Day
+          </div>
+          <div class="calNavMod">
+            <div for="homeCalDay" onclick="">+</div>
+            <div for="homeCalDay" onclick="">-</div>
+          </div>
         </div>
       </div>
       `;
@@ -36,10 +46,22 @@ if(typeof home==='undefined'){
     console.log("asfasdf");
     clearTimeout(this.timerObj);
     }
-    
+   
+
+
+    /*---------------------------------
+    pre: functions one wants to put in here 
+    post: whatever these functions do.
+    Any and all functions that you want to run every x interval, put in here
+    whether that be updating a clock, changing the events to be displayed, etc.
+    ---------------------------------*/
     runOnInterval(e){
     console.log("<----------runOnInterval()");
     console.log(e);
+    //update clock (if exists)
+    //update date
+    //update which events to highlight
+    //update events
     }
    
     /*----------------------------------
@@ -114,8 +136,6 @@ if(typeof home==='undefined'){
         Logic:
         if cur time within shift, show current shift. 
         else, do cal above.
-
-        
     */
     document.getElementById('leftNavMod').innerHTML=this.lftNavHead;
 
