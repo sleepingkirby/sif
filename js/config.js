@@ -27,12 +27,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </div>
           <div class="configRow">
             <span class="configRowLabel">Icon set:</span>
-            <select name="config[iconSet]" title="Icon set for app. (Requires restart)">
+            <select name="config[iconSet]" title="Icon set for app. (Requires re-login)">
               <option>none</option>
             </select>
           </div>
           <div class="configRow">
-            <span class="configRowLabel redBold" style="font-size:small">Icon set change requires restart</span>
+            <span class="configRowLabel redBold" style="font-size:small">Icon set change requires re-login</span>
           </div>
           <div class="configRowButton">
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()"/>
@@ -52,6 +52,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let els=document.querySelectorAll('*[name^="config"]');
       let config={
       'iconSet':null,
+      'clockInterval':1000,
         'shift':{
           'start':null,
           'end':null

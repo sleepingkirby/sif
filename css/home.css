@@ -1,0 +1,10 @@
+.homeClockWrap{
+display:flex;
+flex-direction:row;
+justify-content:flex-start;
+align-items:center;
+}
+
+.homeClockWrap > div{
+margin-right:6px;
+}

@@ -7,9 +7,39 @@ if(typeof home==='undefined'){
   class home{
 
     constructor(){
+      this.lftNavHead=`
+      <div class="homeClockWrap">
+        <div>
+        Home
+        </div>
+        <div id="homeClockDate">
+        Date
+        </div>
+        <div id="homeClockTime">
+        Time
+        </div>
+      </div>
+      `;
       this.rghtModForm=``;
       this.mainElHtml=[];
+      this.timerObj=null;
     }
+
+    
+    runOnInterval(){
+
+    }
+   
+    /*----------------------------------
+    pre: state.user.config.clockInterval
+    post:
+    setInterval
+    ----------------------------------*/
+    setsTimer(){
+    
+
+    }
+
 
     /*----------------------------------
     pre: everything this class requires
@@ -50,8 +80,35 @@ if(typeof home==='undefined'){
     That panel should also have the option to take pictures of that customer. The interface thereof should be a overlay modal so the page doesn't have to change.
     The appoints liste item should also change color/status/whatever depending on current time. 
     */
-    document.getElementById('leftNavMod').innerHTML="Home";
 
+    /*
+    features:
+    - status filters
+    - autoscroll to current event[s] (bias on first event)
+    - highlight to current event[2]
+    - buttons: camera, done, other (all other status options)
+    - interface for selecting current day
+    - item block, not row
+    - event edit on block click
+    - lunch block
+    - determine what day to show by time calculation.
+      ex. If shift is defined as 10pm to 4am.
+        if current datetime is 2024-01-04 7:00 pm
+        last end shift date time 2024-01-04 4:00am
+        prev start shift date time 2024-01-04 10pm
+        LastEndShift - Cur time = 15 hours
+        Cur time - PrevStartShift = 3 hours.
+        3 > 15 hours. Show next shift
+
+        Logic:
+        if cur time within shift, show current shift. 
+        else, do cal above.
+
+        
+    */
+    document.getElementById('leftNavMod').innerHTML=this.lftNavHead;
+
+//function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
     }
 
