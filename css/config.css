@@ -29,8 +29,17 @@ color:var(--default-gray);
 margin-bottom: 12px;
 }
 
-.configArea input[type="time"]{
+.configArea input{
+border-color: var(--default-gray);
+color: var(--default-gray);
+font-size:x-large;
+font-family: var(--font-family);
+background-color:transparent;
+}
 
+.configArea input[type="time"]{
+border:1px solid var(--default-gray);
+border-radius: var(--default-border-radius);
 }
 
 .configArea textarea{
@@ -43,6 +52,7 @@ color:var(--default-gray-a6);
 
 .configArea select{
 color:var(--default-gray);
+border-color:var(--default-gray);
 }
 
 .configRow{

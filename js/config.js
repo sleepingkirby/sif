@@ -20,6 +20,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <input type="time" name="config[shift-end]" title="End of shift time"></input>
           </div>
           <div class="configRow">
+            <span class="configRowLabel">Lunch Start:</span>
+            <input type="time" name="config[lunch-start]" title="Start of lunch time"></input>
+          </div>
+          <div class="configRow">
+            <span class="configRowLabel">Lunch Duration:</span>
+            <input type="number" name="config[lunch-dur]" title="Lunch duration" size="3"></input>
+          </div>
+          <div class="configRow">
              <span class="configRowLabel">User type:</span>
             <select name="config[typeId]" title="Type for user">
               <option>none</option>
@@ -55,7 +63,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       'clockInterval':1000,
         'shift':{
           'start':null,
-          'end':null
+          'end':null,
+          'lunchStart':null,
+          'lunchDur':30
         }
       };
     let user={'email':null, 'typeId':null, 'type':null};
@@ -66,6 +76,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         break;
         case 'shift-end':
         config.shift.end=el.value;
+        break;
+        case 'lunch-start':
+        config.shift.lunchStart=el.value;
+        break;
+        case 'lunch-dur':
+        config.shift.lunchDur=el.value;
         break;
         case 'iconSet':
         config.iconSet=el.value;
@@ -167,6 +183,17 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(email){
       email.value=state.user.email;
       }
+    let lunchStart=document.getElementsByName('config[lunch-start]');
+    lunchStart=lunchStart?lunchStart[0]:null;
+      if(lunchStart){
+      lunchStart.value=state.user.config.shift.lunchStart;
+      }
+    let lunchDur=document.getElementsByName('config[lunch-dur]');
+    lunchDur=lunchDur?lunchDur[0]:null;
+      if(lunchDur){
+      lunchDur.value=state.user.config.shift.lunchDur;
+      }
+
     this.types=selectType('users');
     let typeEl=document.getElementsByName('config[typeId]');
     typeEl=typeEl?typeEl[0]:null;
