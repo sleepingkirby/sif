@@ -123,11 +123,11 @@ if(typeof home==='undefined'){
         homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
         }
         else if(state.user.config.clockInterval<=60000
-        &&state.user.config.clockInterval>1000
+        &&state.user.config.clockInterval>=1000
         &&nowHr==0
         &&nowMin==0
         &&now.getSeconds()>=0
-        &&now.getSeconds()<Math.ceil(state.user.config.clockInterval/1000)
+        &&now.getSeconds()<=Math.floor(state.user.config.clockInterval/1000)
         ){
         homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
         }
