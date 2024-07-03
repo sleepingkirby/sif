@@ -38,9 +38,9 @@ if(typeof home==='undefined'){
           </div>
         </div>
         <div class="calNav">
-          <div name="homeCalHr" class="calNavNum" style="border-width:0px;margin:0px;">Hr</div>
+          <div name="homeCalHr" padLen=2 padChar="0" minVal=0 maxVal=23 class="calNavNum" style="border-width:0px;margin:0px;">Hr</div>
           <div class="calNavNum" style="border-width:0px; padding:0px; margin:0px;">:</div>
-          <div name="homeCalMn" class="calNavNum" style="border-width:0px;">Mn</div>
+          <div name="homeCalMin" padLen=2 padChar="0" minVal=0 maxVal=59 class="calNavNum" style="border-width:0px;">Mn</div>
         </div>
       </div>
       `;
@@ -88,13 +88,74 @@ if(typeof home==='undefined'){
     ---------------------------------*/
     runOnInterval(e){
     console.log("<----------runOnInterval()");
-    console.log(e);
     //update clock (if exists)
+    let now=new Date();
+    let nowHr=Number(now.getHours());
+    let nowMin=Number(now.getMinutes());
+    let hr=document.getElementsByName("homeCalHr")[0];
+      if(hr){
+      padVal(hr,nowHr);
+      }
+    let min=document.getElementsByName("homeCalMin")[0];
+      if(min){
+      padVal(min,nowMin);
+      }
+
     //update date
+    let yr=document.getElementsByName("homeCalYear")[0];
+    let mon=document.getElementsByName("homeCalMon")[0];
+    let day=document.getElementsByName("homeCalDay")[0];
+
+    //Checks if the displayed time is yesterday. If so, check if need to update time when reaches midnight...-ish
+      if(Number(yr.innerText)==now.getFullYear()&&Number(mon.innerText)==now.getMonth()+1&&Number(day.innerText)==now.getDate()-1){
+      //if the clockInterval is more than a minute
+      //should not be able to go beyond one hour 
+        if(state.user.config.clockInterval==3600000
+        &&nowHr==0){
+        homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
+        }
+        else if(state.user.config.clockInterval<3600000
+        &&state.user.config.clockInterval>60000
+        &&nowHr==0
+        &&nowMin>=0
+        &&nowMin<=Math.floor(state.user.config.clockInterval/60000)
+        ){
+        homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
+        }
+        else if(state.user.config.clockInterval<=60000
+        &&state.user.config.clockInterval>1000
+        &&nowHr==0
+        &&nowMin==0
+        &&now.getSeconds()>=0
+        &&now.getSeconds()<Math.ceil(state.user.config.clockInterval/1000)
+        ){
+        homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
+        }
+      }
     //update which events to highlight
     //update events
     }
-   
+  
+
+    /*----------------------------------
+    pre:
+    post:
+    update this.today and GUI
+    ----------------------------------*/
+    updtToday(yr=null, mn=null, dt=null){
+      if(yr&&mn&&dt){
+      this.today.setFullYear(yr);
+      this.today.setMonth(mn);
+      this.today.setDate(dt);
+      }
+    let year=document.getElementsByName("homeCalYear")[0];
+    let mon=document.getElementsByName("homeCalMon")[0];
+    let day=document.getElementsByName("homeCalDay")[0];
+    padVal(year, Number(this.today.getFullYear()));
+    padVal(mon, Number(this.today.getMonth() + 1));
+    padVal(day, Number(this.today.getDate()));
+    }
+
     /*----------------------------------
     pre: state.user.config.clockInterval
     post:
@@ -106,14 +167,19 @@ if(typeof home==='undefined'){
 
 
     /*----------------------------------
+    pre: left navigation element exists
+    post: elements filled out.
+    Fills out the elements as needed
     ----------------------------------*/
     fillLeftNavHead(){
     let yr=document.getElementsByName("homeCalYear")[0];
     let mon=document.getElementsByName("homeCalMon")[0];
     let day=document.getElementsByName("homeCalDay")[0];
-    padVal(yr, Number(this.today.getFullYear()));
-    padVal(mon, Number(this.today.getMonth() + 1));
-    padVal(day, Number(this.today.getDate()));
+    this.updtToday();
+    let hr=document.getElementsByName("homeCalHr")[0];
+    let min=document.getElementsByName("homeCalMin")[0];
+    padVal(hr,Number(this.today.getHours()));
+    padVal(min,Number(this.today.getMinutes()));
     } 
 
 
@@ -151,12 +217,9 @@ if(typeof home==='undefined'){
         break;
       }
 
-    padVal(yr,this.today.getFullYear());
-    padVal(mn,this.today.getMonth()+1);
-    dy?padVal(dy,this.today.getDate()):null;
-
     //updates appts when date is changed
     //this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
+    this.updtToday();
     return true;
     }
 

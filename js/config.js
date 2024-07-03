@@ -29,7 +29,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </div>
           <div class="configRow">
             <span class="configRowLabel">Home Page Interval(sec):</span>
-            <input type="number" name="config[clockInterval]" title="The interval which the home page will check to see which appointments is/are the current appointments." size="3"></input>
+            <input type="number" name="config[clockInterval]" title="The interval which the home page will check to see which appointments is/are the current appointments." size="3" max=3600></input>
           </div>
           <div class="configRow">
              <span class="configRowLabel">User type:</span>
