@@ -10,6 +10,15 @@ if(typeof home==='undefined'){
       this.today=new Date();
       this.lftNavHead=`
       <div class="homeClockWrap">
+        <div id="homeCalYear" class="calNav">
+          <div name="homeCalYear" class="calNavNum" padLen=4 padChar="0" minVal=1 contenteditable="true" title="Current Year">
+          Year
+          </div>
+          <div class="calNavMod">
+            <div for="homeCalYear" onclick=homeObj.modToElNum(true)>+</div>
+            <div for="homeCalYear" onclick=homeObj.modToElNum(false)>-</div>
+          </div>
+        </div>
         <div id="homeCalMon" class="calNav">
           <div name="homeCalMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true" title="Current Month">
           Mon
@@ -27,6 +36,11 @@ if(typeof home==='undefined'){
             <div for="homeCalDay" onclick=homeObj.modToElNum(true)>+</div>
             <div for="homeCalDay" onclick=homeObj.modToElNum(false)>-</div>
           </div>
+        </div>
+        <div class="calNav">
+          <div name="homeCalHr" class="calNavNum" style="border-width:0px;margin:0px;">Hr</div>
+          <div class="calNavNum" style="border-width:0px; padding:0px; margin:0px;">:</div>
+          <div name="homeCalMn" class="calNavNum" style="border-width:0px;">Mn</div>
         </div>
       </div>
       `;
@@ -94,10 +108,12 @@ if(typeof home==='undefined'){
     /*----------------------------------
     ----------------------------------*/
     fillLeftNavHead(){
+    let yr=document.getElementsByName("homeCalYear")[0];
     let mon=document.getElementsByName("homeCalMon")[0];
     let day=document.getElementsByName("homeCalDay")[0];
+    padVal(yr, Number(this.today.getFullYear()));
     padVal(mon, Number(this.today.getMonth() + 1));
-    padVal(day, Number(this.today.getDay()));
+    padVal(day, Number(this.today.getDate()));
     } 
 
 
@@ -114,37 +130,33 @@ if(typeof home==='undefined'){
       return false;
       }
   
-console.log(event);
-/* 
-    var mnEl=document.getElementsByName('homeCalMon')[0];
-    var dyEl=document.getElementsByName('homeCalDay').length>=1?document.getElementsByName('homeCalDay')[0]:null;
+    var yr=document.getElementsByName("homeCalYear")[0];
+    var mn=document.getElementsByName('homeCalMon')[0];
+    var dy=document.getElementsByName('homeCalDay').length>=1?document.getElementsByName('homeCalDay')[0]:null;
    
    
-    var dt=new Date(yrEl.innerText,Number(mnEl.innerText)-1,dyEl?dyEl.innerText:this.day);
-
     add?num++:num--;
 
       switch(forId){
-        case "calNavDay":
-        dt.setDate(num);
+        case "homeCalDay" :
+        this.today.setDate(num);
         break;
-        case "calNavMon":
-        dt.setMonth(num-1);
+        case "homeCalMon":
+        this.today.setMonth(num-1);
         break;
-        case "calNavYear":
-        dt.setFullYear(num);
+        case "homeCalYear":
+        this.today.setFullYear(num);
         break;
         default:
         break;
       }
 
+    padVal(yr,this.today.getFullYear());
+    padVal(mn,this.today.getMonth()+1);
+    dy?padVal(dy,this.today.getDate()):null;
 
-    padVal(yrEl,dt.getFullYear());
-    padVal(mnEl,dt.getMonth()+1);
-    dyEl?padVal(dyEl,dt.getDate()):null;
-
-    this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
-  */
+    //updates appts when date is changed
+    //this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
     return true;
     }
 
