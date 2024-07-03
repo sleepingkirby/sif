@@ -32,7 +32,7 @@ if(typeof week==='undefined'){
     this.tmpl.leftNav[0]=`
       <div class="calNav">
         <div id="calYear">
-          <div name="calNavYear" class="calNavNum" contenteditable="true" oninput=wkObj.modDate()>`;
+          <div name="calNavYear" class="calNavNum" contenteditable="true" oninput=wkObj.modDate() title="Current Year">`;
     this.tmpl.leftNav[1]=`
           </div>
           <div class="calNavMod">
@@ -41,7 +41,7 @@ if(typeof week==='undefined'){
           </div>
         </div>
         <div id="calMon">
-          <div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">`;
+          <div name="calNavMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true" title="Current Month">`;
     this.tmpl.leftNav[2]=`
           </div>
           <div class="calNavMod">
@@ -50,7 +50,7 @@ if(typeof week==='undefined'){
           </div>
         </div>
         <div id="calDay">
-          <div name="calNavDay" class="calNavNum" padLen=2 padChar="0" contenteditable="true" oninput=wkObj.modDate()>`;
+          <div name="calNavDay" class="calNavNum" padLen=2 padChar="0" contenteditable="true" oninput=wkObj.modDate() title="Current Day">`;
     this.tmpl.leftNav[3]=`
           </div>
           <div class="calNavMod">

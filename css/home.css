@@ -19,3 +19,28 @@ flex-direction:row;
 justify-content:center;
 align-items:center;
 }
+
+.homeMain{
+width:100%;
+box-sizing: border-box;
+color: var(--default-gray);
+padding:6px 12px;
+display:flex;
+flex-direction:column;
+justify-content: flex-start;
+align-items:center;
+}
+
+.homeMain > div{
+display:flex;
+min-width:570px;
+}
+
+.homeMainFltr{
+}
+
+.homeMain select{
+color:var(--default-gray);
+}
+
+

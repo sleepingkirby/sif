@@ -10,28 +10,45 @@ if(typeof home==='undefined'){
       this.today=new Date();
       this.lftNavHead=`
       <div class="homeClockWrap">
-        <div id="homeCalMon" class="">
-          <div name="homeCalMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">
+        <div id="homeCalMon" class="calNav">
+          <div name="homeCalMon" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true" title="Current Month">
           Mon
           </div>
           <div class="calNavMod">
-            <div for="homeCalMon" onclick="">+</div>
-            <div for="homeCalMon" onclick="">-</div>
+            <div for="homeCalMon" onclick=homeObj.modToElNum(true)>+</div>
+            <div for="homeCalMon" onclick=homeObj.modToElNum(false)>-</div>
           </div>
         </div>
-        <div id="homeCalDay">
-          <div name="homeCalDay" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=12 contenteditable="true">
+        <div id="homeCalDay" class="calNav">
+          <div name="homeCalDay" class="calNavNum" padLen=2 padChar="0" minVal=1 maxVal=31 contenteditable="true" title="Current Day">
           Day
           </div>
           <div class="calNavMod">
-            <div for="homeCalDay" onclick="">+</div>
-            <div for="homeCalDay" onclick="">-</div>
+            <div for="homeCalDay" onclick=homeObj.modToElNum(true)>+</div>
+            <div for="homeCalDay" onclick=homeObj.modToElNum(false)>-</div>
           </div>
         </div>
       </div>
       `;
       this.rghtModForm=``;
-      this.mainElHtml=[];
+      this.mainElHtml=`
+      <div class="homeMain">
+        <div class="homeMainFltr fltrRow" style="justify-content:center;">
+          <div>
+            <div class="fltrRowCellLbl">
+            Status Filter
+            </div>
+            <select name="homeMainFltrSlct" class="fltrSlct">
+              <option>none</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="homeMainAppts">
+          <div class="">appoints</div>
+        </div>
+      </div>
+      `;
       this.timerObj=null;
       this.destruct=this.destructor;
     }
@@ -75,6 +92,64 @@ if(typeof home==='undefined'){
 
 
     /*----------------------------------
+    ----------------------------------*/
+    fillLeftNavHead(){
+    let mon=document.getElementsByName("homeCalMon")[0];
+    let day=document.getElementsByName("homeCalDay")[0];
+    padVal(mon, Number(this.today.getMonth() + 1));
+    padVal(day, Number(this.today.getDay()));
+    } 
+
+
+    /*----------------------------------
+    ----------------------------------*/
+    modToElNum(add=true){
+      if(!event || !"target" in event || !event.target.hasAttribute("for")){
+      return false;
+      }
+    var forId=event.target.getAttribute("for");
+    var el=document.getElementsByName(forId)[0];
+    let num=Number(el.innerText);
+      if(isNaN(num)){
+      return false;
+      }
+  
+console.log(event);
+/* 
+    var mnEl=document.getElementsByName('homeCalMon')[0];
+    var dyEl=document.getElementsByName('homeCalDay').length>=1?document.getElementsByName('homeCalDay')[0]:null;
+   
+   
+    var dt=new Date(yrEl.innerText,Number(mnEl.innerText)-1,dyEl?dyEl.innerText:this.day);
+
+    add?num++:num--;
+
+      switch(forId){
+        case "calNavDay":
+        dt.setDate(num);
+        break;
+        case "calNavMon":
+        dt.setMonth(num-1);
+        break;
+        case "calNavYear":
+        dt.setFullYear(num);
+        break;
+        default:
+        break;
+      }
+
+
+    padVal(yrEl,dt.getFullYear());
+    padVal(mnEl,dt.getMonth()+1);
+    dyEl?padVal(dyEl,dt.getDate()):null;
+
+    this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
+  */
+    return true;
+    }
+
+
+    /*----------------------------------
     pre: everything this class requires
     post: events added to elements.
     adds event hooks to elements that need it
@@ -97,7 +172,7 @@ if(typeof home==='undefined'){
     generates contacts table
     ----------------------------------*/
     draw(){
-    document.getElementById('mainEl').innerHTML="";
+    document.getElementById('mainEl').innerHTML=this.mainElHtml;
     }
 
     /*-------------------------------------
@@ -138,9 +213,10 @@ if(typeof home==='undefined'){
         else, do cal above.
     */
     document.getElementById('leftNavMod').innerHTML=this.lftNavHead;
-
+    this.fillLeftNavHead();
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
+    this.hookEl();
     this.setsTimer();
     }
 
