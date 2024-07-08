@@ -304,7 +304,12 @@ if(typeof home==='undefined'){
             </div>
           </div>
           <div class="homeApptCardActions">
-          actions
+            <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
+            <div class="menuIcon" title="Mark as done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div class="menuIcon homeAppCardActionsMore" title="More actions">
+            `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`
+              <div class="homeAppCardActionsMoreMore"> testing extended</div>
+            </div>
           </div>
         </div>
       `;

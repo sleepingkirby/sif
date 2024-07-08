@@ -72,5 +72,43 @@ flex-grow:10;
 
 .homeApptCard .homeApptCardActions{
 background-color:var(--default-light-gray);
+display:flex;
+flex-direction:row;
+justify-content:flex-end;
+align-items:center;
+margin-left:18px;
 }
 
+.homeApptCardActions > .menuIcon{
+margin-left: 9px;
+margin-right: 9px;
+}
+
+.homeApptCardActions > .menuIcon:hover > svg{
+background-color:var(--default-gray);
+fill:white;
+}
+
+.homeApptCardActions svg{
+fill:var(--default-gray);
+}
+
+.homeAppCardActionsMoreMore{
+display:flex;
+flex-direction:row;
+flex-wrap:nowrap;
+justify-content:flex-end;
+align-items:center;
+overflow:hidden;
+max-width:0px;
+padding-left:0px;
+padding-right:0px;
+background-color: var(--default-light-gray);
+transition: all 0.45s ease-in-out;
+}
+
+.homeApptCardActions .homeAppCardActionsMore:hover .homeAppCardActionsMoreMore{
+max-width: 400px;
+padding-left:9px;
+padding-right:9px;
+}
