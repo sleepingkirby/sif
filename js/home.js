@@ -1,6 +1,6 @@
 if(typeof home==='undefined'){
   /*-------------------------------------------
-  pre: state variable
+  pre: state variable, invcsRghtModObj
   post: html changed, db updated
   class for the main page that people will live for most the day
   -------------------------------------------*/
@@ -259,7 +259,17 @@ if(typeof home==='undefined'){
     post: none
     generates right modal content
     ----------------------------------*/
-    rghtMod(){
+    rghtMod(id=null){
+    console.log(id);
+      if(!id&&id===null){
+      return null;
+      }
+      state.pageVars.home={
+      'eventId':id
+      };
+      console.log(state.pageVars.home);
+      invcsRghtModObj.popRghtMod();
+      mainObj.modRghtOpenClose();
     }
 
     /*----------------------------------
@@ -282,7 +292,7 @@ if(typeof home==='undefined'){
           </div>
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
-            <div class="menuIcon" title="Mark as done and generates receipt">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
+            <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.rghtMod(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div class="menuIcon" title="Mark as done (no receipt)">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
             `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`

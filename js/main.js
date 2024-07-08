@@ -29,7 +29,7 @@ class sif{
 
   this.tmpl={};
   this.tmpl['rightNav']=[];
-  this.tmpl['rightNav'].push(`<div class="rightNavActns" onclick=mainObj.setState("pos","config")><div class="menuIcon" title="Settings" tabindex=0>`);
+  this.tmpl['rightNav'].push(`<div class="rightNavActns" ><div class="menuIcon" onclick=mainObj.setState("pos","config") title="Settings" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);
   this.tmpl['rightNav'].push(`<div id="saveDB" class="menuIcon" title="Save" tabindex=0>`);
   this.tmpl['rightNav'].push(`</div>`);
@@ -242,6 +242,7 @@ class sif{
 
           //setting up module appt module to set up left modal
           this.addModule("apptQck", "lftModalScript");
+          this.addModule("invcsRghtMod", null, false);
           this.draw(state.pos);
 
           /*reminder for later if needed
