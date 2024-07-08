@@ -33,7 +33,7 @@ align-items:center;
 
 .homeMain > div{
 display:flex;
-min-width:570px;
+min-width:640px;
 }
 
 .homeMainFltr{
@@ -67,7 +67,20 @@ flex-direction:column;
 justify-content:flex-start;
 align-items:flex-start;
 flex-grow:10;
+min-width:200px;
+cursor:pointer;
+}
 
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime{
+background-color:var(--default-mid-gray);
+padding:var(--default-snglLn-pad-size);
+border-radius:var(--default-border-radius) 0px var(--default-border-radius) 0px;
+color:white;
+font-weight:900;
+}
+
+.homeApptCard .homeApptCardInfo .homeApptCardInfoCust{
+padding: 4px 6px 4px 6px;
 }
 
 .homeApptCard .homeApptCardActions{
@@ -76,20 +89,21 @@ display:flex;
 flex-direction:row;
 justify-content:flex-end;
 align-items:center;
-margin-left:18px;
+margin-left:12px;
 }
 
-.homeApptCardActions > .menuIcon{
-margin-left: 9px;
-margin-right: 9px;
+.homeApptCardActions .menuIcon{
+margin-left: 6px;
+margin-right: 6px;
+fill:var(--default-gray);
 }
 
-.homeApptCardActions > .menuIcon:hover > svg{
+.homeApptCardActions .menuIcon:hover > svg{
 background-color:var(--default-gray);
 fill:white;
 }
 
-.homeApptCardActions svg{
+.homeApptCardActions .menuIcon svg{
 fill:var(--default-gray);
 }
 
@@ -108,7 +122,7 @@ transition: all 0.45s ease-in-out;
 }
 
 .homeApptCardActions .homeAppCardActionsMore:hover .homeAppCardActionsMoreMore{
-max-width: 400px;
-padding-left:9px;
-padding-right:9px;
+max-width:400px;
+padding-left:6px;
+padding-right:6px;
 }

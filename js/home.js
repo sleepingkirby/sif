@@ -63,28 +63,6 @@ if(typeof home==='undefined'){
         </div>
       </div>
       `;
-      this.apptCardHtml={
-        'homeApptCard':{
-        'start':`<div class="homeApptCard">`,
-        'end':`</div>`
-        },
-        'homeApptCardInfo':{
-        'start':'<div class="homeApptCardInfo">',
-        'end':'</div>'
-        },
-        'homeApptCardInfoDateTime':{
-        'start':'<div class="homeApptCardInfoDateTime">',
-        'end':'</div>'
-        },
-        'homeApptCardInfoCust':{
-        'start':'<div class="homeApptCardInfoCust">',
-        'end':'</div>'
-        },
-        'homeApptCardActions':{
-        'start':'<div class="homeApptCardActions">',
-        'end':'</div>'
-        }
-      };
       this.timerObj=null;
       this.statuses=null;
       this.sttsHsh=null;
@@ -226,7 +204,6 @@ if(typeof home==='undefined'){
     var mn=document.getElementsByName('homeCalMon')[0];
     var dy=document.getElementsByName('homeCalDay').length>=1?document.getElementsByName('homeCalDay')[0]:null;
    
-   
     add?num++:num--;
 
       switch(forId){
@@ -305,10 +282,14 @@ if(typeof home==='undefined'){
           </div>
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
-            <div class="menuIcon" title="Mark as done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div class="menuIcon" title="Mark as done and generates receipt">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
+            <div class="menuIcon" title="Mark as done (no receipt)">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
             `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`
-              <div class="homeAppCardActionsMoreMore"> testing extended</div>
+              <div class="homeAppCardActionsMoreMore">
+                <div class="menuIcon" title="Cancel Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
+                <div class="menuIcon" title="Put appointment on hold">`+getEvalIcon(iconSets, state.user.config.iconSet, 'hand')+`</div>
+              </div>
             </div>
           </div>
         </div>
