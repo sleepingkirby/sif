@@ -58,12 +58,22 @@ if(typeof home==='undefined'){
           </div>
         </div>
 
-        <div class="homeMainAppts">
+        <div id="homeMainAppts" class="homeMainAppts">
           <div class="">appoints</div>
         </div>
       </div>
       `;
+      this.apptCardHtml=[];
+      this.apptCardHtml[0]=`
+      <div class="homeApptCard">
+      `;      
+
+      this.apptCardHtml[1]=`
+      </div>
+      `;
       this.timerObj=null;
+      this.statuses=null;
+      this.sttsHsh=null;
       this.destruct=this.destructor;
     }
 
@@ -223,6 +233,23 @@ if(typeof home==='undefined'){
     return true;
     }
 
+    /*----------------------------------
+    pre: 
+    post: 
+    ----------------------------------*/
+    sttsSlctFunc(e){
+    console.log(e.target.value);
+    }
+
+    /*----------------------------------
+    pre: 
+    post: 
+    ----------------------------------*/
+    hookSttsSlct(){
+    let el=document.getElementsByName("homeMainFltrSlct")[0];
+    el.onchange=this.sttsSlctFunc;
+    }
+
 
     /*----------------------------------
     pre: everything this class requires
@@ -230,6 +257,7 @@ if(typeof home==='undefined'){
     adds event hooks to elements that need it
     ----------------------------------*/
     hookEl(){
+    this.hookSttsSlct();
     } 
   
 
@@ -242,12 +270,25 @@ if(typeof home==='undefined'){
     }
 
     /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    drawApptsCard(){
+    let appts=document.getElementById('homeMainAppts');
+    appts.innerHTML='';
+      for(let i=0;i<10;i++){
+      appts.innerHTML+=this.apptCardHtml[0]+i+this.apptCardHtml[1];
+      }
+    }
+
+    /*----------------------------------
     pre: drawTbl(), element contactsmain
     post: draws the table to the html
     generates contacts table
     ----------------------------------*/
     draw(){
     document.getElementById('mainEl').innerHTML=this.mainElHtml;
+    this.drawApptsCard();
     }
 
     /*-------------------------------------
@@ -289,8 +330,15 @@ if(typeof home==='undefined'){
     */
     document.getElementById('leftNavMod').innerHTML=this.lftNavHead;
     this.fillLeftNavHead();
+    this.statuses=selectStatus();
+    this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
+    console.log(this.statuses);
+    console.log(this.sttsHsh);
     this.draw();
+    //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+    document.getElementsByName('homeMainFltrSlct')[0].innerHTML=genSttsSlct(this.statuses);
+    
     this.hookEl();
     this.setsTimer();
     }

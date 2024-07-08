@@ -43,4 +43,16 @@ min-width:570px;
 color:var(--default-gray);
 }
 
+.homeMainAppts{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items: flex-start;
+}
 
+.homeMainAppts > .homeApptCard{
+border:1px solid var(--default-gray);
+margin-bottom:12px;
+border-radius: 6px;
+min-width:200px;
+}
