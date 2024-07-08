@@ -63,14 +63,28 @@ if(typeof home==='undefined'){
         </div>
       </div>
       `;
-      this.apptCardHtml=[];
-      this.apptCardHtml[0]=`
-      <div class="homeApptCard">
-      `;      
-
-      this.apptCardHtml[1]=`
-      </div>
-      `;
+      this.apptCardHtml={
+        'homeApptCard':{
+        'start':`<div class="homeApptCard">`,
+        'end':`</div>`
+        },
+        'homeApptCardInfo':{
+        'start':'<div class="homeApptCardInfo">',
+        'end':'</div>'
+        },
+        'homeApptCardInfoDateTime':{
+        'start':'<div class="homeApptCardInfoDateTime">',
+        'end':'</div>'
+        },
+        'homeApptCardInfoCust':{
+        'start':'<div class="homeApptCardInfoCust">',
+        'end':'</div>'
+        },
+        'homeApptCardActions':{
+        'start':'<div class="homeApptCardActions">',
+        'end':'</div>'
+        }
+      };
       this.timerObj=null;
       this.statuses=null;
       this.sttsHsh=null;
@@ -98,7 +112,7 @@ if(typeof home==='undefined'){
     ---------------------------------*/
     runOnInterval(e){
     console.log("<----------runOnInterval()");
-    //update clock (if exists)
+    //update clock 
     let now=new Date();
     let nowHr=Number(now.getHours());
     let nowMin=Number(now.getMinutes());
@@ -142,8 +156,10 @@ if(typeof home==='undefined'){
         homeObj.updtToday(now.getFullYear(),now.getMonth(),now.getDate());
         }
       }
-    //update which events to highlight
     //update events
+    //update which events to highlight
+    //scroll to current event
+    //el[49].scrollIntoView({'behavior':"smooth","block":"center", "inline":"center"}); 
     }
   
 
@@ -276,8 +292,22 @@ if(typeof home==='undefined'){
     drawApptsCard(){
     let appts=document.getElementById('homeMainAppts');
     appts.innerHTML='';
-      for(let i=0;i<10;i++){
-      appts.innerHTML+=this.apptCardHtml[0]+i+this.apptCardHtml[1];
+      for(let i=0;i<50;i++){
+      appts.innerHTML+=`
+        <div class="homeApptCard">
+          <div class="homeApptCardInfo">
+            <div class="homeApptCardInfoDateTime">
+            datetime
+            </div>
+            <div class="homeApptCardInfoCust">
+            cust. info
+            </div>
+          </div>
+          <div class="homeApptCardActions">
+          actions
+          </div>
+        </div>
+      `;
       }
     }
 
