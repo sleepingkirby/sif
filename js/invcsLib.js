@@ -330,6 +330,13 @@ CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invc
       if(typesIdHsh.invntSrv[""][items[i].typeId]!="discount"){
       prntUUID=itemUUID;
       }
+    let ovrrdPrice=null;
+      if(items[i].hasOwnProperty('ovrrdPrice')){
+      ovrrdPrice=items[i].ovrrdPrice;
+      }
+      else if(items[i].hasOwnProperty('addAmnt')&&items[i].hasOwnProperty('sell')){
+      ovrrdPrice=items[i].addAmnt*items[i].sell;
+      }
 
       qObj={
       '$uuid':itemUUID,
@@ -339,9 +346,9 @@ CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invc
       '$prntInvcsItemId':typesIdHsh.invntSrv[""][items[i].type_id]!="discount"?null:prntUUID,
       '$ord':i,
       '$name':items[i].hasOwnProperty('name')?items[i].name:null,
-      '$price':items[i].hasOwnProperty('price')?items[i].price:null,
+      '$price':items[i].hasOwnProperty('sell')?items[i].sell:null,
       '$price_type_id':items[i].hasOwnProperty('price_type_id')?items[i].price_type_id:null,
-      '$ovrrdPrice':items[i].hasOwnProperty('ovrrdPrice')?items[i].ovrrdPrice:null,
+      '$ovrrdPrice':ovrrdPrice,
       '$amnt':items[i].hasOwnProperty('addAmnt')?items[i].addAmnt:null,
       '$notes':items[i].hasOwnProperty('notes')?items[i].notes:null
       };

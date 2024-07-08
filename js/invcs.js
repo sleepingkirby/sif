@@ -643,6 +643,7 @@ manage inventory and services
     clears the right modal
     -----------------------------------------------*/
     clearRghtMod(){
+    this.invcsNewApptId=null;
     let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
       for(let el of els){
       let nm=getSubs(el.getAttribute('name'),'invcs');
@@ -658,6 +659,7 @@ manage inventory and services
       }
     this.invcsNewItemsList=[];
     this.flipCrtUpdtBtn('create');
+    this.flipNewInvcsBtn('create', true);
     this.newInvcsTblTtlRedrw();
     }
 
@@ -866,7 +868,6 @@ manage inventory and services
       if(!appt||appt.length<=0){
       return null;
       }
-    console.log(appt);
     let apptInvntSrv=selectEventInvntSrv(state.pageVars.appt.id);
       for(let ais of apptInvntSrv){
       //this.invcsNewItemsList.push(this.invntSrvItems[ais.invntSrv_id]);
@@ -898,7 +899,6 @@ manage inventory and services
     el=document.getElementsByName("invcs[invcs_status_id]");
     let dn=this.statuses.find((e)=>{return e.name=="done"});
     el[0].value=dn.uuid;
-    console.log(dn);
 
     this.flipNewInvcsBtn();
     mainObj.modRghtOpenClose();
