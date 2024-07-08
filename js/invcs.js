@@ -426,7 +426,7 @@ manage inventory and services
             lastSubTtl=Number(subTtl);
             }
             else{
-              if(this.invcsNewItemsList[i].hasOwnProperty('ovrrdPrice')){
+              if(this.invcsNewItemsList[i].hasOwnProperty('ovrrdPrice')&&this.invcsNewItemsList[i].ovrrdPrice!=null){
               subTtl=Number(this.invcsNewItemsList[i].ovrrdPrice);
               }
               else{
