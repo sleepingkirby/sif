@@ -563,6 +563,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
     this.genRghtMod();
     this.hookEl(refresh);
+    this.cleanRghtModForm();
       if(eventId){
       this.updtApptRghtMod(eventId);
       }
