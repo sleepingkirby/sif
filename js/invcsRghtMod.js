@@ -635,7 +635,7 @@ manage inventory and services
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=customers;
     document.getElementById('invcsSelectByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
-    document.getElementById('invcsSelectForUser').innerHTML=genUsrSlct(customers,'username','Username','uuid',state.user.uuid);
+    document.getElementById('invcsSelectForUser').innerHTML=genCustSlct(customers,'Customer','uuid',state.user.uuid);
 
     //fill inventory/services items
     this.invntSrvItems=getInvntSrv(null, false, 'name', 'asc');

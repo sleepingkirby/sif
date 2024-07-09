@@ -45,6 +45,29 @@ return html;
 }
 
 /*-----------------------------------------------
+pre: none
+post: none
+params: users= array of users,dfltVal=default value, slsctdPrp=which property to match slctdVl against, slctdVl= the value to choose to select
+generates <option/> for select elements for users with firstname and last name (abbreviated)
+-----------------------------------------------*/
+function genCustSlct(users,dfltVal='none',slctdPrp=null,slctdVl=null){
+  let html="";
+  html+='<option value="">'+dfltVal+'</option>';
+  for(const usr of users){
+  let fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
+  let lNm=usr.surName.length>=8?usr.surName.substr(0,5)+'...':usr.surName;
+  let selected='';
+  let title=usr.fName+' '+usr.surName+', '+usr.email+', '+usr.cellphone||usr.phone;
+    if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
+    selected='selected';
+    }
+    html+='<option value="'+usr.uuid+'"'+' title="'+title+'" '+selected+'>'+fNm+' '+lNm+"</option>";
+  }
+return html;
+}
+
+
+/*-----------------------------------------------
 pre: this.invntSrvList filled
 post: none
 -----------------------------------------------*/
