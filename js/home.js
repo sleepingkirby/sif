@@ -260,15 +260,8 @@ if(typeof home==='undefined'){
     generates right modal content
     ----------------------------------*/
     rghtMod(id=null){
-    console.log(id);
-      if(!id&&id===null){
-      return null;
-      }
-      state.pageVars.home={
-      'eventId':id
-      };
-      console.log(state.pageVars.home);
-      invcsRghtModObj.popRghtMod();
+      //the home page will ONLY have appointments
+      invcsRghtModObj.popRghtMod(null, id);
       mainObj.modRghtOpenClose();
     }
 

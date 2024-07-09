@@ -671,12 +671,12 @@ manage inventory and services
       if(!uuid||!this.invcsListHsh.hasOwnProperty(uuid)){
       return null;
       }
-    this.invcsNewApptId=uuid;
+    //this.invcsNewApptId=uuid;
     //fill right mod
-    this.fillRghtMod(uuid);
-    this.flipNewInvcsBtn('update', false);
-    this.flipCrtUpdtBtn('update');
-    mainObj.modRghtOpenClose();
+    this.rghtMod(uuid,null,true);
+    //this.fillRghtMod(uuid);
+    //this.flipNewInvcsBtn('update', false);
+    //this.flipCrtUpdtBtn('update');
     }
 
     /*-----------------------------------------------
@@ -905,17 +905,27 @@ manage inventory and services
     }
 
     /*----------------------------------
+    pre: this.rghtModForm 
+    post: none
+    generates right modal content
+    ----------------------------------*/
+    rghtMod(invcsId=null,apptId=null,updt){
+      invcsRghtModObj.popRghtMod(invcsId, apptId,updt);
+      mainObj.modRghtOpenClose();
+    }
+
+    /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modRghtOpenClose()
     post: event hook added
     addes event hook to apptAddBtn element
     ----------------------------------*/
     hookNewInvntBtn(){
       document.getElementById("invcAddBtn").onclick=(e)=>{
-      this.clearRghtMod();
-      mainObj.modRghtOpenClose();
+      //this.clearRghtMod();
+      //mainObj.modRghtOpenClose();
+      this.rghtMod();
       };
     }
-
 
     /*----------------------------------
     pre: invntSrvFltrInptWrap element
@@ -1017,7 +1027,7 @@ manage inventory and services
     this.typesIdHsh=sepTypesIdHsh(this.types);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
-    this.genRghtMod();
+    //this.genRghtMod();
     //document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     this.drawTbl();
     document.getElementById('invcFilterStatus').innerHTML=this.genFltrSttsSlct();

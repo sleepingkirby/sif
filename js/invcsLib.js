@@ -127,14 +127,14 @@ left join events as event on invcs.event_id=event.uuid
 
 let and='';
 let tmp=null;
-let obj={};
+let obj=[];
 
   if(paramObj&&Object.keys(paramObj).length>0){
   query+='where';
     for(let param of Object.keys(paramObj)){
       if(paramObj[param]){
-      query+=`${and} ${param}=\$${param}`;
-      obj[`\$${param}`]=paramObj[param];
+      query+=`${and} ${param}=?`;
+      obj.push(paramObj[param]);
       and=' and';
       }
     }
@@ -314,6 +314,7 @@ CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invc
 
   query=`delete from invcs_items where invcs_id=$invcs_id`;
   qObj={'$invcs_id':uuid};
+
     try{
     sqlObj.runQuery(query,qObj);
     }
@@ -352,6 +353,7 @@ CREATE TABLE invcs_items(uuid text not null primary key, type_id text null, invc
       '$amnt':items[i].hasOwnProperty('addAmnt')?items[i].addAmnt:null,
       '$notes':items[i].hasOwnProperty('notes')?items[i].notes:null
       };
+
       try{
       sqlObj.runQuery(query,qObj);
       }
