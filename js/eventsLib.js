@@ -99,6 +99,7 @@ CREATE TABLE events_invntSrv(uuid text not null, create_date int not null, event
       }
     });
   }
+return true;
 }
 
 /*-----------------------------------------------
@@ -197,6 +198,7 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
     sqlObj.runQuery(subQ,subObj);
     });
   }
+return true;
 }
 
 

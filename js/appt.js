@@ -43,7 +43,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.tmpl.apptTblHdCll[1]=`
           </th>
     `;
-    //<div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(event)">
+    //<div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptRghtModObj.setColSrtHookFunc(event)">
     this.tmpl.apptTblHdCllIcn=`
             <div class="tblHdSrt ##pntClass##" tabindex=0 name="##hdrNm##" onclick="apptObj.setColSrtHookFunc(this)">
               <div>##hdrTtl##</div>
@@ -534,17 +534,31 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*----------------------------------
+    pre: this.rghtModForm 
+    post: none
+    generates right modal content
+    ----------------------------------*/
+    apptRghtMod(id=null){
+      apptRghtModObj.popRghtMod(id);
+      mainObj.modRghtOpenClose();
+    }
+
+
+    /*----------------------------------
     pre: apptAddBtn element exists, mainObj.modRghtOpenClose();
     post: event hook added
     addes event hook to apptAddBtn element
     ----------------------------------*/
     hookNewApptBtn(){
       document.getElementById("apptAddBtn").onclick=(e)=>{
+      /*
       this.addUpdtBtnFlip();
 
       this.cleanRghtModForm();
 
       mainObj.modRghtOpenClose();
+      */
+      this.apptRghtMod();
       };
     }
 
@@ -647,12 +661,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(!uuid){
       return null;
       }
+      /*
       if(this.apptsHsh.hasOwnProperty(uuid)&&this.apptsHsh[uuid]){
       this.apptsHsh[uuid];
       this.fillRghtMod(this.apptsHsh[uuid]);
       this.addUpdtBtnFlip(true);
       mainObj.modRghtOpenClose();
       }
+      */
+      this.apptRghtMod(uuid);
     }
 
     /*-----------------------------------------------
@@ -677,7 +694,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <td>`+appt.duration+`</td>
         <td>
           <div class="moduleTblCellActns">
-            <div name="apptEdit" class="menuIcon" onclick=apptObj.updtApptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
+            <div name="apptEdit" class="menuIcon" onclick=apptObj.apptRghtMod("`+appt.event_id+`"); title="Edit Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'edit')+`</div>
             <div name="apptDone" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","done"); title="Mark Appoint As Done">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div name="apptDoneInvcs" class="menuIcon" onclick=(function(){state.pageVars.appt.id="`+appt.event_id+`"})();apptObj.updtEvntStts("`+appt.event_id+`","done");mainObj.setState("pos","invcs"); title="Mark Appoint As Done And Generate Invoice">`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div name="apptCancel" class="menuIcon" onclick=apptObj.updtEvntStts("`+appt.event_id+`","cancelled"); title="Mark Appoint As Cancelled">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
@@ -828,7 +845,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.fltrStts=this.sttsHsh.hasOwnProperty('active')?this.sttsHsh['active'].uuid:null;
     document.getElementById('mainEl').innerHTML=this.tmpl.headers;
     document.getElementById('apptFilterStatus').innerHTML=this.genFltrSttsSlct();
-    document.getElementById('apptMain').innerHTML=this.genAppts();
+    this.reDrwAppts();
     document.getElementById('leftNavMod').innerHTML=this.genLeftNavAppt();
     this.genRghtMod();
     this.hookEl();

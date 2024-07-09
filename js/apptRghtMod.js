@@ -317,7 +317,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: form exists.
     post: set event
     ----------------------------------*/
-    hookAddApptBtn(){
+    hookAddApptBtn(refresh=true){
     //this.addApptBtnId=
     let btn=document.getElementById(this.addApptBtnId);
       btn.onclick=(e)=>{
@@ -328,6 +328,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
         createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
+          if(refresh&&state.depModuleObjs.hasOwnProperty("appt")){
+          state.depModuleObjs.appt.reDrwAppts();
+          }
+
         mainObj.setFloatMsg("Appointment Created");
         mainObj.modRghtOpenClose();
         }
@@ -344,7 +348,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: sets event hooks
     update service button hook
     ----------------------------------*/
-    hookUpdtApptBtn(){
+    hookUpdtApptBtn(refresh=true){
     let btn=document.getElementById(this.updtApptBtnId);
       btn.onclick=(e)=>{
       let uuid=document.getElementById("apptNewApptFormFullApptInfoUUID");
@@ -353,8 +357,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let dur=document.getElementById("apptNewApptFormFullApptInfoDur");
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(uuid&&uuid.value&&byUser&&byUser.value&&this.usrAddedArr.length>0){
-
         updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
+          if(refresh&&state.depModuleObjs.hasOwnProperty("appt")){
+          state.depModuleObjs.appt.reDrwAppts();
+          }
         mainObj.setFloatMsg("Appointment Updated");
         mainObj.modRghtOpenClose();
         }
@@ -398,14 +404,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: events added to elements.
     adds event hooks to elements that need it
     ----------------------------------*/
-    hookEl(){
+    hookEl(refresh=null){
     this.hookAddSrvBtn();
-    this.hookUpdtApptBtn();
+    this.hookUpdtApptBtn(refresh);
     this.hookElSlctFullForm();
     this.hookElAddUserToUserLst();
     this.hookElCreateUser();
     this.hookUserInfoFrm();
-    this.hookAddApptBtn();
+    this.hookAddApptBtn(refresh);
     }
 
     /*-----------------------------------------------
@@ -545,7 +551,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: none
     post: write the html to the page
     -----------------------------------------------*/
-    popRghtMod(eventId){
+    popRghtMod(eventId,refresh=true){
     this.users=getUsers();
     
     this.invntSrvList=getInvntSrv();
@@ -556,7 +562,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.statuses=selectStatus();
     this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
     this.genRghtMod();
-    this.hookEl();
+    this.hookEl(refresh);
       if(eventId){
       this.updtApptRghtMod(eventId);
       }
