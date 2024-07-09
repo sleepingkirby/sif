@@ -235,6 +235,16 @@ if(typeof week==='undefined'){
     this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
     return true;
     }
+
+    /*----------------------------------
+    pre: this.rghtModForm 
+    post: none
+    generates right modal content
+    ----------------------------------*/
+    apptRghtMod(id=null){
+      apptRghtModObj.popRghtMod(id);
+      mainObj.modRghtOpenClose();
+    }
  
     /*-----------------------------------------------
     pre: mainObj.modRghtOpenClose(), fillRghtMod()
@@ -348,7 +358,7 @@ if(typeof week==='undefined'){
         let eventId=dayAppts[apptIn].event_id;
         
         dayApptsStr+=`
-        <div class="calApptSum" onclick="wkObj.drawRghtMod('${eventId}')" ${ovrlpTtl}>
+        <div class="calApptSum" onclick="wkObj.apptRghtMod('${eventId}')" ${ovrlpTtl}>
           <div><div class="calApptSumDtRw ${ovrlpClss}"><div>${tmpDt}&nbsp;</div><div class="calApptSumNDt">- ${nDt}</div></div><div class="calApptSumDur" title="Appointment duration: ${dur}">${dur} min</div></div>
           <div class="calApptSumNm">${tmpNm}</div>
         </div>`;
