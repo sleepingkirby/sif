@@ -711,7 +711,6 @@ manage inventory and services
     el[0].value=dn.uuid;
 
     this.flipNewInvcsBtn();
-    mainObj.modRghtOpenClose();
     }
 
     /*-----------------------------------------------

@@ -426,13 +426,14 @@ manage inventory and services
     this.typesIdHsh=sepTypesIdHsh(this.types);
     document.getElementById('leftNavMod').innerHTML=this.genLeftNav();
     document.getElementById('mainEl').innerHTML=this.mainEl();
-    //this.genRghtMod();
-    //document.getElementById('invcsNewItems').innerHTML=this.genInvcsNewItemsTbl();
     this.drawTbl();
     document.getElementById('invcFilterStatus').innerHTML=this.genFltrSttsSlct();
     this.hookEl();
-    //start making invoice from appointment
-    //this.apptToInvcs();
+      if(state.pageVars.hasOwnProperty('appt')&&state.pageVars.appt.id!==null){
+      //    rghtMod(invcsId=null,apptId=null,updt){
+      console.log("this.rghtMod() <<<<<<<<<");
+      this.rghtMod(null, state.pageVars.appt.id);
+      }
     }
   }
 
