@@ -66,6 +66,7 @@ if(typeof home==='undefined'){
       this.timerObj=null;
       this.statuses=null;
       this.sttsHsh=null;
+      this.appts=null;
       this.destruct=this.destructor;
     }
 
@@ -136,6 +137,7 @@ if(typeof home==='undefined'){
     //update events
     //update which events to highlight
     //scroll to current event
+    //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
     //el[49].scrollIntoView({'behavior':"smooth","block":"center", "inline":"center"}); 
     }
   
@@ -264,7 +266,6 @@ if(typeof home==='undefined'){
       mainObj.modRghtOpenClose();
     }
  
-
     /*----------------------------------
     pre: this.rghtModForm 
     post: none
@@ -309,6 +310,18 @@ if(typeof home==='undefined'){
         </div>
       `;
       }
+    }
+
+    /*----------------------------------
+    pre: state.user.config.shift obj, selectViewEventUser()
+    post: 
+    gets the appoints for the proper time range.
+
+    I'm so tempted to implement my custom binary search that is able to binary search via a range.
+    I have no idea how, that I've written a new type of binary search that, to my knowledge, doesn't exist anywhere and improves on such a fundamental search algorithm for a job interview and I DIDN'T get that job. At some point, it feels like someone going "I've invented an engine that will use the same amount of fuel and power uphill as it does down hill" and someone else going "Yes, but you didn't make the engine green."
+    ----------------------------------*/
+    getAppts(){
+
     }
 
     /*----------------------------------
@@ -364,7 +377,6 @@ if(typeof home==='undefined'){
     this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
-    //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
     document.getElementsByName('homeMainFltrSlct')[0].innerHTML=genSttsSlct(this.statuses);
     
     this.hookEl();
