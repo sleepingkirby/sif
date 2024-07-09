@@ -55,7 +55,7 @@ function genCustSlct(users,dfltVal='none',slctdPrp=null,slctdVl=null){
   html+='<option value="">'+dfltVal+'</option>';
   for(const usr of users){
   let fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
-  let lNm=usr.surName.length>=8?usr.surName.substr(0,5)+'...':usr.surName;
+  let lNm=usr.surName.length>=6?usr.surName.substr(0,3)+'...':usr.surName;
   let selected='';
   let title=usr.fName+' '+usr.surName+', '+usr.email+', '+usr.cellphone||usr.phone;
     if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
