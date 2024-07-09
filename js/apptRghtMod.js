@@ -328,8 +328,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
         createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
-          if(refresh&&state.depModuleObjs.hasOwnProperty("appt")){
-          state.depModuleObjs.appt.reDrwAppts();
+          if(refresh){
+            if(state.depModuleObjs.hasOwnProperty("appt")){
+            state.depModuleObjs.appt.reDrwAppts();
+            }
+            else if(state.depModuleObjs.hasOwnProperty("week")){
+            state.depModuleObjs.week.genWk();
+            }
           }
 
         mainObj.setFloatMsg("Appointment Created");
@@ -358,8 +363,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(uuid&&uuid.value&&byUser&&byUser.value&&this.usrAddedArr.length>0){
         updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
-          if(refresh&&state.depModuleObjs.hasOwnProperty("appt")){
-          state.depModuleObjs.appt.reDrwAppts();
+          if(refresh){
+            if(state.depModuleObjs.hasOwnProperty("appt")){
+            state.depModuleObjs.appt.reDrwAppts();
+            }
+            else if(state.depModuleObjs.hasOwnProperty("week")){
+            state.depModuleObjs.week.genWk();
+            }
           }
         mainObj.setFloatMsg("Appointment Updated");
         mainObj.modRghtOpenClose();

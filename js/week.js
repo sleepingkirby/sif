@@ -366,7 +366,7 @@ if(typeof week==='undefined'){
     }
     
     run(){
-    wkObj.genWk();
+    this.genWk();
     document.getElementById('leftNavMod').innerHTML=wkObj.genLeftNavWk();
     this.hookEl();
     }
