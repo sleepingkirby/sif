@@ -429,9 +429,8 @@ manage inventory and services
     this.drawTbl();
     document.getElementById('invcFilterStatus').innerHTML=this.genFltrSttsSlct();
     this.hookEl();
+      //hook for when appointment module redirects and has an id set
       if(state.pageVars.hasOwnProperty('appt')&&state.pageVars.appt.id!==null){
-      //    rghtMod(invcsId=null,apptId=null,updt){
-      console.log("this.rghtMod() <<<<<<<<<");
       this.rghtMod(null, state.pageVars.appt.id);
       }
     }

@@ -185,13 +185,13 @@ let csStr='';
   }
 
   if(!isNaN(parseInt(limit))){
-  query+=' limit $limit';
-  obj['$limit']=limit;
+  query+=' limit ?';
+  obj.push(limit);
   }
 
   if(!isNaN(parseInt(offset))){
-  query+=' offset $offset';
-  obj['$offset']=offset;
+  query+=' offset ?';
+  obj.push(offset);
   }
 
 tmp=sqlObj.runQuery(query,obj);

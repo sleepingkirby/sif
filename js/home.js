@@ -76,7 +76,6 @@ if(typeof home==='undefined'){
     destructor to run closing any streams when changing modules.
     ---------------------------------*/
     destructor(){
-    console.log("asfasdf");
     clearTimeout(this.timerObj);
     }
    
@@ -252,14 +251,26 @@ if(typeof home==='undefined'){
     hookEl(){
     this.hookSttsSlct();
     } 
-  
+
 
     /*----------------------------------
     pre: this.rghtModForm 
     post: none
     generates right modal content
     ----------------------------------*/
-    rghtMod(id=null){
+    apptRghtMod(id=null){
+      //the home page will ONLY have appointments
+      apptRghtModObj.popRghtMod(id);
+      mainObj.modRghtOpenClose();
+    }
+ 
+
+    /*----------------------------------
+    pre: this.rghtModForm 
+    post: none
+    generates right modal content with appointment
+    ----------------------------------*/
+    invcsRghtMod(id=null){
       //the home page will ONLY have appointments
       invcsRghtModObj.popRghtMod(null, id);
       mainObj.modRghtOpenClose();
@@ -275,17 +286,17 @@ if(typeof home==='undefined'){
       for(let i=0;i<50;i++){
       appts.innerHTML+=`
         <div class="homeApptCard">
-          <div class="homeApptCardInfo">
+          <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("b2511661-871d-4377-bc14-3cbbf50dfb8c")>
             <div class="homeApptCardInfoDateTime">
             datetime
             </div>
-            <div class="homeApptCardInfoCust">
+            <div class="homeApptCardInfoCust" >
             cust. info
             </div>
           </div>
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
-            <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.rghtMod(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
+            <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.invcsRghtMod(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div class="menuIcon" title="Mark as done (no receipt)">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
             `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`
@@ -352,8 +363,6 @@ if(typeof home==='undefined'){
     this.statuses=selectStatus();
     this.sttsHsh=arrOfHshToHshHsh('name',this.statuses);
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
-    console.log(this.statuses);
-    console.log(this.sttsHsh);
     this.draw();
     //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
     document.getElementsByName('homeMainFltrSlct')[0].innerHTML=genSttsSlct(this.statuses);

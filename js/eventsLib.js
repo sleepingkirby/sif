@@ -201,9 +201,9 @@ let obj={$uuid:evnt_uuid, $forUser_id:forUser, $byUser_id:byUser, $now_date:toIn
 
 
 /*-----------------------------------------------
-pre: sqlObj, view_events_user
+pre: sqlObj
 post: none
-get event_user
+get event
 -----------------------------------------------*/
 function selectViewEventUser(paramObj, ord, desc=false, limit=null, offset=null){
 let query=`select
@@ -239,14 +239,14 @@ left join contacts as cntcts on cntcts.user_id=cust.uuid
 `;
 let and='';
 let tmp=null;
-let obj={};
+let obj=[];
 
   if(paramObj){
   query+='where';
     for(let param of Object.keys(paramObj)){
       if(paramObj[param]){
-      query+=`${and} ${param}=\$${param}`;
-      obj[`\$${param}`]=paramObj[param];
+      query+=`${and} ${param}=?`;
+      obj.push(paramObj[param]);
       and=' and';
       }
     }
@@ -287,13 +287,13 @@ let obj={};
 
 
   if(!isNaN(parseInt(limit))){
-  query+=' limit $limit';
-  obj['$limit']=limit;
+  query+=' limit ?';
+  obj.push(limit);
   }
 
   if(!isNaN(parseInt(offset))){
-  query+=' offset $offset';
-  obj['$offset']=offset;
+  query+=' offset ?';
+  obj.push(offset);
   }
 tmp=sqlObj.runQuery(query,obj);
 return tmp;

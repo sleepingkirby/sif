@@ -243,6 +243,7 @@ class sif{
           //setting up module appt module to set up left modal
           this.addModule("apptQck", "lftModalScript");
           this.addModule("invcsRghtMod", null, false);
+          this.addModule("apptRghtMod", null, false);
           this.draw(state.pos);
 
           /*reminder for later if needed
