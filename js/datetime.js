@@ -23,6 +23,13 @@ var timeStr=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toStrin
 return dateStr+' '+timeStr; 
 }
 
+function timeOnly(dateTime=null){
+let dt=new Date();
+  if(dateTime){
+  dt=new Date(dateTime);
+  }
+return dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
+}
 
 function epochTime(date){
 var epch=Date.parse(date.toISOString())/1000;

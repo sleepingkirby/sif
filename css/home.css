@@ -92,6 +92,17 @@ align-items:center;
 margin-left:12px;
 }
 
+.homeApptCardBar{
+background-color: var(--default-blue);
+color: white;
+font-size: smaller;
+margin-bottom: 4px;
+width: 100%;
+border-radius: var(--default-border-radius);
+padding: 1px 1px 1px var(--default-border-radius);
+}
+
+
 .homeApptCardActions .menuIcon{
 margin-left: 6px;
 margin-right: 6px;

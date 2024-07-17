@@ -37,10 +37,19 @@ if(typeof home==='undefined'){
             <div for="homeCalDay" onclick=homeObj.modToElNum(false)>-</div>
           </div>
         </div>
-        <div class="calNav">
-          <div name="homeCalHr" padLen=2 padChar="0" minVal=0 maxVal=23 class="calNavNum" style="border-width:0px;margin:0px;">Hr</div>
-          <div class="calNavNum" style="border-width:0px; padding:0px; margin:0px;">:</div>
+        <div class="calNav" style="margin-right:0px;">
+          <div name="homeCalHr" class="calNavNum" padLen=2 padChar="0" minVal=00 maxVal=23 contenteditable="true" title="Current Hour">
+          Hour
+          </div>
+          <div class="calNavMod">
+            <div for="homeCalHr" onclick=homeObj.modToElNum(true)>+</div>
+            <div for="homeCalHr" onclick=homeObj.modToElNum(false)>-</div>
+          </div>
+          <div class="calNavNum" style="border-width:0px; padding:0px; margin:0px 0px 0px 5px;">:</div>
           <div name="homeCalMin" padLen=2 padChar="0" minVal=0 maxVal=59 class="calNavNum" style="border-width:0px;">Mn</div>
+        </div>
+        <div class="calNav" style="margin-left:0px; margin-right:0px;">
+          <div name="calToday" class="menuIcon" onclick=homeObj.goToday() style="margin:0px;" title="Set to today">${getEvalIcon(iconSets, state.user.config.iconSet, 'today')}</div>
         </div>
       </div>
       `;
@@ -63,10 +72,11 @@ if(typeof home==='undefined'){
         </div>
       </div>
       `;
-      this.timerObj=null;
+      this.timerObj=null;//object that stores the interval timer
       this.statuses=null;
       this.sttsHsh=null;
       this.appts=null;
+      this.editted=false;
       this.destruct=this.destructor;
     }
 
@@ -81,7 +91,6 @@ if(typeof home==='undefined'){
     }
    
 
-
     /*---------------------------------
     pre: functions one wants to put in here 
     post: whatever these functions do.
@@ -90,7 +99,11 @@ if(typeof home==='undefined'){
     ---------------------------------*/
     runOnInterval(e){
     console.log("<----------runOnInterval()");
+    console.log(homeObj.editted);
     //update clock 
+      if(homeObj.editted){
+      return null;
+      }
     let now=new Date();
     let nowHr=Number(now.getHours());
     let nowMin=Number(now.getMinutes());
@@ -104,12 +117,10 @@ if(typeof home==='undefined'){
       }
 
     //update date
-    let yr=document.getElementsByName("homeCalYear")[0];
-    let mon=document.getElementsByName("homeCalMon")[0];
     let day=document.getElementsByName("homeCalDay")[0];
 
     //Checks if the displayed time is yesterday. If so, check if need to update time when reaches midnight...-ish
-      if(Number(yr.innerText)==now.getFullYear()&&Number(mon.innerText)==now.getMonth()+1&&Number(day.innerText)==now.getDate()-1){
+      if(Number(day.innerText)!=now.getDate()){
       //if the clockInterval is more than a minute
       //should not be able to go beyond one hour 
         if(state.user.config.clockInterval==3600000
@@ -135,6 +146,7 @@ if(typeof home==='undefined'){
         }
       }
     //update events
+    this.getAppts();
     //update which events to highlight
     //scroll to current event
     //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -147,18 +159,21 @@ if(typeof home==='undefined'){
     post:
     update this.today and GUI
     ----------------------------------*/
-    updtToday(yr=null, mn=null, dt=null){
-      if(yr&&mn&&dt){
+    updtToday(yr=null, mn=null, dt=null, hr=null){
+      if(yr&&mn&&dt&&hr){
       this.today.setFullYear(yr);
       this.today.setMonth(mn);
       this.today.setDate(dt);
+      this.today.setHours(hr);
       }
     let year=document.getElementsByName("homeCalYear")[0];
     let mon=document.getElementsByName("homeCalMon")[0];
     let day=document.getElementsByName("homeCalDay")[0];
+    let hour=document.getElementsByName("homeCalHr")[0];
     padVal(year, Number(this.today.getFullYear()));
     padVal(mon, Number(this.today.getMonth() + 1));
     padVal(day, Number(this.today.getDate()));
+    padVal(hour, Number(this.today.getHours()));
     }
 
     /*----------------------------------
@@ -204,10 +219,14 @@ if(typeof home==='undefined'){
     var yr=document.getElementsByName("homeCalYear")[0];
     var mn=document.getElementsByName('homeCalMon')[0];
     var dy=document.getElementsByName('homeCalDay').length>=1?document.getElementsByName('homeCalDay')[0]:null;
-   
+    var hr=document.getElementsByName('homeCalHr')[0];
+ 
     add?num++:num--;
 
       switch(forId){
+        case "homeCalHr" :
+        this.today.setHours(num);
+        break;
         case "homeCalDay" :
         this.today.setDate(num);
         break;
@@ -221,9 +240,21 @@ if(typeof home==='undefined'){
         break;
       }
 
+    let now=new Date();
+    this.editted=true;
+      if(
+      this.today.getFullYear()==now.getFullYear()
+      &&this.today.getMonth()==now.getMonth()
+      &&this.today.getDate()==now.getDate()
+      &&this.today.getHours()==now.getHours()
+      ){
+      this.editted=false;
+      }
+
     //updates appts when date is changed
     //this.modDate(dt.getFullYear(),dt.getMonth(),dt.getDate());
     this.updtToday();
+    this.drawApptsCard();
     return true;
     }
 
@@ -282,14 +313,18 @@ if(typeof home==='undefined'){
     post:
     ----------------------------------*/
     drawApptsCard(){
+    let apptsArr=this.getAppts();
+    this.appts=apptsArr;
     let appts=document.getElementById('homeMainAppts');
-    appts.innerHTML='';
-      for(let i=0;i<50;i++){
+    let from=new Date(this.today);
+    from.setHours(from.getHours()-Number(state.user.config.behind));
+    appts.innerHTML='<div class="homeApptCardBar">'+dtTmDbFrmt(from.toISOString())+'</div>';
+      for(let i in apptsArr){
       appts.innerHTML+=`
         <div class="homeApptCard">
           <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("b2511661-871d-4377-bc14-3cbbf50dfb8c")>
             <div class="homeApptCardInfoDateTime">
-            datetime
+            ${apptsArr[i].on_date}
             </div>
             <div class="homeApptCardInfoCust" >
             cust. info
@@ -310,6 +345,10 @@ if(typeof home==='undefined'){
         </div>
       `;
       }
+    let to=new Date(this.today);
+    to.setHours(to.getHours()+Number(state.user.config.ahead));
+
+    appts.innerHTML+='<div class="homeApptCardBar">'+dtTmDbFrmt(to.toISOString())+'</div>';
     }
 
     /*----------------------------------
@@ -321,8 +360,18 @@ if(typeof home==='undefined'){
     I have no idea how, that I've written a new type of binary search that, to my knowledge, doesn't exist anywhere and improves on such a fundamental search algorithm for a job interview and I DIDN'T get that job. At some point, it feels like someone going "I've invented an engine that will use the same amount of fuel and power uphill as it does down hill" and someone else going "Yes, but you didn't make the engine green."
     ----------------------------------*/
     getAppts(){
+    let stts=document.getElementsByName('homeMainFltrSlct')[0];
+    let from=new Date(this.today);
+    from.setHours(from.getHours()-Number(state.user.config.behind));
+    let to=new Date(this.today);
+    to.setHours(to.getHours()+Number(state.user.config.ahead));
 
-
+    console.log(new Date());
+    console.log(from);
+    console.log(to);
+  
+    let arr=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(from.toISOString()), dtTmDbFrmt(to.toISOString()), null, stts.value);
+    return arr;
     }
 
     /*----------------------------------
@@ -379,7 +428,6 @@ if(typeof home==='undefined'){
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
     document.getElementsByName('homeMainFltrSlct')[0].innerHTML=genSttsSlct(this.statuses);
-    
     this.hookEl();
     this.setsTimer();
     }

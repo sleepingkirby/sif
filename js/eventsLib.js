@@ -338,7 +338,7 @@ pre: sqlObj
 post: none 
 get invntSrv for event via userId, from Date and to Date 
 -----------------------------------------------*/
-function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
+function selectEventDateRngUser(userId, dtFro, dtTo, stts='active', sttsId=null){
   if(!userId||!dtFro||!dtTo){
   return [];
   }
@@ -384,7 +384,11 @@ obj.push(dtFro);
 query+=` and e.on_date<?`;
 obj.push(dtTo);
 
-  if(stts&&stts!=''){
+  if(sttsId){
+  query+=` and s.uuid=?`;
+  obj.push(sttsId);
+  }
+  else if(stts&&stts!=''){
   query+=` and s.name=?`;
   obj.push(stts);
   }
@@ -393,6 +397,8 @@ query+=` order by e.on_date asc`;
 
 let tmp=null;
 
+  console.log(obj);
+
   try{
   tmp=sqlObj.runQuery(query,obj);
   }
@@ -400,7 +406,6 @@ let tmp=null;
   console.log(`Unable to get appointments in selectEventDateRngUser(), userId: ${userId}, dtFro: ${dtFro}, dtTo: ${dtTo}`);
   console.log(e);
   }
-
 return tmp;
 }
 
