@@ -11,25 +11,31 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <div class="configWrap">
         <div class="configArea">
           <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
-          <div class="configRow">
-            <span class="configRowLabel">Shift Start:</span>
-            <input type="time" name="config[shift-start]" title="Start of shift time"></input>
+          <div class="configRow configRowHead">
+          Home Page:
           </div>
           <div class="configRow">
-            <span class="configRowLabel">Shift End:</span>
-            <input type="time" name="config[shift-end]" title="End of shift time"></input>
+            <span class="configRowLabel">Look ahead(hours):</span>
+            <input type="number" name="config[ahead]" title="How far ahead to display appointments(in hours)" size="3" max="168" min="0" />
+          </div>
+          <div class="configRow">
+            <span class="configRowLabel">Look behind(hours):</span>
+            <input type="number" name="config[behind]" title="How far behind to display appointments(in hours)" size="3" max="168" min="0" />
           </div>
           <div class="configRow">
             <span class="configRowLabel">Lunch Start:</span>
             <input type="time" name="config[lunch-start]" title="Start of lunch time"></input>
           </div>
           <div class="configRow">
-            <span class="configRowLabel">Lunch Duration:</span>
-            <input type="number" name="config[lunch-dur]" title="Lunch duration" size="3"></input>
+            <span class="configRowLabel">Lunch Duration(min):</span>
+            <input type="number" name="config[lunch-dur]" title="Lunch duration in minutes." size="3"></input>
           </div>
           <div class="configRow">
-            <span class="configRowLabel">Home Page Interval(sec):</span>
-            <input type="number" name="config[clockInterval]" title="The interval which the home page will check to see which appointments is/are the current appointments." size="3" max=3600></input>
+            <span class="configRowLabel">Refresh Interval(sec):</span>
+            <input type="number" name="config[clockInterval]" title="The interval(in seconds) which the home page will check to see which appointments is/are the current appointments." size="3" max=3600 />
+          </div>
+          <div class="configRow configRowHead">
+          Icons:
           </div>
           <div class="configRow">
              <span class="configRowLabel">User type:</span>
@@ -65,27 +71,25 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let config={
       'iconSet':null,
       'clockInterval':60000,
-        'shift':{
-          'start':null,
-          'end':null,
-          'lunchStart':null,
-          'lunchDur':30
-        }
+      'ahead':null,
+      'behind':null,
+      'lunchStart':null,
+      'lunchDur':30
       };
     let user={'email':null, 'typeId':null, 'type':null};
       for(let el of els){
         switch(getSubs(el.name,'config')){
-        case 'shift-start':
-        config.shift.start=el.value;
+        case 'ahead':
+        config.ahead=el.value;
         break;
-        case 'shift-end':
-        config.shift.end=el.value;
+        case 'behind':
+        config.behind=el.value;
         break;
         case 'lunch-start':
-        config.shift.lunchStart=el.value;
+        config.lunchStart=el.value;
         break;
         case 'lunch-dur':
-        config.shift.lunchDur=el.value;
+        config.lunchDur=el.value;
         break;
         case 'clockInterval':
         config.clockInterval=Number(el.value) * 1000;
@@ -175,15 +179,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     slct.innerHTML=this.genSelectIcon(iconSets);
     slct.value=state.user.config.iconSet;
 
-    let shftStrt=document.getElementsByName('config[shift-start]');
-    shftStrt=shftStrt?shftStrt[0]:null;
-      if(shftStrt){
-      shftStrt.value=String(state.user.config.shift.start);
+    let ahead=document.getElementsByName('config[ahead]');
+    ahead=ahead?ahead[0]:null;
+      if(ahead){
+      ahead.value=state.user.config?.ahead?String(state.user.config.ahead):8;
       }
-    let shftEnd=document.getElementsByName('config[shift-end]');
-    shftEnd=shftEnd?shftEnd[0]:null;
-      if(shftEnd){
-      shftEnd.value=String(state.user.config.shift.end);
+    let behind=document.getElementsByName('config[behind]');
+    behind=behind?behind[0]:null;
+      if(behind){
+      behind.value=state.user.config?.behind?String(state.user.config.behind):4;
       }
     let email=document.getElementsByName('config[email]');
     email=email?email[0]:null;
@@ -193,12 +197,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let lunchStart=document.getElementsByName('config[lunch-start]');
     lunchStart=lunchStart?lunchStart[0]:null;
       if(lunchStart){
-      lunchStart.value=state.user.config.shift.lunchStart;
+      lunchStart.value=state.user.config?.lunchStart||"12:00";
       }
     let lunchDur=document.getElementsByName('config[lunch-dur]');
     lunchDur=lunchDur?lunchDur[0]:null;
       if(lunchDur){
-      lunchDur.value=state.user.config.shift.lunchDur;
+      lunchDur.value=state.user.config?.lunchDur||30;
       }
     let clockInterval=document.getElementsByName('config[clockInterval]');
     clockInterval=clockInterval?clockInterval[0]:null;

@@ -47,3 +47,31 @@ var dateStr=dt.getFullYear().toString()+"-"+(dt.getMonth()+1).toString().padStar
 var timeStr=dt.getHours().toString().padStart(2,'0')+":"+dt.getMinutes().toString().padStart(2,'0');
 return dateStr+"T"+timeStr;
 }
+
+
+//convert string of hh:mm to pure hours.
+function shiftTimeSplits(str=null, dt=null){
+let dateObj=dt||new Date();
+dateObj.setHours(hr);
+dateObj.setMinutes(min);
+
+
+let hr=dateObj.getHours();
+let min=dateObj.getMinutes();
+  if(str){
+  let split=str.split(':');
+  hr=Number(split[0]);
+  min=Number(split[1]);
+  dateObj.setHours(hr);
+  dateObj.setMinutes(min);
+  }
+
+let obj={
+'mins': (hr+60)+min,
+'hr':hr,
+'min':min,
+'dt':dateObj,
+'epoch':epochTime(dateObj)
+};
+return obj;
+}
