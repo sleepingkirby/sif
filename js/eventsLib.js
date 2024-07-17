@@ -376,6 +376,24 @@ left join status as byUserStatus on byUser.status_id=byUserStatus.uuid
 left join contacts as cntcts on cntcts.user_id=cust.uuid
 where byUser_uuid=?
 `;
+
+/*
+
+sqlite> select e.uuid, e.forUser_id, GROUP_CONCAT(i.name,';') from events as e left join events_invntSrv as ei on e.uuid=ei.events_id left join invntSrv as i on i.uuid=ei.invntSrv_id group by e.uuid;
+169ea253-fe59-4169-b1e4-7041e1ce8744|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash
+2cd98333-7874-442d-b613-2f7283932491|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash
+49a8edc1-2721-414a-b5c9-6e34cc9aaf61|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash;hair wash
+5c6c7058-b891-4ec0-bfa1-56903247f153|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash;hair wash;hair wash
+61a7285e-2d37-4f9b-bd31-e56024c21e0d|4ceb051a-7113-4b8b-97c6-e66ec9c77f68|hair wash;conditioner;shampoo;shampoo
+82280c5e-1c1c-45d9-a196-ff8900166754|d9ece037-c868-4197-be79-2d75d7ab6b85|shampoo;shampoo
+8cb74bc3-e6be-4fd7-90b7-45d01da20466|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash
+9dbe1d8a-3de7-4439-bc95-57198f94a95d|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash;conditioner;conditioner;conditioner;shampoo;shampoo
+b0aa2158-0433-4a23-9738-96eaa329e1e8|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash
+b2511661-871d-4377-bc14-3cbbf50dfb8c|d9ece037-c868-4197-be79-2d75d7ab6b85|shampoo;shampoo;shampoo
+e76ee0dd-17ef-4fdc-a59e-8b3b8680773c|d9ece037-c868-4197-be79-2d75d7ab6b85|hair wash;hair wash;hair wash
+ee8dde78-040c-4b79-8c0d-b756d5461dc8|d9ece037-c868-4197-be79-2d75d7ab6b85|
+*/
+
 let obj=[userId];
 
 query+=` and e.on_date>=?`;
