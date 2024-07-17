@@ -397,8 +397,6 @@ query+=` order by e.on_date asc`;
 
 let tmp=null;
 
-  console.log(obj);
-
   try{
   tmp=sqlObj.runQuery(query,obj);
   }

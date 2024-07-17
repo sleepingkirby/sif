@@ -146,7 +146,7 @@ if(typeof home==='undefined'){
         }
       }
     //update events
-    this.getAppts();
+    homeObj.drawApptsCard();
     //update which events to highlight
     //scroll to current event
     //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
@@ -317,17 +317,32 @@ if(typeof home==='undefined'){
     this.appts=apptsArr;
     let appts=document.getElementById('homeMainAppts');
     let from=new Date(this.today);
+    let now=new Date(this.today);
     from.setHours(from.getHours()-Number(state.user.config.behind));
-    appts.innerHTML='<div class="homeApptCardBar">'+dtTmDbFrmt(from.toISOString())+'</div>';
+    appts.innerHTML=`<div class="homeApptCardBar"><span>${timeOnly(from)}</span><span>-</span><span>${dateOnly(from)}</span></div>`;
       for(let i in apptsArr){
+      let dt=new Date(apptsArr[i].on_date);
+      let ndt=new Date(dt);
+      ndt.setMinutes(ndt.getMinutes() + Number(apptsArr[i].duration));
+      let cur='';
+        if(epochTime(now)>=epochTime(dt)&&epochTime(now)<=epochTime(ndt)){
+        console.log(apptsArr[i]);
+        cur=' homeApptCardCur';
+        }
+      let userName="";
+      let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
+      let lNm=apptsArr[i].cust_surName.length>=3?apptsArr[i].cust_surName.substr(0,1)+'.':apptsArr[i].cust_surName;
       appts.innerHTML+=`
-        <div class="homeApptCard">
+        <div class="homeApptCard${cur}">
           <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("b2511661-871d-4377-bc14-3cbbf50dfb8c")>
             <div class="homeApptCardInfoDateTime">
-            ${apptsArr[i].on_date}
+            <span>${timeOnly(dt)}</span><span>-</span><span>${dateOnly(dt)}</span>
             </div>
             <div class="homeApptCardInfoCust" >
-            cust. info
+              <div class="homeApptCardInfoCustRow">
+                <div title="${apptsArr[i].cust_fName} ${apptsArr[i].cust_surName} - ${apptsArr[i].cust_cellphone} - ${apptsArr[i].cust_email}">${fNm} ${lNm}</div>
+                <div>${apptsArr[i].duration} min.</div>
+              </div>
             </div>
           </div>
           <div class="homeApptCardActions">
@@ -347,8 +362,7 @@ if(typeof home==='undefined'){
       }
     let to=new Date(this.today);
     to.setHours(to.getHours()+Number(state.user.config.ahead));
-
-    appts.innerHTML+='<div class="homeApptCardBar">'+dtTmDbFrmt(to.toISOString())+'</div>';
+    appts.innerHTML+=`<div class="homeApptCardBar"><span>${timeOnly(to)}</span><span>-</span><span>${dateOnly(to)}</span></div>`;
     }
 
     /*----------------------------------
@@ -366,10 +380,6 @@ if(typeof home==='undefined'){
     let to=new Date(this.today);
     to.setHours(to.getHours()+Number(state.user.config.ahead));
 
-    console.log(new Date());
-    console.log(from);
-    console.log(to);
-  
     let arr=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(from.toISOString()), dtTmDbFrmt(to.toISOString()), null, stts.value);
     return arr;
     }
