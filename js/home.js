@@ -329,21 +329,42 @@ if(typeof home==='undefined'){
         console.log(apptsArr[i]);
         cur=' homeApptCardCur';
         }
-      let userName="";
       let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
       let lNm=apptsArr[i].cust_surName.length>=3?apptsArr[i].cust_surName.substr(0,1)+'.':apptsArr[i].cust_surName;
+      let iSArr=apptsArr[i].events.split('|');
+      let iSHtml='';
+        for(let cnt in iSArr){
+          if(cnt>=1){
+          iSHtml+='<div style="margin-left:4px;">...</div>';
+          break;
+          }
+          iSHtml+=`
+          <div class="homeApprCardInfoIS">
+          ${iSArr[cnt]}
+          </div>
+          `;
+        }
+        if(iSHtml!=''){
+        iSHtml=`
+        <div class="homeApptCardInfoCust" title="${apptsArr[i].events.replaceAll('|',', ')} [${iSArr.length}]">
+          <div class="homeApptCardInfoCustRowIS">
+          ${iSHtml}
+          </div>
+        </div>`;
+        } 
       appts.innerHTML+=`
         <div class="homeApptCard${cur}">
           <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("b2511661-871d-4377-bc14-3cbbf50dfb8c")>
             <div class="homeApptCardInfoDateTime">
             <span>${timeOnly(dt)}</span><span>-</span><span>${dateOnly(dt)}</span>
             </div>
-            <div class="homeApptCardInfoCust" >
+            <div class="homeApptCardInfoCust">
               <div class="homeApptCardInfoCustRow">
                 <div title="${apptsArr[i].cust_fName} ${apptsArr[i].cust_surName} - ${apptsArr[i].cust_cellphone} - ${apptsArr[i].cust_email}">${fNm} ${lNm}</div>
                 <div>${apptsArr[i].duration} min.</div>
               </div>
             </div>
+            ${iSHtml}
           </div>
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
@@ -380,7 +401,7 @@ if(typeof home==='undefined'){
     let to=new Date(this.today);
     to.setHours(to.getHours()+Number(state.user.config.ahead));
 
-    let arr=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(from.toISOString()), dtTmDbFrmt(to.toISOString()), null, stts.value);
+    let arr=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(from.toISOString()), dtTmDbFrmt(to.toISOString()), null, stts.value, true);
     return arr;
     }
 

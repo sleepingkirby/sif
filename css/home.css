@@ -103,6 +103,20 @@ align-items:center;
 width:100%;
 }
 
+.homeApptCard .homeApptCardInfo .homeApptCardInfoCust .homeApptCardInfoCustRowIS{
+display:flex;
+flex-direction:row;
+justify-content:flex-start;
+align-items:center;
+}
+
+.homeApptCard .homeApptCardInfo .homeApptCardInfoCust .homeApptCardInfoCustRowIS .homeApprCardInfoIS{
+background-color:var(--default-mid-gray);
+color:white;
+border-radius:var(--default-border-radius);
+padding: 1px var(--default-border-radius) 1px var(--default-border-radius);
+}
+
 .homeApptCard .homeApptCardActions{
 background-color:var(--default-light-gray);
 display:flex;
@@ -119,6 +133,11 @@ border-color:var(--default-light-green);
 .homeApptCardCur .homeApptCardInfo .homeApptCardInfoDateTime{
 background-color:var(--default-light-green);
 }
+
+.homeApptCardCur .homeApptCardInfo .homeApptCardInfoCust .homeApptCardInfoCustRowIS .homeApprCardInfoIS{
+background-color:var(--default-light-green);
+}
+
 
 .homeApptCardBar{
 background-color: var(--default-blue);
