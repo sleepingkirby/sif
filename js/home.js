@@ -49,7 +49,7 @@ if(typeof home==='undefined'){
           <div name="homeCalMin" padLen=2 padChar="0" minVal=0 maxVal=59 class="calNavNum" style="border-width:0px;">Mn</div>
         </div>
         <div class="calNav" style="margin-left:0px; margin-right:0px;">
-          <div name="calToday" class="menuIcon" onclick=homeObj.goToday() style="margin:0px;" title="Set to today">${getEvalIcon(iconSets, state.user.config.iconSet, 'today')}</div>
+          <div name="calToday" class="menuIcon" onclick=homeObj.gotoToday() style="margin:0px;" title="Set to today">${getEvalIcon(iconSets, state.user.config.iconSet, 'today')}</div>
         </div>
       </div>
       `;
@@ -147,12 +147,19 @@ if(typeof home==='undefined'){
       }
     //update events
     homeObj.drawApptsCard();
-    //update which events to highlight
-    //scroll to current event
-    //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-    //el[49].scrollIntoView({'behavior':"smooth","block":"center", "inline":"center"}); 
     }
   
+    /*----------------------------------
+    pre: this.today, this.updtToday(), this.editted, this.drawApptsCard()
+    post:updates appts cards, datetime
+    sets time to today and now and redraws accordingly.
+    ----------------------------------*/
+    gotoToday(){
+    this.today=new Date();
+    this.updtToday();
+    this.editted=false;
+    this.drawApptsCard();
+    }
 
     /*----------------------------------
     pre:
@@ -320,13 +327,13 @@ if(typeof home==='undefined'){
     let now=new Date(this.today);
     from.setHours(from.getHours()-Number(state.user.config.behind));
     appts.innerHTML=`<div class="homeApptCardBar"><span>${timeOnly(from)}</span><span>-</span><span>${dateOnly(from)}</span></div>`;
+    let scrlld=false;
       for(let i in apptsArr){
       let dt=new Date(apptsArr[i].on_date);
       let ndt=new Date(dt);
       ndt.setMinutes(ndt.getMinutes() + Number(apptsArr[i].duration));
       let cur='';
         if(epochTime(now)>=epochTime(dt)&&epochTime(now)<=epochTime(ndt)){
-        console.log(apptsArr[i]);
         cur=' homeApptCardCur';
         }
       let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
@@ -384,6 +391,12 @@ if(typeof home==='undefined'){
     let to=new Date(this.today);
     to.setHours(to.getHours()+Number(state.user.config.ahead));
     appts.innerHTML+=`<div class="homeApptCardBar"><span>${timeOnly(to)}</span><span>-</span><span>${dateOnly(to)}</span></div>`;
+    //scroll to current event
+    //https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+    let els=document.getElementsByClassName("homeApptCardCur");
+      if(els&&els.length>=1){
+      els[0].scrollIntoView({'behavior':"smooth","block":"center", "inline":"center"});
+      }
     }
 
     /*----------------------------------

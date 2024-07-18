@@ -398,7 +398,15 @@ display: flex;
 margin-left: 16px;
 }
 
-#topEls > div#msgFloat{
+.msgFloatWrap{
+width:100vw;
+display:flex;
+flex-direction:row;
+justify-content:center;
+align-items:flex-start;
+}
+
+.msgFloatWrap > div#msgFloat{
 font-size: x-large;
 border-radius: 0px 0px 8px 8px;
 background-color: #ff5454c9;
@@ -411,6 +419,8 @@ padding-left: 12px;
 padding-right: 12px;
 overflow: hidden;
 text-align:center;
+position:fixed;
+color:white;
 z-index: 99;
 }
 
