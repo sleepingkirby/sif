@@ -11,7 +11,7 @@ if(typeof home==='undefined'){
       this.lftNavHead=`
       <div class="homeClockWrap">
         <div id="homeCalYear" class="calNav">
-          <div name="homeCalYear" class="calNavNum" padLen=4 padChar="0" minVal=1 contenteditable="true" title="Current Year">
+          <div name="homeCalYear" class="calNavNum" padLen=4 padChar="0" minVal=1 contenteditable="true" title="Current Year" onchange=console.log(this)>
           Year
           </div>
           <div class="calNavMod">
