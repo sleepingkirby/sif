@@ -355,7 +355,7 @@ if(typeof home==='undefined'){
       nLnchDt.setMinutes(nLnchDt.getMinutes() + Number(state.user.config.lunchDur));
       let lnch='';
         if((epochTime(dt)>=epochTime(lnchDt)&&epochTime(dt)<=epochTime(nLnchDt))||(epochTime(ndt)>=epochTime(lnchDt)&&epochTime(ndt)<=epochTime(nLnchDt))){
-        lnch=`<div title="Appointment during lunchtime">${getEvalIcon(iconSets, state.user.config.iconSet, 'lunch')}</div>`;
+        lnch=`<div class="homeApptCardInfoCustIcon" title="Appointment during lunchtime">${getEvalIcon(iconSets, state.user.config.iconSet, 'lunch')}</div>`;
         }
       let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
       let lNm=apptsArr[i].cust_surName.length>=3?apptsArr[i].cust_surName.substr(0,1)+'.':apptsArr[i].cust_surName;
@@ -385,7 +385,7 @@ if(typeof home==='undefined'){
           <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("${apptsArr[i].event_id}")>
             <div class="homeApptCardInfoDateTime">
             ${lnch}
-            <span>${timeOnly(dt)}</span><span>-</span><span>${dateOnly(dt)}</span>
+            <span class="homeApptCardInfoDateTimeTime">${timeOnly(dt)}</span><span class="homeApptCardInfoDateTimeDash">-</span><span>${dateOnly(dt)}</span>
             </div>
             <div class="homeApptCardInfoCust">
               <div class="homeApptCardInfoCustRow">

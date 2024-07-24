@@ -84,15 +84,25 @@ justify-content:flex-start;
 align-items:center;
 }
 
-.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > div > svg{
-width:25px;
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > div.homeApptCardInfoCustIcon{
+display:flex;
+flex-direction:row;
+justify-content:center;
+align-items:center;
+width:fit-content;
+height:fit-content;
 }
 
-.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > span:first-child{
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > div > svg{
+width:25px;
+height:25px;
+}
+
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > span.homeApptCardInfoDateTimeTime{
 font-weight:bolder;
 }
 
-.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > span:nth-child(2){
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > span.homeApptCardInfoDateTimeDash{
 margin:0px 6px 0px 6px;
 }
 
