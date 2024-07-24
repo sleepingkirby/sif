@@ -339,12 +339,23 @@ if(typeof home==='undefined'){
     appts.innerHTML=`<div class="homeApptCardBar"><span>${timeOnly(from)}</span><span>-</span><span>${dateOnly(from)}</span></div>`;
     let scrlld=false;
       for(let i in apptsArr){
+      //is it current?
       let dt=new Date(apptsArr[i].on_date);
       let ndt=new Date(dt);
       ndt.setMinutes(ndt.getMinutes() + Number(apptsArr[i].duration));
       let cur='';
         if(epochTime(now)>=epochTime(dt)&&epochTime(now)<=epochTime(ndt)){
         cur=' homeApptCardCur';
+        }
+      
+      //is it within lunch time?
+      let lnchObj=shiftTimeSplits(state.user.config.lunchStart,new Date(this.today));
+      let lnchDt=lnchObj.dt;
+      let nLnchDt=new Date(lnchDt);
+      nLnchDt.setMinutes(nLnchDt.getMinutes() + Number(state.user.config.lunchDur));
+      let lnch='';
+        if((epochTime(dt)>=epochTime(lnchDt)&&epochTime(dt)<=epochTime(nLnchDt))||(epochTime(ndt)>=epochTime(lnchDt)&&epochTime(ndt)<=epochTime(nLnchDt))){
+        lnch=`<div title="Appointment during lunchtime">${getEvalIcon(iconSets, state.user.config.iconSet, 'lunch')}</div>`;
         }
       let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
       let lNm=apptsArr[i].cust_surName.length>=3?apptsArr[i].cust_surName.substr(0,1)+'.':apptsArr[i].cust_surName;
@@ -373,6 +384,7 @@ if(typeof home==='undefined'){
         <div class="homeApptCard${cur}">
           <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("${apptsArr[i].event_id}")>
             <div class="homeApptCardInfoDateTime">
+            ${lnch}
             <span>${timeOnly(dt)}</span><span>-</span><span>${dateOnly(dt)}</span>
             </div>
             <div class="homeApptCardInfoCust">

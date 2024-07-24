@@ -73,9 +73,6 @@ return dateStr+"T"+timeStr;
 //convert string of hh:mm to pure hours.
 function shiftTimeSplits(str=null, dt=null){
 let dateObj=dt||new Date();
-dateObj.setHours(hr);
-dateObj.setMinutes(min);
-
 
 let hr=dateObj.getHours();
 let min=dateObj.getMinutes();

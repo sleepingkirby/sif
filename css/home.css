@@ -53,7 +53,7 @@ align-items: flex-start;
 .homeApptCard{
 border:1px solid var(--default-mid-gray);
 margin-bottom:12px;
-border-radius: 6px;
+border-radius: var(--default-border-radius);
 min-width:200px;
 display:flex;
 flex-direction:row;
@@ -75,8 +75,17 @@ cursor:pointer;
 .homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime{
 background-color:var(--default-mid-gray);
 padding:var(--default-snglLn-pad-size);
-border-radius:var(--default-border-radius) 0px var(--default-border-radius) 0px;
+border-radius:0px 0px var(--default-border-radius) 0px;
 color:white;
+fill:white;
+display:flex;
+flex-direction:row;
+justify-content:flex-start;
+align-items:center;
+}
+
+.homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > div > svg{
+width:25px;
 }
 
 .homeApptCard .homeApptCardInfo .homeApptCardInfoDateTime > span:first-child{

@@ -15,11 +15,13 @@ class sif{
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
   this.defaultConfig={
     "iconSet":"default",
-    'shift':{
-      'start':"10:00",
-      'end':"20:00"
-    }
+    "clockInterval":60000,
+    "ahead":"8",
+    "behind":"4",
+    "lunchStart":"12:00",
+    "lunchDur":"30"
   }
+
   this.defaultConfig=this.defaultConfig?this.defaultConfig:defaultConfig;
 
   this.hookEl();
