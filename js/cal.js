@@ -194,8 +194,9 @@ if(typeof cal==='undefined'){
           dayApptsStr+='<div>...</div>';
           break;
           }
-          tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
-          tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
+          //tmpDt=new Date(dayAppts[apptIn].on_date).toLocaleTimeString();
+          //tmpDt=tmpDt.replace(/:[0-9]{2} /,'');
+          tmpDt=timeOnly(dayAppts[apptIn].on_date,'nospace');
           tmpNm=dayAppts[apptIn].cust_fName;
           tmpNm=tmpNm.length>=8?tmpNm.substr(0,5)+'...':tmpNm;
           dayApptsStr+='<div class="calApptSum"><div>'+tmpDt+'</div><div>'+tmpNm+'</div></div>';

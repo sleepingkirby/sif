@@ -35,12 +35,20 @@ let dt=new Date();
 return dt.getFullYear().toString()+'-'+(dt.getMonth()+1).toString().padStart(2,'0')+'-'+dt.getDate().toString().padStart(2,'0');
 }
 
-function timeOnly(dateTime=null){
+function timeOnly(dateTime=null, sec=false){
 let dt=new Date();
   if(dateTime){
   dt=new Date(dateTime);
   }
-return dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
+  let t=dt.toLocaleTimeString();
+    if(!sec){
+    t=t.replace(/:[0-9]{2} /, ' ');
+    }
+    else if(sec=='nospace'){
+    t=t.replace(/:[0-9]{2} /, '');
+    }
+
+return t; 
 }
 
 
