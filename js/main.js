@@ -242,10 +242,11 @@ class sif{
           //setting left menu
           menuLftObj.setMenu();
 
-          //setting up module appt module to set up left modal
+          //setting up modules that needs to be loaded and available.
           this.addModule("apptQck", "lftModalScript");
           this.addModule("invcsRghtMod", null, false);
           this.addModule("apptRghtMod", null, false);
+          this.addModule("homeCamera", null, false);
           this.draw(state.pos);
 
           /*reminder for later if needed

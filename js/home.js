@@ -332,7 +332,7 @@ if(typeof home==='undefined'){
       if(!id){
       return null;
       }
-       
+    homeCameraObj.drawCamera();
  
     mainObj.openCloseOverMod();
     }

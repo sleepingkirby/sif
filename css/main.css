@@ -809,14 +809,32 @@ height: 100%;
 width: 100%;
 padding: 6px 12px 6px 12px;
 color:var(--default-gray);
+flex-direction:column;
+justify-content:flex-start;
+align-items:stretch;
+}
+
+.overMod .overContent > div{
+box-sizing:border-box;
+border:1px solid red;
+display:flex;
 }
 
 .overMod .overContent .head{
-display:flex;
-width:100%;
 justify-content: flex-end;
 height: fit-content;
 font-size: xxx-large;
+}
+
+.overMod .overContent .body{
+flex-grow:10;
+
+}
+
+.overMod .overContent .foot{
+flex-direction:row;
+justify-content:center;
+align-items:center;
 }
 
 @keyframes opac{
