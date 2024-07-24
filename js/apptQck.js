@@ -185,7 +185,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         if(state.pos=="appt"||state.pos=="week"||state.pos=="cal"){
         state.depModuleObjs[state.pos].run();
         }
-       
+        if(state.pos=="home"){
+        state.depModuleObjs[state.pos].drawApptsCard();
+        }
+ 
       }
 
       //add service to new appointment form

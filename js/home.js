@@ -322,6 +322,7 @@ if(typeof home==='undefined'){
     drawApptsCard(){
     let apptsArr=this.getAppts();
     this.appts=apptsArr;
+    console.log(apptsArr);
     let appts=document.getElementById('homeMainAppts');
     let from=new Date(this.today);
     let now=new Date(this.today);
@@ -361,7 +362,7 @@ if(typeof home==='undefined'){
         } 
       appts.innerHTML+=`
         <div class="homeApptCard${cur}">
-          <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("b2511661-871d-4377-bc14-3cbbf50dfb8c")>
+          <div class="homeApptCardInfo" title="Edit Appointment" onclick=homeObj.apptRghtMod("${apptsArr[i].event_id}")>
             <div class="homeApptCardInfoDateTime">
             <span>${timeOnly(dt)}</span><span>-</span><span>${dateOnly(dt)}</span>
             </div>
@@ -425,7 +426,6 @@ if(typeof home==='undefined'){
     ----------------------------------*/
     draw(){
     document.getElementById('mainEl').innerHTML=this.mainElHtml;
-    this.drawApptsCard();
     }
 
     /*-------------------------------------
@@ -472,6 +472,7 @@ if(typeof home==='undefined'){
 //function selectEventDateRngUser(userId, dtFro, dtTo, stts='active'){
     this.draw();
     document.getElementsByName('homeMainFltrSlct')[0].innerHTML=genSttsSlct(this.statuses);
+    this.drawApptsCard();
     this.hookEl();
     this.setsTimer();
     }

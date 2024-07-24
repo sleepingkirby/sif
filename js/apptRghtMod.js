@@ -475,6 +475,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       return null;
       }
     appt=appt[0];
+    console.log(appt);
     this.fillRghtMod(appt);
     this.addUpdtBtnFlip(true);
     }
