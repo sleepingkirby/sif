@@ -28,6 +28,7 @@ manage inventory and services
       <div class="lbl">Invoice</div>
       <div id="invcsNewFormUUID">
         <input id="invcsNewFormInfoUUID" name="invcs[uuid]" type="hidden" />
+        <input id="invcsNewFormInfoApptUUID" name="invcs[appt_id]" type="hidden" />
       </div>
       <div id="invcsNewFormInfo">
         <div id="invcsNewFormInvcsStts" class="row">
@@ -502,6 +503,7 @@ manage inventory and services
     -----------------------------------------------*/
     clearRghtMod(){
     this.invcsNewApptId=null;
+    this.apptId=null;
     let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
     let dt=new Date();
       for(let el of els){
@@ -522,6 +524,10 @@ manage inventory and services
     this.invcsNewItemsList=[];
     this.flipCrtUpdtBtn('create');
     this.flipNewInvcsBtn('create', true);
+
+    let el=document.getElementsByName("invcs[create_date]");
+    el[0].innerText=dtTmDbFrmt(new Date());
+
     this.newInvcsTblTtlRedrw();
     }
 
@@ -554,9 +560,22 @@ manage inventory and services
       let nm=getSubs(el.name,'invcs');
       invcs[nm]=el.value;
       }
+
+      //setting create_date
+      if(!invcs.hasOwnProperty('create_date')){
+      let crtDt=document.getElementsByName("invcs[create_date]")[0];
+      invcs["create_date"]=toInptValFrmt(Date.parse(new Date(crtDt.innerText)));
+      }
+
       if(createInvcs(invcs, this.invcsNewItemsList)){
-        if(refresh&&state.depModuleObjs.hasOwnProperty("invcs")){
-        state.depModuleObjs.invcs.drawTbl();
+        if(refresh){
+          if(state.pos=="invcs"){
+          state.depModuleObjs[state.pos].drawTbl();
+          }
+          else if(state.pos=="home"){
+          updateEventStatus(this.apptId,'done');
+          state.depModuleObjs[state.pos].drawApptsCard();
+          }
         }
       mainObj.modRghtOpenClose();
       mainObj.setFloatMsg('Invoice Created');
@@ -674,6 +693,7 @@ manage inventory and services
       if(!id){
       return null;
       }
+    this.apptId=id;
     let appt=selectViewEventUser({'event_id':id});
       if(!appt||appt.length<=0){
       return null;
@@ -695,6 +715,13 @@ manage inventory and services
     el[0].value=toInptValFrmt();
     el=document.getElementsByName("invcs[paid_date]");
     el[0].value=toInptValFrmt();
+    el=document.getElementsByName("invcs[create_date]");
+    el[0].innerText=dtTmDbFrmt(new Date());
+
+
+    //sets apptId
+    el=document.getElementsByName("invcs[appt_id]");
+    el[0].value=id;
 
     //updates invoice total_paid to total.
     state.pageVars.appt.id=null;

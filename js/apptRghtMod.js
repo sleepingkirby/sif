@@ -328,12 +328,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       let stts=document.getElementById("apptNewApptFormFullApptStatus");
         if(byUser&&byUser.value&&this.usrAddedArr.length>0){
         createEvent(this.usrAddedArr[0],byUser.value,onDt?.value,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
+        console.log(refresh);
           if(refresh){
-            if(state.depModuleObjs.hasOwnProperty("appt")){
-            state.depModuleObjs.appt.reDrwAppts();
+            if(state.pos=="appt"){
+            state.depModuleObjs[state.pos].reDrwAppts();
             }
-            else if(state.depModuleObjs.hasOwnProperty("week")){
-            state.depModuleObjs.week.genWk();
+            else if(state.pos=="week"){
+            state.depModuleObjs[state.pos].genWk();
+            }
+            else if(state.pos=="home"){
+            state.depModuleObjs[state.pos].drawApptsCard();
             }
           }
 
@@ -364,11 +368,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         if(uuid&&uuid.value&&byUser&&byUser.value&&this.usrAddedArr.length>0){
         updateEvent(uuid?.value,this.usrAddedArr[0],byUser.value,onDt?.value,null,dur?.value,null,stts?.value,this.invntSrvAddedArr,this.usrAddedArr);
           if(refresh){
-            if(state.depModuleObjs.hasOwnProperty("appt")){
-            state.depModuleObjs.appt.reDrwAppts();
+            if(state.pos=="appt"){
+            state.depModuleObjs[state.pos].reDrwAppts();
             }
-            else if(state.depModuleObjs.hasOwnProperty("week")){
-            state.depModuleObjs.week.genWk();
+            else if(state.pos=="week"){
+            state.depModuleObjs[state.pos].genWk();
+            }
+            else if(state.pos=="home"){
+            state.depModuleObjs[state.pos].drawApptsCard();
             }
           }
         mainObj.setFloatMsg("Appointment Updated");
@@ -475,7 +482,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       return null;
       }
     appt=appt[0];
-    console.log(appt);
     this.fillRghtMod(appt);
     this.addUpdtBtnFlip(true);
     }

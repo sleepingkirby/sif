@@ -98,8 +98,7 @@ if(typeof home==='undefined'){
     whether that be updating a clock, changing the events to be displayed, etc.
     ---------------------------------*/
     runOnInterval(e){
-    console.log("<----------runOnInterval()");
-    console.log(homeObj.editted);
+    //console.log("<----------runOnInterval()");
     //update clock 
       if(homeObj.editted){
       return null;
@@ -265,13 +264,6 @@ if(typeof home==='undefined'){
     return true;
     }
 
-    /*----------------------------------
-    pre: 
-    post: 
-    ----------------------------------*/
-    sttsSlctFunc(e){
-    console.log(e.target.value);
-    }
 
     /*----------------------------------
     pre: 
@@ -279,7 +271,9 @@ if(typeof home==='undefined'){
     ----------------------------------*/
     hookSttsSlct(){
     let el=document.getElementsByName("homeMainFltrSlct")[0];
-    el.onchange=this.sttsSlctFunc;
+      el.onchange=function(e){
+      homeObj.drawApptsCard();
+      };
     }
 
 
@@ -299,7 +293,6 @@ if(typeof home==='undefined'){
     generates right modal content
     ----------------------------------*/
     apptRghtMod(id=null){
-      //the home page will ONLY have appointments
       apptRghtModObj.popRghtMod(id);
       mainObj.modRghtOpenClose();
     }
@@ -310,7 +303,6 @@ if(typeof home==='undefined'){
     generates right modal content with appointment
     ----------------------------------*/
     invcsRghtMod(id=null){
-      //the home page will ONLY have appointments
       invcsRghtModObj.popRghtMod(null, id);
       mainObj.modRghtOpenClose();
     }
@@ -322,7 +314,6 @@ if(typeof home==='undefined'){
     drawApptsCard(){
     let apptsArr=this.getAppts();
     this.appts=apptsArr;
-    console.log(apptsArr);
     let appts=document.getElementById('homeMainAppts');
     let from=new Date(this.today);
     let now=new Date(this.today);
@@ -376,7 +367,7 @@ if(typeof home==='undefined'){
           </div>
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
-            <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.invcsRghtMod(${i})>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
+            <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.invcsRghtMod("${apptsArr[i].event_id}")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div class="menuIcon" title="Mark as done (no receipt)">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
             `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`
