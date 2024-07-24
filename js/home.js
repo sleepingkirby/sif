@@ -308,6 +308,24 @@ if(typeof home==='undefined'){
     }
 
     /*----------------------------------
+    pre: 
+    post:
+    marks appointment as done
+    ----------------------------------*/
+    markAs(id=null,stts=null){
+      if(!id||!stts){
+      return null;
+      }
+    stts=stts=="hold"?"on hold":stts;
+    console.log(stts);
+    updateEventStatus(id,stts);
+    stts=stts=="hold"?"on hold":stts;
+    mainObj.setFloatMsg(`Appointment Status Updated to "${stts}"`);
+    this.drawApptsCard();
+    }
+
+
+    /*----------------------------------
     pre:
     post:
     ----------------------------------*/
@@ -368,12 +386,12 @@ if(typeof home==='undefined'){
           <div class="homeApptCardActions">
             <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
             <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.invcsRghtMod("${apptsArr[i].event_id}")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
-            <div class="menuIcon" title="Mark as done (no receipt)">`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
+            <div class="menuIcon" title="Mark as done (no receipt)" onclick=homeObj.markAs("${apptsArr[i].event_id}","done")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
             `+getEvalIcon(iconSets, state.user.config.iconSet, 'moreHorz')+`
               <div class="homeAppCardActionsMoreMore">
-                <div class="menuIcon" title="Cancel Appointment">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
-                <div class="menuIcon" title="Put appointment on hold">`+getEvalIcon(iconSets, state.user.config.iconSet, 'hand')+`</div>
+                <div class="menuIcon" title="Cancel Appointment" onclick=homeObj.markAs("${apptsArr[i].event_id}","cancelled")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancel')+`</div>
+                <div class="menuIcon" title="Put appointment on hold" onclick=homeObj.markAs("${apptsArr[i].event_id}","hold")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'hand')+`</div>
               </div>
             </div>
           </div>
