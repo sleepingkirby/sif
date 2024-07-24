@@ -308,8 +308,8 @@ if(typeof home==='undefined'){
     }
 
     /*----------------------------------
-    pre: 
-    post:
+    pre:updateEventStatus(), stats, maonObj.setFloatMsg(), this.drawApptsCard() 
+    post: appointment(event) status updated, cards redrawn.
     marks appointment as done
     ----------------------------------*/
     markAs(id=null,stts=null){
@@ -322,6 +322,18 @@ if(typeof home==='undefined'){
     stts=stts=="hold"?"on hold":stts;
     mainObj.setFloatMsg(`Appointment Status Updated to "${stts}"`);
     this.drawApptsCard();
+    }
+
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    camForAppt(id=null){
+      if(!id){
+      return null;
+      }
+    
+    mainObj.openCloseOverMod();
     }
 
 
@@ -396,7 +408,7 @@ if(typeof home==='undefined'){
             ${iSHtml}
           </div>
           <div class="homeApptCardActions">
-            <div class="menuIcon" title="Pictures">`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
+            <div class="menuIcon" title="Pictures" onclick=homeObj.camForAppt("${apptsArr[i].event_id}")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`</div>
             <div class="menuIcon" title="Mark as done and generates receipt" onclick=homeObj.invcsRghtMod("${apptsArr[i].event_id}")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'receipt')+`</div>
             <div class="menuIcon" title="Mark as done (no receipt)" onclick=homeObj.markAs("${apptsArr[i].event_id}","done")>`+getEvalIcon(iconSets, state.user.config.iconSet, 'done')+`</div>
             <div class="menuIcon homeAppCardActionsMore" title="More actions">
