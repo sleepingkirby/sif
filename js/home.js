@@ -372,7 +372,7 @@ if(typeof home==='undefined'){
         }
       let fNm=apptsArr[i].cust_fName.length>=11?apptsArr[i].cust_fName.substr(0,8)+'...':apptsArr[i].cust_fName;
       let lNm=apptsArr[i].cust_surName.length>=3?apptsArr[i].cust_surName.substr(0,1)+'.':apptsArr[i].cust_surName;
-      let iSArr=apptsArr[i].events.split('|');
+      let iSArr=apptsArr[i].events?.split('|')||[];
       let iSHtml='';
         for(let cnt in iSArr){
           if(cnt>=1){
