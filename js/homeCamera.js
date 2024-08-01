@@ -27,6 +27,21 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
 
+    /*-----------------------------------------------
+    pre: none
+    post: closes video stream 
+    -----------------------------------------------*/
+    closeStream(ev){
+    const streams=homeCameraObj.video.srcObject?.getTracks()||null;
+      if(!streams){
+      return null;
+      }
+      for(const stream of streams){
+      stream.stop();
+      }
+    }
+
+
     hookEls(){
       this.video.addEventListener(
         "canplay",
@@ -53,12 +68,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       );
       this.closebutton.addEventListener(
         "click",
-        (ev) => {
-        const streams=this.video.srcObject.getTracks();
-          for(const stream of streams){
-          stream.stop();
-          }
-        },
+        this.closeStream,
         false,
       );
       this.dl.addEventListener("click",
@@ -108,7 +118,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('overModBody').innerHTML=`
     <div class="camera">
       <video id="video">Video stream not available.</video>
-      <button id="startbutton">Take photo</button>
       <button id="closebutton">close</button>
     </div>
     <canvas id="canvas"> </canvas>
@@ -118,6 +127,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       <button id="dlbutton">download</button>
     </div>
     `;
+
+    document.getElementById("overModFoot").innerHTML=`
+      <div id="startbutton" tabindex=1>`+getEvalIcon(iconSets, state.user.config.iconSet, 'radioButton')+`</div>
+    `;
+
 
     this.video = document.getElementById('video');
     this.canvas = document.getElementById('canvas');
@@ -151,10 +165,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     destructor to run closing any streams when changing modules.
     -----------------------------------------------*/
     destructor() {
-    const streams=this.video.srcObject.getTracks();
-      for(const stream of streams){
-      stream.stop();
-      }
+    this.closeStream();
     }
   }
 

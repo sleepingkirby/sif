@@ -837,6 +837,20 @@ justify-content:center;
 align-items:center;
 }
 
+#startbutton{
+cursor: pointer;
+width:100px;
+height:100px;
+}
+
+#startbutton svg{
+fill:var(--default-gray);
+}
+
+#startbutton:active svg{
+fill:red;
+}
+
 @keyframes opac{
 0%{max-height: 0px; margin-bottom: 0px; padding-top: 4px; padding-bottom: 4px;}
 20%{max-height: 600px; margin-bottom: 4px;}

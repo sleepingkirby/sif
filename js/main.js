@@ -305,6 +305,9 @@ class sif{
     if(prntEl){
     prntEl.style.display=prntEl.style.display=='none'?'flex':'none';
     }
+    if(state.depModuleObjs.hasOwnProperty('homeCamera')){
+    state.depModuleObjs.homeCamera.closeStream();
+    }
   }
 
   /*-------------------------------------------------------
