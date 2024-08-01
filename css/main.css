@@ -828,7 +828,9 @@ font-size: xxx-large;
 
 .overMod .overContent .body{
 flex-grow:10;
-
+flex-direction:column;
+justify-content:flex-start;
+align-items:center;
 }
 
 .overMod .overContent .foot{
@@ -849,6 +851,9 @@ fill:var(--default-gray);
 
 #startbutton:active svg{
 fill:red;
+}
+
+#canvas{
 }
 
 @keyframes opac{

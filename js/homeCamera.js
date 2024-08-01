@@ -9,14 +9,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.width = 320;    // We will scale the photo width to this
     this.height = 0;     // This will be computed based on the input stream
 
-    this.streaming = false;
+    //Camera spec
+    this.camSpec=null;
 
     this.video = null;
     this.canvas = null;
     this.photo = null;
     this.startbutton = null;
+    this.closebutton = null;
+    this.clearbutton = null;
 
     this.dl = null;
+
+    this.wndwEvent=this.wndwOrnt;
 
     this.destruct=this.destructor;//hook for destructor to run on module change.
     }
@@ -26,34 +31,32 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     console.log(e.target.value);
     }
 
-
     /*-----------------------------------------------
     pre: none
-    post: closes video stream 
+    post: adds hooks to elements
     -----------------------------------------------*/
-    closeStream(ev){
-    const streams=homeCameraObj.video.srcObject?.getTracks()||null;
-      if(!streams){
-      return null;
-      }
-      for(const stream of streams){
-      stream.stop();
-      }
-    }
-
-
     hookEls(){
       this.video.addEventListener(
         "canplay",
         (ev) => {
-          if (!this.streaming) {
-            this.height = (this.video.videoHeight / this.video.videoWidth) * this.width;
+          if (this.video&&this.camSpec) {
+          this.height = (this.video.videoHeight / this.video.videoWidth) * this.width;
       
-            this.video.setAttribute("this.width", this.width);
-            this.video.setAttribute("this.height", this.height);
-            this.canvas.setAttribute("this.width", this.width);
-            this.canvas.setAttribute("this.height", this.height);
-            this.streaming = true;
+          this.video.setAttribute("width", this.camSpec.width);
+          this.video.setAttribute("height", this.camSpec.height);
+
+            if(this.camSpec){
+            this.canvas.setAttribute("width", this.camSpec.width);
+            this.canvas.setAttribute("height", this.camSpec.height);
+            this.canvas.style.width=String(this.camSpec.width)+'px';
+            this.canvas.style.height=String(this.camSpec.height)+'px';
+            }
+            else{
+            this.canvas.setAttribute("width", this.width);
+            this.canvas.setAttribute("height", this.height);
+            this.canvas.style.width=String(this.width)+'px';
+            this.canvas.style.height=String(this.height)+'px';
+            }
           }
         },
         false,
@@ -62,6 +65,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         "click",
         (ev) => {
           this.takepicture();
+          this.imgFlip();
           ev.preventDefault();
         },
         false,
@@ -71,6 +75,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         this.closeStream,
         false,
       );
+      this.clearbutton.addEventListener(
+        "click",
+        (e)=>{
+        console.log("clear button");
+        this.clearphoto();
+        this.imgFlip();
+        },
+        false,
+      );
       this.dl.addEventListener("click",
         (ev) => {
         const a=document.getElementById('picDL');
@@ -78,26 +91,42 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         },
         false,
       );
+
+      window.addEventListener("deviceorientation", this.wndwEvent);
+    }
+
+
+    /*-----------------------------------------------
+    pre: none
+    post:none
+    function to detect orientation 
+    -----------------------------------------------*/
+    wndwOrnt(e){
+    console.log(e);
     }
 
 
     clearphoto() {
-      const canvas=document.getElementById('canvas');
+      const canvas=document.getElementById('cameraCanvas');
       const context = canvas.getContext("2d");
       context.fillStyle = "#AAA";
       context.fillRect(0, 0, canvas.width, canvas.height);
     
       const data = canvas.toDataURL("image/png");
-      this.photo.setAttribute("src", data);
+      this.photo.setAttribute("src", "");
     }
-    
+   
+
+    /*-----------------------------------------------
+    pre: none
+    post: canvas(not show), alias and img drawn
+    draws image to canvas, alias and img
+    -----------------------------------------------*/
     takepicture() {
-      const canvas=document.getElementById('canvas');
+      const canvas=document.getElementById('cameraCanvas');
       const context = canvas.getContext("2d");
-      if (this.width && this.height) {
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        context.drawImage(this.video, 0, 0, this.width, this.height);
+      if (this.camSpec) {
+        context.drawImage(this.video, 0, 0, this.camSpec.width, this.camSpec.height);
     
         const data = canvas.toDataURL("image/png");
         this.photo.setAttribute("src", data);
@@ -112,19 +141,55 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
     /*-----------------------------------------------
     pre: none
+    post: closes video stream 
+    -----------------------------------------------*/
+    closeStream(ev){
+    const streams=homeCameraObj.video.srcObject?.getTracks()||null;
+      if(!streams){
+      return null;
+      }
+      for(const stream of streams){
+      stream.stop();
+      }
+    window.removeEventListener("deviceorientation",this.wndwEvent);
+    }
+
+    /*-----------------------------------------------
+    pre: none
+    post: closes video stream 
+    -----------------------------------------------*/
+    imgFlip(){
+    console.log(this.photo.src);
+      if(this.photo.getAttribute('src')==""){
+      this.photo.style.display="none";
+      this.video.style.display="flex";
+      }
+      else{
+      this.photo.style.display="flex";
+      this.video.style.display="none";
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: none
     post: write the html to the page
+    If the canvas is being hidden, why do we need it?
+    The video data is drawn to the canvas and only 
+    via the canvas (to my knowledge), can you convert
+    to an image.
     -----------------------------------------------*/
     drawCamera(){
     document.getElementById('overModBody').innerHTML=`
     <div class="camera">
       <video id="video">Video stream not available.</video>
-      <button id="closebutton">close</button>
+      <button id="cameraCloseButton">close</button>
     </div>
-    <canvas id="canvas"> </canvas>
+    <canvas id="cameraCanvas"></canvas>
     <div class="output">
       <img id="photo" alt="The screen capture will appear in this box." />
-      <a id="picDL" />
+      <a id="picDL">&nbsp;</a>
       <button id="dlbutton">download</button>
+      <button id="clearbutton">clear</button>
     </div>
     `;
 
@@ -134,12 +199,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
 
     this.video = document.getElementById('video');
-    this.canvas = document.getElementById('canvas');
+    this.canvas = document.getElementById('cameraCanvas');
     this.photo = document.getElementById('photo');
     this.startbutton = document.getElementById('startbutton');
-    this.closebutton = document.getElementById('closebutton');
+    this.closebutton = document.getElementById('cameraCloseButton');
+    this.clearbutton = document.getElementById('clearbutton');
     this.dl = document.getElementById('dlbutton');
-
+//navigator.mediaDevices.getUserMedia(params);
       if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
           video: {
@@ -148,6 +214,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           audio: false
         })
           .then((stream) => {
+            this.camSpec=stream.getTracks()[0].getSettings();
             video.srcObject = stream;
             video.play();
           })
