@@ -1,11 +1,38 @@
+#cameraVideoWrap{
+display:flex;
+flex-direction:column;
+justify-content:flex-start;
+align-items:center;
+}
+
 #cameraCanvas{
 display:none;
 }
 
 #cameraCloseButton{
-display:none;
 }
 
-#picDL{
+
+#cameraOutput{
 display:none;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100%;
+}
+
+.cameraOutputControls{
+display:flex;
+flex-direction:row;
+justify-content:space-between;
+align-items: center;
+flex-grow:10;
+width:100%;
+padding-bottom:40px;
+}
+
+.cameraOutputControls svg{
+fill:var(--default-gray);
+width:80px;
+height:80px;
 }

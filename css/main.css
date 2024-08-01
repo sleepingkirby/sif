@@ -827,6 +827,7 @@ font-size: xxx-large;
 }
 
 .overMod .overContent .body{
+display:flex;
 flex-grow:10;
 flex-direction:column;
 justify-content:flex-start;

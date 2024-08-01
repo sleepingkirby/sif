@@ -19,7 +19,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.closebutton = null;
     this.clearbutton = null;
 
+    this.videoWrapId='cameraVideoWrap';
+    this.outputWrapId='cameraOutput';
+
     this.dl = null;
+
+    this.apptId=null;
 
     this.wndwEvent=this.wndwOrnt;
 
@@ -58,14 +63,18 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             this.canvas.style.height=String(this.height)+'px';
             }
           }
+        this.imgFlip();
         },
         false,
       );
+      //take picture
       this.startbutton.addEventListener(
         "click",
         (ev) => {
           this.takepicture();
           this.imgFlip();
+          const a=document.getElementById('picDL');
+          a.download="test.png";
           ev.preventDefault();
         },
         false,
@@ -78,12 +87,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.clearbutton.addEventListener(
         "click",
         (e)=>{
-        console.log("clear button");
         this.clearphoto();
         this.imgFlip();
         },
         false,
       );
+      /*
       this.dl.addEventListener("click",
         (ev) => {
         const a=document.getElementById('picDL');
@@ -91,8 +100,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         },
         false,
       );
-
-      window.addEventListener("deviceorientation", this.wndwEvent);
+      */
+      window.addEventListener("deviceorientation", this.wndwEvent, false);
     }
 
 
@@ -101,11 +110,19 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post:none
     function to detect orientation 
     -----------------------------------------------*/
-    wndwOrnt(e){
-    console.log(e);
+    wndwOrnt(event){
+    console.log(event);
+      const rotateDegrees = event.alpha; // alpha: rotation around z-axis
+      const leftToRight = event.gamma; // gamma: left to right
+      const frontToBack = event.beta; // beta: front back motion
+
     }
 
-
+    /*-----------------------------------------------
+    pre: none
+    post:none
+    clearing the photo from the canvas and the photo element
+    -----------------------------------------------*/
     clearphoto() {
       const canvas=document.getElementById('cameraCanvas');
       const context = canvas.getContext("2d");
@@ -144,7 +161,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: closes video stream 
     -----------------------------------------------*/
     closeStream(ev){
-    const streams=homeCameraObj.video.srcObject?.getTracks()||null;
+    const streams=homeCameraObj.video?.srcObject?.getTracks()||null;
       if(!streams){
       return null;
       }
@@ -159,16 +176,26 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: closes video stream 
     -----------------------------------------------*/
     imgFlip(){
-    console.log(this.photo.src);
-      if(this.photo.getAttribute('src')==""){
-      this.photo.style.display="none";
-      this.video.style.display="flex";
+    const video=document.getElementById(this.videoWrapId);
+    const output=document.getElementById(this.outputWrapId);
+      if(!this.photo.getAttribute('src')||this.photo.getAttribute('src')==""){
+      output.style.display="none";
+      video.style.display="flex";
       }
       else{
-      this.photo.style.display="flex";
-      this.video.style.display="none";
+      output.style.display="flex";
+      video.style.display="none";
       }
     }
+
+    /*-----------------------------------------------
+    pre: none
+    post: writes img name 
+    -----------------------------------------------*/
+    genNm(){
+
+    }
+
 
     /*-----------------------------------------------
     pre: none
@@ -178,18 +205,23 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     via the canvas (to my knowledge), can you convert
     to an image.
     -----------------------------------------------*/
-    drawCamera(){
+    drawCamera(apptId){
+    this.apptId=apptId||null;
+
     document.getElementById('overModBody').innerHTML=`
-    <div class="camera">
+    <div id="cameraVideoWrap" class="camera">
       <video id="video">Video stream not available.</video>
       <button id="cameraCloseButton">close</button>
     </div>
     <canvas id="cameraCanvas"></canvas>
-    <div class="output">
-      <img id="photo" alt="The screen capture will appear in this box." />
-      <a id="picDL">&nbsp;</a>
-      <button id="dlbutton">download</button>
-      <button id="clearbutton">clear</button>
+    <div id="cameraOutput" class="output">
+      <img id="photo" />
+      <div class="cameraOutputControls">
+        <a id="picDL">
+          <div id="dlbutton" title="Save photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+        </a>
+        <div id="clearbutton" title="Clear photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancelCircle')+`</div>
+      </div>
     </div>
     `;
 

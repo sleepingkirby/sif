@@ -332,7 +332,7 @@ if(typeof home==='undefined'){
       if(!id){
       return null;
       }
-    homeCameraObj.drawCamera();
+    homeCameraObj.drawCamera(id);
  
     mainObj.openCloseOverMod();
     }
@@ -403,7 +403,7 @@ if(typeof home==='undefined'){
             <div class="homeApptCardInfoCust">
               <div class="homeApptCardInfoCustRow">
                 <div title="${apptsArr[i].cust_fName} ${apptsArr[i].cust_surName} - ${apptsArr[i].cust_cellphone} - ${apptsArr[i].cust_email}">${fNm} ${lNm}</div>
-                <div>${apptsArr[i].duration} min.</div>
+                <div>${apptsArr[i].duration||0} min.</div>
               </div>
             </div>
             ${iSHtml}
