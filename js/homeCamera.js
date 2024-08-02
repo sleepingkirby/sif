@@ -151,7 +151,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       img.addEventListener("mouseenter",(event)=>{
       //if there is no photo in image,
         if(!event.target.getAttribute('err')){
-        console.log(this.oldImgBuff.src);
         this.photo.setAttribute('src',this.oldImgBuff.src);
         return null;
         }
