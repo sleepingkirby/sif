@@ -92,6 +92,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <input id="apptNewApptFormFullApptInfoAddBtn" style="" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
+      <div id="apptNewApptFormPics">
+      photos
+      </div>
     </div>
     `;
     this.usrAddedArr=[];
