@@ -93,3 +93,7 @@ display:none;
 #clearbutton{
 visibility:hidden;
 }
+
+#cameraOutputImgs{
+visibility:hidden;
+}

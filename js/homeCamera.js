@@ -119,7 +119,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: none
     post:none
     -----------------------------------------------*/
-    loadOldImg(name){
+    loadOldImg(name=null){
     const nm=name||this.genNm();
     this.oldImgBuff.src=this.outPath+nm;
     }
@@ -138,7 +138,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       //set download image name
       const a=document.getElementById('picDL');
-      a.download=nm;
+      a.download=this.genNm();
       },false);
     }
 
@@ -149,8 +149,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     oldImgIconHook(){
       const img=document.getElementById('cameraOutputOldImgIcon');
       img.addEventListener("mouseenter",(event)=>{
-      //if img is 
+      //if there is no photo in image,
         if(!event.target.getAttribute('err')){
+        console.log(this.oldImgBuff.src);
         this.photo.setAttribute('src',this.oldImgBuff.src);
         return null;
         }
@@ -159,6 +160,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       img.addEventListener("mouseleave",(event)=>{
       this.photo.setAttribute('src',this.canvas.toDataURL("image/png"));
+
         if(event.target.getAttribute('class')=="err"){
         event.target.removeAttribute('class');
         }
@@ -281,12 +283,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     imgFlip(){
     const video=document.getElementById(this.videoWrapId);
     const output=document.getElementById(this.outputWrapId);
+    const drpdwn=document.getElementById('cameraOutputImgs');
       if(!this.photo.getAttribute('src')||this.photo.getAttribute('src')==""){
       output.style.display='none';
       video.style.display='flex';
       this.dl.style.display='none';
       this.startbutton.style.display='flex';
       this.clearbutton.style.setProperty('visibility','hidden');
+      drpdwn.style.setProperty('visibility','hidden');
       }
       else{
       output.style.display='flex';
@@ -294,6 +298,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.dl.style.display='flex';
       this.startbutton.style.display='none';
       this.clearbutton.style.setProperty('visibility','visible');
+      drpdwn.style.setProperty('visibility','visible');
       }
     }
 
@@ -302,7 +307,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: writes img name 
     -----------------------------------------------*/
     genNm(path=false){
-    const val=this.drpDwn.value||'1';
+    const d=document.getElementById('cameraDrpdwn');
+    const val=d?d.value:'1';
       if(path){
       return this.outPath+this.apptId+'-'+val+'.png';
       }
