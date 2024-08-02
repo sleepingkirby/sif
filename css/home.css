@@ -62,6 +62,10 @@ align-items: stretch;
 overflow:hidden;
 }
 
+.homeApptCard:hover{
+box-shadow:0px 0px 10px var(--default-gray-a6);
+}
+
 .homeApptCard .homeApptCardInfo{
 display:flex;
 flex-direction:column;

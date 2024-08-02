@@ -21,6 +21,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
     this.videoWrapId='cameraVideoWrap';
     this.outputWrapId='cameraOutput';
+    this.controlsId='cameraOutputControls';
 
     this.dl = null;
 
@@ -49,6 +50,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       
           this.video.setAttribute("width", this.camSpec.width);
           this.video.setAttribute("height", this.camSpec.height);
+          this.video.style.maxWidth=String(this.camSpec.width)+'px';
+          this.video.style.maxHeight=String(this.camSpec.height)+'px';
 
             if(this.camSpec){
             this.canvas.setAttribute("width", this.camSpec.width);
@@ -74,6 +77,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           this.takepicture();
           this.imgFlip();
           const a=document.getElementById('picDL');
+          this.genNm();
           a.download="test.png";
           ev.preventDefault();
         },
@@ -146,6 +150,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         context.drawImage(this.video, 0, 0, this.camSpec.width, this.camSpec.height);
     
         const data = canvas.toDataURL("image/png");
+        this.photo.style.maxWidth=String(this.camSpec.width)+'px';
+        this.photo.style.maxHeight=String(this.camSpec.height)+'px';
         this.photo.setAttribute("src", data);
       } else {
         this.clearphoto();
@@ -178,13 +184,18 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     imgFlip(){
     const video=document.getElementById(this.videoWrapId);
     const output=document.getElementById(this.outputWrapId);
+    const control=document.getElementById(this.controlsId);
       if(!this.photo.getAttribute('src')||this.photo.getAttribute('src')==""){
-      output.style.display="none";
-      video.style.display="flex";
+      output.style.display='none';
+      video.style.display='flex';
+      control.style.display='none';
+      this.startbutton.style.display='flex';
       }
       else{
-      output.style.display="flex";
-      video.style.display="none";
+      output.style.display='flex';
+      video.style.display='none';
+      control.style.display='flex';
+      this.startbutton.style.display='none';
       }
     }
 
@@ -193,7 +204,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post: writes img name 
     -----------------------------------------------*/
     genNm(){
-
+    console.log(this.apptId);
     }
 
 
@@ -216,17 +227,22 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     <canvas id="cameraCanvas"></canvas>
     <div id="cameraOutput" class="output">
       <img id="photo" />
-      <div class="cameraOutputControls">
-        <a id="picDL">
-          <div id="dlbutton" title="Save photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
-        </a>
-        <div id="clearbutton" title="Clear photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancelCircle')+`</div>
-      </div>
     </div>
     `;
 
     document.getElementById("overModFoot").innerHTML=`
       <div id="startbutton" tabindex=1>`+getEvalIcon(iconSets, state.user.config.iconSet, 'radioButton')+`</div>
+      <div id="cameraOutputControls">
+        <a id="picDL">
+          <div id="dlbutton" title="Save photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+        </a>
+        <div>
+          <select id="cameraDrpdwn">
+          <option>1</option>
+          </select>
+        </div>
+        <div id="clearbutton" title="Clear photo">`+getEvalIcon(iconSets, state.user.config.iconSet, 'cancelCircle')+`</div>
+      </div>
     `;
 
 
