@@ -199,6 +199,25 @@ justify-content:flex-start;
 flex-wrap:wrap;
 }
 
+#apptFormPics{
+display:flex;
+flex-direction:row;
+justify-content:space-around;
+align-items:flex-start;
+border:1px solid white;
+border-radius:var(--default-border-radius);
+padding:var(--default-border-radius);
+}
+
+#apptFormPics div{
+display:flex;
+}
+
+#apptFormPics .photo, #apptFormPics img{
+width:50px;
+border-radius:var(--default-border-radius);
+}
+
 .multiBoxListItem{
 display:flex;
 flex-direction:row;

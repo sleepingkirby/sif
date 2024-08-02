@@ -92,10 +92,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <input id="apptNewApptFormFullApptInfoAddBtn" style="" type="submit" value="Add Appointment" disabled/>
         </div>
       </div>
-      <div id="apptNewApptFormPics">
-      photos
+      <div id="apptFormPics">
+       no photos
       </div>
     </div>
+    `;
+    this.tmpl.photos=[];
+    this.tmpl.photos[0]=`
+      <div class="photo">
+        <img />
+      </div>
     `;
     this.usrAddedArr=[];
     this.invntSrvAddedArr=[];
@@ -118,6 +124,61 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.cntctPatt=new RegExp(/(contact\[|\])/,"g");
     }
 
+
+    imgLoad(e){
+    }
+
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    prvwPicEn(e){
+    console.log("<=========prvwPicEn");
+    console.log(e);
+      switch(e.type){
+        case 'mouseenter':
+
+        break;
+        case 'mouseleave':
+
+        break;
+        default:
+        break;
+      }
+    }
+
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    imgErr(e){
+    e.target.style.setProperty('display','none');
+    }
+
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    genPhotos(apptId){
+    let ps=document.getElementById('apptFormPics');
+    let rtrn='';
+      for(let i=1;i<=7;i++){
+      rtrn+=this.tmpl.photos[0];
+      }
+    ps.innerHTML=rtrn;
+
+    let nds=document.querySelectorAll('#apptFormPics img');
+    let i=1;
+      for(let n of nds){
+      console.log(n);
+      n.addEventListener("error",this.imgErr,false);
+      //n.addEventListener("load",this.imgLoad,false);
+      n.addEventListener("mouseenter",this.prvwPicEn,false);
+      n.addEventListener("mouseleave",this.prvwPicEn,false);
+      n.src=homeCameraObj.outPath+String(apptId)+'-'+String(i)+'.png';
+      i++;
+      }
+    }    
 
     /*----------------------------------
     pre: select elements
@@ -469,6 +530,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       if(stts){
       stts.value=appt.status_uuid;
       }
+    this.genPhotos(appt.event_id);
     }
 
     /*-----------------------------------------------
