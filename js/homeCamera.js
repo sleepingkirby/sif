@@ -119,7 +119,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: none
     post:none
     -----------------------------------------------*/
-    loadOldImg(nm){
+    loadOldImg(name){
+    const nm=name||this.genNm();
     this.oldImgBuff.src=this.outPath+nm;
     }
 
@@ -133,8 +134,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       return null;
       }
       this.drpDwn.addEventListener("change",(e)=>{
-      const nm=this.genNm();
-      this.loadOldImg(nm);
+      this.loadOldImg();
 
       //set download image name
       const a=document.getElementById('picDL');
@@ -237,7 +237,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     takepicture() {
       const context = this.canvas.getContext("2d");
 
-      this.loadOldImg(this.genNm());//tries to load the old image to sync the oldImgIcon
+      this.loadOldImg();//tries to load the old image to sync the oldImgIcon
 
       if (this.camSpec) {
         context.drawImage(this.video, 0, 0, this.camSpec.width, this.camSpec.height);
@@ -286,12 +286,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       video.style.display='flex';
       this.dl.style.display='none';
       this.startbutton.style.display='flex';
+      this.clearbutton.style.setProperty('visibility','hidden');
       }
       else{
       output.style.display='flex';
       video.style.display='none';
       this.dl.style.display='flex';
       this.startbutton.style.display='none';
+      this.clearbutton.style.setProperty('visibility','visible');
       }
     }
 
@@ -384,6 +386,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           });
       }
     this.hookEls();
+    this.loadOldImg();
     }
 
     

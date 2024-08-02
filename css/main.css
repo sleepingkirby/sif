@@ -816,7 +816,6 @@ align-items:stretch;
 
 .overMod .overContent > div{
 box-sizing:border-box;
-border:1px solid red;
 display:flex;
 }
 

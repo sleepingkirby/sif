@@ -89,3 +89,7 @@ fill:red;
 #dlbutton{
 display:none;
 }
+
+#clearbutton{
+visibility:hidden;
+}
