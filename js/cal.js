@@ -3,7 +3,7 @@ if(typeof cal==='undefined'){
 
     constructor(yr=null, mn=null, dy=null){
 
-    var date=new Date();
+    const date=new Date();
     this.year=yr;
       if(!yr||yr==null){
       this.year=state['shwDate']['year']=date.getFullYear();
@@ -33,8 +33,8 @@ if(typeof cal==='undefined'){
     //---------------------------------------------------
     //updates html elements with the current date
     dateUpdt(year=this.year, mon=this.mon){
-    var yrEl=document.getElementsByName("calNavYear")[0];
-    var mnEl=document.getElementsByName("calNavMon")[0];
+    const yrEl=document.getElementsByName("calNavYear")[0];
+    const mnEl=document.getElementsByName("calNavMon")[0];
     
     padVal(yrEl, year);
     padVal(mnEl, Number(mon)+1);
@@ -43,7 +43,7 @@ if(typeof cal==='undefined'){
 
     //changes the calendar to today/this month.
     goToday(){
-    let dt=new Date();
+    const dt=new Date();
     this.modDate(dt.getFullYear(), dt.getMonth());
     
     this.dateUpdt(dt.getFullYear(), dt.getMonth()); 
@@ -78,7 +78,7 @@ if(typeof cal==='undefined'){
       return false;
       }
     
-    var el=document.getElementsByName(event.target.getAttribute("for"))[0];
+    const el=document.getElementsByName(event.target.getAttribute("for"))[0];
     let num=Number(el.innerText);
       if(isNaN(num)){
       return false;
@@ -90,8 +90,8 @@ if(typeof cal==='undefined'){
       //check if element being changed is the month
       //if so, see if need to inc or dec year.
       if(el.getAttribute('name')=='calNavMon'){
-        let yrEl=document.getElementsByName('calNavYear')[0];
-        let yrNm=yrEl.innerText;
+        const yrEl=document.getElementsByName('calNavYear')[0];
+        const yrNm=yrEl.innerText;
         if(num>el.getAttribute('maxVal')){
         //increment year
         padVal(yrEl, parseInt(yrNm)+1);
@@ -104,8 +104,8 @@ if(typeof cal==='undefined'){
 
       padVal(el, num);
 
-    let year=document.getElementsByName("calNavYear")[0].innerText;
-    let mon=Number(document.getElementsByName("calNavMon")[0].innerText)-1;
+    const year=document.getElementsByName("calNavYear")[0].innerText;
+    const mon=Number(document.getElementsByName("calNavMon")[0].innerText)-1;
 
     this.modDate(year, mon);
     return true;
@@ -117,9 +117,8 @@ if(typeof cal==='undefined'){
     generates HTML of leftNav element for calendar
     -----------------------------------------------*/
     genLeftNavCal(year=this.year, mon=this.mon){
-      
-      var rtrn="";
-      rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
+    var rtrn="";
+    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
     return rtrn;
     }
 

@@ -168,7 +168,7 @@ class sif{
     switch(id){
       case "dbFile":
         //validate if db file. If not, empty. if so hide element
-        let ext=state.dbFile&&state.dbFile.name?state.dbFile.name.substr(-3):null;
+        const ext=state.dbFile&&state.dbFile.name?state.dbFile.name.substr(-3):null;
         if(ext!=".db"){
         state[id]="";
         }
@@ -359,7 +359,7 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   afterHookEl(){
-  let el=document.getElementById("logout");
+  const el=document.getElementById("logout");
     if(el){
       el.onclick=(e)=>{
       this.destructModule();
@@ -379,7 +379,7 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   saveHookEl(){
-  let el=document.getElementById("saveDB");
+  const el=document.getElementById("saveDB");
     if(el){
       el.onclick=(e)=>{
       const fn='sif-'+dtFlNm()+'.db';
@@ -394,7 +394,7 @@ class sif{
   open/close left modal
   -------------------------------------------------------*/
   modLftOpenClose(){
-  let el=document.getElementById('lftMod').getElementsByClassName('close')[0];
+  const el=document.getElementById('lftMod').getElementsByClassName('close')[0];
   this.modPrcClsCall(el);
   }
 
@@ -404,7 +404,7 @@ class sif{
   open/close right modal
   -------------------------------------------------------*/
   modRghtOpenClose(){
-  let el=document.getElementById('rghtMod').getElementsByClassName('close')[0];
+  const el=document.getElementById('rghtMod').getElementsByClassName('close')[0];
   this.modPrcClsCall(el);
   }
 
@@ -577,7 +577,7 @@ class sqljs{
     }
 
   const stmt=state.dbObj.prepare(qry);
-  var rtrn=[];
+  const rtrn=[];
     if(stmt && stmt.bind(binds)){
       while(stmt.step()){
       rtrn.push(stmt.getAsObject());
@@ -589,7 +589,7 @@ class sqljs{
     }
 
   //setting dbModded state to true
-  let q=qry.trim().toLocaleLowerCase();
+  const q=qry.trim().toLocaleLowerCase();
     if(q.indexOf('select')!=0){
     state.dbModded=true;
     }

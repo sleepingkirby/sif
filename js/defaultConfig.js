@@ -1,4 +1,4 @@
-var defaultConfig={
+const defaultConfig={
 "iconSet":"default",
   'shift':{
   'start':"10:00",
