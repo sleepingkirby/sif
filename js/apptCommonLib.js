@@ -6,7 +6,7 @@ function genInvntSrv(invntSrv, selectedUUID){
   if(!invntSrv){
   return '';
   }
-let keys=Object.keys(invntSrv);
+const keys=Object.keys(invntSrv);
 let html='';
   if(keys.length<=0){
   return html;
@@ -54,10 +54,10 @@ function genCustSlct(users,dfltVal='none',slctdPrp=null,slctdVl=null){
   let html="";
   html+='<option value="">'+dfltVal+'</option>';
   for(const usr of users){
-  let fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
-  let lNm=usr.surName.length>=6?usr.surName.substr(0,3)+'...':usr.surName;
+  const fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
+  const lNm=usr.surName.length>=6?usr.surName.substr(0,3)+'...':usr.surName;
   let selected='';
-  let title=usr.fName+' '+usr.surName+', '+usr.email+', '+usr.cellphone||usr.phone;
+  const title=usr.fName+' '+usr.surName+', '+usr.email+', '+usr.cellphone||usr.phone;
     if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
     selected='selected';
     }
@@ -74,7 +74,7 @@ post: none
 function genInvntSrvListEls(invntSrvList,invntSrvAddedArr,objNm='apptQckObj'){
 let html="";
 let total=0;
-let rtrn={'html':'','total':0};
+const rtrn={'html':'','total':0};
   if(invntSrvList&&invntSrvAddedArr){
     for(const uuid of invntSrvAddedArr){
       if(invntSrvList.hasOwnProperty(uuid)){

@@ -117,8 +117,7 @@ if(typeof cal==='undefined'){
     generates HTML of leftNav element for calendar
     -----------------------------------------------*/
     genLeftNavCal(year=this.year, mon=this.mon){
-    var rtrn="";
-    rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
+    const rtrn=this.tmpl.leftNav[0]+year+this.tmpl.leftNav[1]+padDate(mon+1)+this.tmpl.leftNav[2];
     return rtrn;
     }
 
@@ -142,14 +141,14 @@ if(typeof cal==='undefined'){
     genCal(year=this.year, mon=this.mon, day=this.day){
 
     //get where to start building calendar. This could be last month if it's in the week
-    var ptrDt=new Date(year, mon, 1);
-    var today=new Date();
-    var curDy=(1 - ptrDt.getDay())%7;
+    const ptrDt=new Date(year, mon, 1);
+    const today=new Date();
+    let curDy=(1 - ptrDt.getDay())%7;
     ptrDt.setFullYear(year, mon, curDy);
-    var rtrn="";
-    var end=false;
-    var i=0; //thnis always starts as 0 because we're always starting on a sunday.
-    var endDt=new Date(year, mon+1, 0);
+    let rtrn="";
+    let end=false;
+    let i=0; //thnis always starts as 0 because we're always starting on a sunday.
+    const endDt=new Date(year, mon+1, 0);
     endDt.setFullYear(endDt.getFullYear(), endDt.getMonth(), endDt.getDate()+(7-endDt.getDay()));//last day of calendar +1 day
     this.appts=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(ptrDt.toISOString()), dtTmDbFrmt(endDt.toISOString()));
     let apptI=0;
@@ -171,8 +170,8 @@ if(typeof cal==='undefined'){
         cls=' class="fade"';
         }
       
-      let dayAppts=[];
-      let ptrDtT=new Date(ptrDt.toISOString())
+      const dayAppts=[];
+      const ptrDtT=new Date(ptrDt.toISOString())
       ptrDtT.setDate(ptrDtT.getDate()+1)
         while(apptI<this.appts.length){
           //if appointment exists and on_date for said appointment is valid and it's within the day in question
@@ -188,7 +187,7 @@ if(typeof cal==='undefined'){
       let dayApptsStr='';
       let tmpDt='';
       let tmpNm='';
-        for(let apptIn in dayAppts){
+        for(const apptIn in dayAppts){
           if(apptIn>1){
           dayApptsStr+='<div>...</div>';
           break;
