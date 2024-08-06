@@ -1,25 +1,25 @@
 function dtFlNm(dateTime=null){
-var dt=new Date();
+let dt=new Date();
   if(Number.isFinite(dateTime)){
   dt=new Date(dateTime);
   }
-var dateStr=dt.getFullYear().toString()+(dt.getMonth()+1).toString().padStart(2,'0')+dt.getDate().toString().padStart(2,'0');
-var timeStr=dt.getHours().toString().padStart(2,'0')+dt.getMinutes().toString().padStart(2,'0')+dt.getSeconds().toString().padStart(2,'0');
+const dateStr=dt.getFullYear().toString()+(dt.getMonth()+1).toString().padStart(2,'0')+dt.getDate().toString().padStart(2,'0');
+const timeStr=dt.getHours().toString().padStart(2,'0')+dt.getMinutes().toString().padStart(2,'0')+dt.getSeconds().toString().padStart(2,'0');
 return dateStr+'-'+timeStr; 
 }
 
 //date time database format
 //2023-11-09 09:17:43
 function dtTmDbFrmt(dateTime=null, flip=false){
-var dt=new Date();
+let dt=new Date();
   if(Number.isFinite(dateTime)){
   dt=new Date(dateTime);
   }
   else if(typeof dateTime=="string" || typeof dateTime=="object"){
   dt=new Date(dateTime);
   }
-var dateStr=dt.getFullYear().toString()+'-'+(dt.getMonth()+1).toString().padStart(2,'0')+'-'+dt.getDate().toString().padStart(2,'0');
-var timeStr=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
+const dateStr=dt.getFullYear().toString()+'-'+(dt.getMonth()+1).toString().padStart(2,'0')+'-'+dt.getDate().toString().padStart(2,'0');
+const timeStr=dt.getHours().toString().padStart(2,'0')+':'+dt.getMinutes().toString().padStart(2,'0')+':'+dt.getSeconds().toString().padStart(2,'0');
   if(flip){
   return timeStr+' '+dateStr;
   }
@@ -54,26 +54,26 @@ return t;
 
 
 function epochTime(date){
-var epch=Date.parse(date.toISOString())/1000;
+const epch=Date.parse(date.toISOString())/1000;
 return Math.floor(epch);
 }
 
 //outputs yyyymmdd, ex 20220201
 function toTimeStr(date){
-var rtrn=String(date.getFullYear());
+let rtrn=String(date.getFullYear());
 rtrn+=String(date.getMonth()).padStart(2, '0');
 rtrn+=String(date.getDate()).padStart(2, '0');
 return rtrn;
 }
 
 function toInptValFrmt(dateTime=null){
-var dt=new Date();
+let dt=new Date();
   if(Number.isFinite(dateTime)){
   dt=new Date(dateTime);
   }
 
-var dateStr=dt.getFullYear().toString()+"-"+(dt.getMonth()+1).toString().padStart(2,'0')+"-"+dt.getDate().toString().padStart(2,'0');
-var timeStr=dt.getHours().toString().padStart(2,'0')+":"+dt.getMinutes().toString().padStart(2,'0');
+let dateStr=dt.getFullYear().toString()+"-"+(dt.getMonth()+1).toString().padStart(2,'0')+"-"+dt.getDate().toString().padStart(2,'0');
+let timeStr=dt.getHours().toString().padStart(2,'0')+":"+dt.getMinutes().toString().padStart(2,'0');
 return dateStr+"T"+timeStr;
 }
 
@@ -92,7 +92,7 @@ let min=dateObj.getMinutes();
   dateObj.setMinutes(min);
   }
 
-let obj={
+const obj={
 'mins': (hr+60)+min,
 'hr':hr,
 'min':min,

@@ -149,7 +149,7 @@ manage inventory and services
       return null;
       }
 
-    let tmp=this.invcsNewItemsList[indx];
+    const tmp=this.invcsNewItemsList[indx];
     this.invcsNewItemsList[indx]=this.invcsNewItemsList[newIndx];
     this.invcsNewItemsList[newIndx]=tmp;
     return true;
@@ -179,7 +179,7 @@ manage inventory and services
     this.newInvcsTblTtlRedrw();
 
       if(this.invcsNewItemsList.length<=0){
-      let mode=this.invcsNewApptId?'update':'create';
+      const mode=this.invcsNewApptId?'update':'create';
       this.flipNewInvcsBtn(mode, true);
       }
     }
@@ -191,7 +191,7 @@ manage inventory and services
     -----------------------------------------------*/
     addInvcsNewItemsListRedrw(){
     //get valuefrom
-    let els=document.getElementsByName("invcsNewItem");
+    const els=document.getElementsByName("invcsNewItem");
       if(!this.invntSrvItems.hasOwnProperty(els[0].value)){
       return null;
       }
@@ -199,7 +199,7 @@ manage inventory and services
     this.newInvcsTblTtlRedrw();
 
       if(this.invcsNewItemsList.length>0){
-      let mode=this.invcsNewApptId?'update':'create';
+      const mode=this.invcsNewApptId?'update':'create';
       this.flipNewInvcsBtn(mode, false);
       }
     }
@@ -246,8 +246,8 @@ manage inventory and services
     //let tmp=this.tmpl.invcsNewItemsTbl['tableStart']+this.tmpl.invcsNewItemsTbl['headStart']+"test"+this.tmpl.invcsNewItemsTbl['headEnd']+`<tr><td>test</td></tr>`+this.tmpl.invcsNewItemsTbl['tableEnd'];
     //CREATE TABLE invcs_items(uuid text not null primary key, invc_id text not null, type_id text null, invntSrv_id text null, ord int null, name text not null, price real not null, price_dscntd real null, notes null, foreign key(invc_id) references invcs(uuid), foreign key(type_id) references type(uuid), foreign key(invntSrv_id) references invntSrv(uuid));
     let newItmTbl='';
-    let prodTypeHsh=this.typesHsh['invntSrv'][""]; 
-    let prcTypeHsh=this.typesHsh['invntSrv']["price_type"];
+    const prodTypeHsh=this.typesHsh['invntSrv'][""]; 
+    const prcTypeHsh=this.typesHsh['invntSrv']["price_type"];
     let prdSlct=null;
     let prcSlct=null;
     let subTtl=null;
@@ -256,8 +256,8 @@ manage inventory and services
     let sell=null;
     let ttl=0;
 
-      for(let i in this.invcsNewItemsList){
-      let addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
+      for(const i in this.invcsNewItemsList){
+      const addAmnt=this.invcsNewItemsList[i].hasOwnProperty('addAmnt')?this.invcsNewItemsList[i].addAmnt:0;
       prdSlct=genSlctHshIndx(prodTypeHsh, this.invcsNewItemsList[i].type_id);
       prcSlct=genSlctHshIndx(prcTypeHsh, this.invcsNewItemsList[i].price_type_id);
       sellRaw=this.invcsNewItemsList[i].hasOwnProperty('sell')?this.invcsNewItemsList[i].sell:this.invcsNewItemsList[i].price;
@@ -361,8 +361,8 @@ manage inventory and services
         `;
         }
 
-      let up=i>0?`<div onclick=invcsRghtModObj.swapInvcsNewItemsListRedrw(${i},'up')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>`:``;
-      let dwn=i<this.invcsNewItemsList.length-1?`<div onclick=invcsRghtModObj.swapInvcsNewItemsListRedrw(${i},'down')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>`:``;
+      const up=i>0?`<div onclick=invcsRghtModObj.swapInvcsNewItemsListRedrw(${i},'up')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowUpCrcl')+`</div>`:``;
+      const dwn=i<this.invcsNewItemsList.length-1?`<div onclick=invcsRghtModObj.swapInvcsNewItemsListRedrw(${i},'down')>`+getEvalIcon(iconSets, state.user.config.iconSet, 'arrowDwnCrcl')+`</div>`:``;
       newItmTbl+=`
          <tr>
            <td>
@@ -404,12 +404,12 @@ manage inventory and services
       ttl=Number(ttl) + Number(lastSubTtl);
       }
 
-    let ttlEl=document.getElementsByName("invcs[total]");
+    const ttlEl=document.getElementsByName("invcs[total]");
       if(ttlEl&&ttlEl.length>=1){
       ttlEl[0].value=Number(ttl||0).toFixed(2);
       }
 
-    let tmp=`
+    const tmp=`
       <table id="invcsNewItemsTbl">
         <tr>
           <th>
@@ -474,12 +474,12 @@ manage inventory and services
       invc=invc[0];
       }
     this.invcsNewItemsList=getInvcItems(uuid);
-    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    const els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
 
-    let idEl=document.getElementById('invcsNewFormInfoUUID').value=uuid;
+    document.getElementById('invcsNewFormInfoUUID').value=uuid;
 
-      for(let el of els){
-      let nm=getSubs(el.getAttribute('name'),'invcs');
+      for(const el of els){
+      const nm=getSubs(el.getAttribute('name'),'invcs');
         if(el.tagName=="SPAN"){
           if(invc[nm]){
           el.innerText=invc[nm];
@@ -504,8 +504,8 @@ manage inventory and services
     clearRghtMod(){
     this.invcsNewApptId=null;
     this.apptId=null;
-    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
-    let dt=new Date();
+    const els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    const dt=new Date();
       for(let el of els){
       let nm=getSubs(el.getAttribute('name'),'invcs');
         if(el.tagName=="SPAN"){
@@ -525,7 +525,7 @@ manage inventory and services
     this.flipCrtUpdtBtn('create');
     this.flipNewInvcsBtn('create', true);
 
-    let el=document.getElementsByName("invcs[create_date]");
+    const el=document.getElementsByName("invcs[create_date]");
     el[0].innerText=dtTmDbFrmt(new Date());
 
     this.newInvcsTblTtlRedrw();
@@ -554,16 +554,16 @@ manage inventory and services
     -----------------------------------------------*/
     newInvcs(refresh=true){
     //invcsNewForm
-    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
-    let invcs={};
-      for(let el of els){
-      let nm=getSubs(el.name,'invcs');
+    const els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    const invcs={};
+      for(const el of els){
+      const nm=getSubs(el.name,'invcs');
       invcs[nm]=el.value;
       }
 
       //setting create_date
       if(!invcs.hasOwnProperty('create_date')){
-      let crtDt=document.getElementsByName("invcs[create_date]")[0];
+      const crtDt=document.getElementsByName("invcs[create_date]")[0];
       invcs["create_date"]=toInptValFrmt(Date.parse(new Date(crtDt.innerText)));
       }
 
@@ -591,8 +591,8 @@ manage inventory and services
     gathers data, writes to db. 
     -----------------------------------------------*/
     updtInvcs(refresh=true){
-    let els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
-    let invcs={};
+    const els=document.querySelectorAll('#'+this.invcsNewFrmId+' *[name^="invcs["]');
+    const invcs={};
       for(let el of els){
       let nm=getSubs(el.name,'invcs');
       invcs[nm]=el.value;
@@ -608,7 +608,7 @@ manage inventory and services
       invcs.due_date=dtTmDbFrmt(invcs.due_date);
       }
 
-    let elId=document.getElementById("invcsNewFormInfoUUID");
+    const elId=document.getElementById("invcsNewFormInfoUUID");
     
 
       if(updtInvcs(elId.value, invcs, this.invcsNewItemsList)){
@@ -630,7 +630,7 @@ manage inventory and services
     generates and fills the right modal status dropdown
     -----------------------------------------------*/
     popRghtModStts(sttsNm=null){
-    let stts=document.getElementById('invcsSelectStatus');
+    const stts=document.getElementById('invcsSelectStatus');
       if(stts){
       stts.innerHTML=this.genSttsSlct(sttsNm);
       }
@@ -666,8 +666,8 @@ manage inventory and services
     post:
     ----------------------------------*/
     flipCrtUpdtBtn(mode=null){
-    let crt=document.getElementById('invcsNewFormAddBtn');
-    let updt=document.getElementById('invcsNewFormUpdtBtn');
+    const crt=document.getElementById('invcsNewFormAddBtn');
+    const updt=document.getElementById('invcsNewFormUpdtBtn');
       if(!mode){
       crt.style.display!=''?crt.style.removeProperty('display'):crt.style.display='none';
       updt.style.display!=''?updt.style.removeProperty('display'):updt.style.display='none';
@@ -694,12 +694,12 @@ manage inventory and services
       return null;
       }
     this.apptId=id;
-    let appt=selectViewEventUser({'event_id':id});
+    const appt=selectViewEventUser({'event_id':id});
       if(!appt||appt.length<=0){
       return null;
       }
     let apptInvntSrv=selectEventInvntSrv(id);
-      for(let ais of apptInvntSrv){
+      for(const ais of apptInvntSrv){
       //this.invcsNewItemsList.push(this.invntSrvItems[ais.invntSrv_id]);
         if(this.invntSrvItems.hasOwnProperty(ais.invntSrv_id)){
         this.invcsNewItemsList.push({...this.invntSrvItems[ais.invntSrv_id],addAmnt:1});
@@ -734,7 +734,7 @@ manage inventory and services
     //set status
     //invcs[invcs_status_id]
     el=document.getElementsByName("invcs[invcs_status_id]");
-    let dn=this.statuses.find((e)=>{return e.name=="done"});
+    const dn=this.statuses.find((e)=>{return e.name=="done"});
     el[0].value=dn.uuid;
 
     this.flipNewInvcsBtn();

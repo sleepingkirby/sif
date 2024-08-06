@@ -13,7 +13,7 @@ function sepTypesHsh(arr){
   if(typeof arr!="object"){
   return null;
   }
-let obj={};
+const obj={};
   for(let row of arr){
     if(row.hasOwnProperty('categ')&&row.hasOwnProperty('col')){
       if(!obj.hasOwnProperty(row.categ)){
@@ -37,8 +37,8 @@ function sepTypesIdHsh(arr){
   if(typeof arr!="object"){
   return null;
   }
-let obj={};
-  for(let row of arr){
+const obj={};
+  for(const row of arr){
     if(row.hasOwnProperty('categ')&&row.hasOwnProperty('col')){
       if(!obj.hasOwnProperty(row.categ)){
       obj[row.categ]={};
@@ -61,7 +61,7 @@ get type
 function selectType(categ=null){
 //CREATE TABLE status(uuid text primary key, name text not null, notes text);
 let query='select uuid, name, categ, col from type';
-let where=' where';
+const where=' where';
 let obj={};
 
   if(categ){
