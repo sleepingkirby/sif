@@ -58,7 +58,7 @@ class sif{
   run module's destructor function
   -------------------------------------*/
   destructModule(modNm=null){
-  let moduleNm=modNm?modNm:state.pos
+  const moduleNm=modNm?modNm:state.pos
     if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
       if(state.depModuleObjs[moduleNm].hasOwnProperty("destruct")){
       state.depModuleObjs[moduleNm].destruct();
@@ -80,7 +80,7 @@ class sif{
     document.head.removeChild(scrpt);
 
     //remove previous module from depMdulesObjs
-    let moduleNm=scrpt.getAttribute('module');
+    const moduleNm=scrpt.getAttribute('module');
       if(moduleNm&&state.depModuleObjs.hasOwnProperty(moduleNm)){
       this.destructModule(moduleNm);
       delete state.depModuleObjs[moduleNm];
@@ -130,7 +130,7 @@ class sif{
   generate righNav
   --------------------------------------*/
   genRightNav(){
-  var rtrn='';
+  let rtrn='';
   rtrn+=this.tmpl['rightNav'][0]+getEvalIcon(iconSets, state.user.config.iconSet, 'settings')+this.tmpl['rightNav'][1];
   rtrn+=this.tmpl['rightNav'][2]+getEvalIcon(iconSets, state.user.config.iconSet, 'save')+this.tmpl['rightNav'][3];
   rtrn+=this.tmpl['rightNav'][4]+getEvalIcon(iconSets, state.user.config.iconSet, 'logout')+this.tmpl['rightNav'][5];
@@ -180,7 +180,7 @@ class sif{
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";
           //global configuration
-          var config=this.sqlObj.runQuery(`
+          const config=this.sqlObj.runQuery(`
           select
           config.uuid,
           config.users_id,
@@ -203,7 +203,7 @@ class sif{
             }
 
           if(state?.user?.uuid){
-            let profile=this.sqlObj.runQuery(`
+            const profile=this.sqlObj.runQuery(`
             select
             users.uuid,
             users.username,
@@ -275,7 +275,7 @@ class sif{
     if(!text||text==""){
     return null;
     }
-  let el=document.getElementById(this.msgFloatId);
+  const el=document.getElementById(this.msgFloatId);
     if(el&&el.classList&&!el.classList.contains(this.cssFadeOut)){
     el.innerText=text;
     el.classList.add(this.cssFadeOut);
@@ -288,7 +288,7 @@ class sif{
   removes this.cssFadOut from the msgFloat element
   -------------------------------------------------------*/
   closeFloatMsg(){
-  let el=document.getElementById(this.msgFloatId);
+  const el=document.getElementById(this.msgFloatId);
     if(el&&el.classList&&el.classList.contains(this.cssFadeOut)){
     el.classList.remove(this.cssFadeOut);
     }
@@ -300,8 +300,8 @@ class sif{
   toggles the display on overMod, hiding it or showing it
   -------------------------------------------------------*/
   openCloseOverMod(el){
-  let cEl=el?el:document.getElementById(this.overModId);
-  let prntEl=document.getElementById(cEl.getAttribute('hideel'));
+  const cEl=el?el:document.getElementById(this.overModId);
+  const prntEl=document.getElementById(cEl.getAttribute('hideel'));
     if(prntEl){
     prntEl.style.display=prntEl.style.display=='none'?'flex':'none';
     }
@@ -316,7 +316,7 @@ class sif{
   sets hook for overMod close button to close the modal on click
   -------------------------------------------------------*/
   openCloseOverModHook(){
-  let el=document.getElementById(this.overModId);
+  const el=document.getElementById(this.overModId);
     el.onclick=(e)=>{
     this.openCloseOverMod(e.target);
     }
@@ -330,7 +330,7 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   hookEl(){
-  let el=document.getElementById(this.dbPgId);
+  const el=document.getElementById(this.dbPgId);
     if(el){
       el.onchange=(e)=>{
       this.setState('dbFile', e.target.files[0]);
@@ -338,7 +338,7 @@ class sif{
       };
     }
   //message floating element. Removes class on self
-  let floatMsg=document.getElementById(this.msgFloatId);
+  const floatMsg=document.getElementById(this.msgFloatId);
     if(floatMsg){
       floatMsg.onanimationend=(e)=>{
         if(e.target.classList.contains(this.cssFadeOut)){
@@ -359,7 +359,7 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   afterHookEl(){
-  var el=document.getElementById("logout");
+  let el=document.getElementById("logout");
     if(el){
       el.onclick=(e)=>{
       this.destructModule();
@@ -379,7 +379,7 @@ class sif{
   sets up onchange to elId
   ---------------------------------------*/
   saveHookEl(){
-  var el=document.getElementById("saveDB");
+  let el=document.getElementById("saveDB");
     if(el){
       el.onclick=(e)=>{
       const fn='sif-'+dtFlNm()+'.db';
@@ -414,8 +414,8 @@ class sif{
   sets up modal open close
   -------------------------------------------------------*/
   modOpenClose(elId){
-  let el=document.getElementById(elId);
-  let cls=el.getElementsByClassName("close")[0];
+  const el=document.getElementById(elId);
+  const cls=el.getElementsByClassName("close")[0];
   cls.onclick=(e)=>{this.modPrcCls(e);};
   }
 
@@ -426,7 +426,7 @@ class sif{
   hides or shows the element. *This is an adapter to modPrcClsCall() to for onclick event*
   -------------------------------------------------------*/
   modPrcCls(e){
-  let el=e.target;
+  const el=e.target;
   this.modPrcClsCall(el);
   }
 
@@ -438,11 +438,11 @@ class sif{
   hides or shows the element of el. 
   -------------------------------------------------------*/
   modPrcClsCall(el){
-  let oLft=el.getAttribute("oLft");
-  let nLft=el.getAttribute("nLft");
-  let oRght=el.getAttribute("oRght");
-  let nRght=el.getAttribute("nRght");
-  let prntEl=document.getElementById(el.getAttribute("hideEl"));
+  const oLft=el.getAttribute("oLft");
+  const nLft=el.getAttribute("nLft");
+  const oRght=el.getAttribute("oRght");
+  const nRght=el.getAttribute("nRght");
+  const prntEl=document.getElementById(el.getAttribute("hideEl"));
 
     if(oLft&&nLft){
       if(prntEl.style.left==''||prntEl.style.left==oLft){
@@ -472,10 +472,10 @@ class sif{
   not use currently.
   -------------------------------------------------------*/
   getBlob(elId=this.dbPgId){
-  var el=document.getElementById(elId);
+  const el=document.getElementById(elId);
     if(el){
       el.onchange=(e)=>{
-      var r=new FileReader();
+      const r=new FileReader();
         r.onload=function(){
         const uints=new Uint8Array(r.result);
         console.log(uints);
@@ -516,15 +516,15 @@ class sqljs{
     }
 
   //convert wasm to uint8array to blob so sql.js can load it.
-  var bin=atob(wasm);
-  var len=bin.length;
+  const bin=atob(wasm);
+  const len=bin.length;
 
-  var bytes = new Uint8Array(len);
-  for (var i = 0; i < len; i++) {
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
       bytes[i] = bin.charCodeAt(i);
   }
 
-  var myBlob=new Blob([bytes], {type: 'application/wasm'});
+  const myBlob=new Blob([bytes], {type: 'application/wasm'});
 
   const config = await initSqlJs({
   locateFile: file => URL.createObjectURL(myBlob)
@@ -533,7 +533,7 @@ class sqljs{
     initSqlJs(config).then(function(SQL){
     const r = new FileReader();
       r.onload = function() {
-      var Uints = new Uint8Array(r.result);
+      const Uints = new Uint8Array(r.result);
       state.dbObj = new SQL.Database(Uints);
       callback();
       }
@@ -547,8 +547,8 @@ class sqljs{
   write to db file
   ------------------------------------------------*/
   writeDb(fn){
-	var blob = new Blob([state.dbObj.export()]);
-	var a = document.createElement("a");
+	const blob = new Blob([state.dbObj.export()]);
+	const a = document.createElement("a");
 	document.body.appendChild(a);
 	a.href = window.URL.createObjectURL(blob);
 	a.download = fn||"sif.db";
@@ -576,7 +576,7 @@ class sqljs{
     console.log("unable to run query. dbObj in state is empty");
     }
 
-  let stmt=state.dbObj.prepare(qry);
+  const stmt=state.dbObj.prepare(qry);
   var rtrn=[];
     if(stmt && stmt.bind(binds)){
       while(stmt.step()){
@@ -610,10 +610,10 @@ console.log(v);
 //pulled this off the internet
 function createUUID() {
    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
    });
 }
 
-var sqlObj=new sqljs();
-var mainObj=new sif(mod, menuLftObj);
+const sqlObj=new sqljs();
+const mainObj=new sif(mod, menuLftObj);

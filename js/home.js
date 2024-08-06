@@ -98,12 +98,12 @@ if(typeof home==='undefined'){
     whether that be updating a clock, changing the events to be displayed, etc.
     ---------------------------------*/
     runOnInterval(e){
-    //console.log("<----------runOnInterval()");
     //update clock 
       if(homeObj.editted){
       return null;
       }
     let now=new Date();
+    homeObj.today=new Date();
     let nowHr=Number(now.getHours());
     let nowMin=Number(now.getMinutes());
     let hr=document.getElementsByName("homeCalHr")[0];
@@ -448,7 +448,6 @@ if(typeof home==='undefined'){
     from.setHours(from.getHours()-Number(state.user.config.behind));
     let to=new Date(this.today);
     to.setHours(to.getHours()+Number(state.user.config.ahead));
-
     let arr=selectEventDateRngUser(state.user.uuid, dtTmDbFrmt(from.toISOString()), dtTmDbFrmt(to.toISOString()), null, stts.value, true);
     return arr;
     }
