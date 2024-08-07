@@ -99,10 +99,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     `;
     this.tmpl.photos=[];
     this.tmpl.photos[0]=`
-      <div class="photo">
+      <div class="photo" title="`;
+
+    this.tmpl.photos[1]=`" >
         <img />
       </div>
     `;
+    this.apptId=null;
     this.usrAddedArr=[];
     this.invntSrvAddedArr=[];
     this.invntSrvList=null;
@@ -125,7 +128,24 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
 
-    imgLoad(e){
+    /*----------------------------------
+    pre:
+    post:
+    ----------------------------------*/
+    imgIntoMod(el){
+    const modBdy=document.getElementById('overModBody');
+    console.log(el);
+      modBdy.innerHTML=`
+      <div class="overModApptPhoto">
+        <img src="${el.src}" />
+      </div>
+      `;
+    const modFt=document.getElementById('overModFoot');
+      modFt.innerHTML=`
+      <div class="overModApptPhotoInfo">
+      ${el.src}
+      </div>
+      `;
     }
 
     /*----------------------------------
@@ -133,46 +153,56 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post:
     ----------------------------------*/
     prvwPicEn(e){
-      switch(e.type){
-        case 'mouseenter':
-        mainObj.openCloseOverMod();
-        break;
-        case 'mouseleave':
-
-        break;
-        default:
-        break;
-      }
+      apptRghtModObj.imgIntoMod(e.target);
+      mainObj.openCloseOverMod();
     }
 
     /*----------------------------------
     pre:
-    post:
+    post:html changed
+    if img element doesn't load, don't display
     ----------------------------------*/
     imgErr(e){
     e.target.style.setProperty('display','none');
     }
 
+
+
     /*----------------------------------
     pre:
     post:
+    open camera
     ----------------------------------*/
-    genPhotos(apptId){
-    let ps=document.getElementById('apptFormPics');
+    openCamera(id){
+    homeCameraObj.drawCamera(id);
+    mainObj.openCloseOverMod();
+    }
+
+    /*----------------------------------
+    pre:
+    post:
+    generates the images to the appointment
+    ----------------------------------*/
+    genPhotos(id){
+    const apptId=id||this.apptId;
+    const ps=document.getElementById('apptFormPics');
     let rtrn='';
       for(let i=1;i<=7;i++){
-      rtrn+=this.tmpl.photos[0];
+      rtrn+=this.tmpl.photos[0]+"photo for appointment ("+i+")"+this.tmpl.photos[1];
       }
+    rtrn+=`
+    <div class="apptFormPicsIcon" onclick=apptRghtModObj.openCamera("${apptId}") title="Take picture for this appointment" >
+    `+getEvalIcon(iconSets, state.user.config.iconSet, 'camera')+`
+    </div>
+    `;
     ps.innerHTML=rtrn;
 
-    let nds=document.querySelectorAll('#apptFormPics img');
+    const nds=document.querySelectorAll('#apptFormPics img');
     let i=1;
       for(let n of nds){
-      console.log(n);
       n.addEventListener("error",this.imgErr,false);
       //n.addEventListener("load",this.imgLoad,false);
-      n.addEventListener("mouseenter",this.prvwPicEn,false);
-      n.addEventListener("mouseleave",this.prvwPicEn,false);
+      n.addEventListener("click",this.prvwPicEn,false);
       n.src=homeCameraObj.outPath+String(apptId)+'-'+String(i)+'.png';
       i++;
       }
@@ -456,6 +486,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post:
     ----------------------------------*/
     cleanRghtModForm(){
+    this.apptId=null;
     let onDt=document.getElementById("apptNewApptFormFullApptInfoOnDate");
       if(onDt){
       onDt.value=toInptValFrmt();
@@ -645,6 +676,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     this.hookEl(refresh);
     this.cleanRghtModForm();
       if(eventId){
+      this.apptId=eventId;
       this.updtApptRghtMod(eventId);
       }
     }

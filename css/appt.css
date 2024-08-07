@@ -203,8 +203,9 @@ flex-wrap:wrap;
 #apptFormPics{
 display:flex;
 flex-direction:row;
+flex-wrap:wrap;
 justify-content:space-around;
-align-items:flex-start;
+align-items:center;
 border:1px solid white;
 border-radius:var(--default-border-radius);
 padding:var(--default-border-radius);
@@ -217,6 +218,20 @@ display:flex;
 #apptFormPics .photo, #apptFormPics img{
 width:50px;
 border-radius:var(--default-border-radius);
+}
+
+#apptFormPics .photo{
+cursor:pointer;
+box-sizing: border-box;
+}
+
+#apptFormPics .photo:hover{
+box-shadow: 0px 0px 0px 2px rgba(255,255,255,0.6);
+}
+
+.apptFormPicsIcon{
+width:50px;
+cursor:pointer
 }
 
 .multiBoxListItem{

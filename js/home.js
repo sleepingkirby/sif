@@ -317,7 +317,6 @@ if(typeof home==='undefined'){
       return null;
       }
     stts=stts=="hold"?"on hold":stts;
-    console.log(stts);
     updateEventStatus(id,stts);
     stts=stts=="hold"?"on hold":stts;
     mainObj.setFloatMsg(`Appointment Status Updated to "${stts}"`);

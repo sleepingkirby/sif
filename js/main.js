@@ -308,6 +308,11 @@ class sif{
     if(state.depModuleObjs.hasOwnProperty('homeCamera')){
     state.depModuleObjs.homeCamera.closeStream();
     }
+
+    //refresh list of photos from right modal
+    if(apptRghtModObj&&apptRghtModObj.genPhotos){
+    apptRghtModObj.genPhotos();
+    }
   }
 
   /*-------------------------------------------------------

@@ -853,6 +853,10 @@ align-items:center;
 border-top:4px solid var(--default-gray);
 }
 
+.overModApptPhotoInfo{
+padding:var(--default-border-radius) 0px 0px 0px;
+}
+
 @keyframes opac{
 0%{max-height: 0px; margin-bottom: 0px; padding-top: 4px; padding-bottom: 4px;}
 20%{max-height: 600px; margin-bottom: 4px;}
