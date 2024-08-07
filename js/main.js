@@ -221,8 +221,8 @@ class sif{
             on config.users_id=users.uuid
             where users.uuid=?
             `,[state.user.uuid]);
-
-            if(profile){
+  
+            if(profile&&profile.length>=1){
             state.user.username=profile[0].username;
             state.user.type=profile[0].userType;
             state.user.typeId=profile[0].userTypeId;
@@ -231,6 +231,9 @@ class sif{
               if(profile[0].json){
               state.user.config=JSON.parse(profile[0].json);
               }
+            }
+            else{
+            this.setState('pos',"config"); 
             }
           }
 
