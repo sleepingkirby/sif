@@ -73,6 +73,7 @@ justify-content:flex-start;
 align-items:stretch;
 padding:0px 12px 0px 12px;
 width: 100%;
+height:fit-content;
 }
 
 #apptNewApptFormFull .lbl{

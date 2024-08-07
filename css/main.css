@@ -302,6 +302,7 @@ box-shadow: 0px 1px 2px 0px rgba(60,64,67,0.6);
 #bttmEls{
 position: fixed;
 box-sizing: border-box;
+box-shadow:0px 0px 10px var(--default-gray-a6);
 background-color: var(--default-blue);
 color: white;
 z-index: 50;
@@ -498,6 +499,12 @@ border-radius: 6px 0px 0px 6px;
 border-width: 0px;
 box-shadow: 0px 1px 2px 1px rgba(60,64,67,0.6);
 z-index: 79;
+}
+
+#rghtMod .content{
+padding-bottom: 12px;
+overflow:auto;
+overscroll-behavior: contain;
 }
 
 .row{
@@ -812,6 +819,7 @@ color:var(--default-gray);
 flex-direction:column;
 justify-content:flex-start;
 align-items:stretch;
+overflow:auto;
 }
 
 .overMod .overContent > div{
