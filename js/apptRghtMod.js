@@ -133,11 +133,9 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     post:
     ----------------------------------*/
     prvwPicEn(e){
-    console.log("<=========prvwPicEn");
-    console.log(e);
       switch(e.type){
         case 'mouseenter':
-
+        mainObj.openCloseOverMod();
         break;
         case 'mouseleave':
 
