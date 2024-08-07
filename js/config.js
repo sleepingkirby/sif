@@ -53,7 +53,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <span class="configRowLabel redBold" style="font-size:small">Icon set change requires re-login</span>
           </div>
           <div class="configRowButton">
-            <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()"/>
+            <input id="configCreateBtn" type="submit" value="Save" onclick=configObj.save('create') />
+            <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" />
           </div>
         </div>
       </div>
@@ -66,7 +67,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: none
     post: db saved 
     -----------------------------------------------*/
-    save(){
+    save(type=null){
     let els=document.querySelectorAll('*[name^="config"]');
       let config={
       'iconSet':null,
@@ -110,19 +111,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
     let success=false;
 
-      if(els){
-      success=updtConfig(JSON.stringify(config));
-      state.user.config=config;
-      }
-    
-      if(success===false){
-      mainObj.setFloatMsg("Update to configuration failed");
-      }
 
       if(user.email&&user.typeId){
       let type=this.types.find((e)=>e.uuid==user.typeId);
       user.type=type?type.name:null;
-      success=updtCurUser(state.user.uuid, user);
+        if(type==='create'){
+        createMe(createUUID(),user);
+        }
+        else{
+        success=updtCurUser(state.user.uuid, user);
+        }
       state.user.email=user.email;
       state.user.typeId=user.typeId;
       state.user.type=user.type;
@@ -130,6 +128,20 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       if(success===false){
       mainObj.setFloatMsg("Update to profile failed");
+      }
+
+      if(els){
+        if(type==="create"){
+        createConfig(crtUUID(),config);
+        }
+        else{
+        success=updtConfig(JSON.stringify(config));
+        }
+      state.user.config=config;
+      }
+    
+      if(success===false){
+      mainObj.setFloatMsg("Update to configuration failed");
       }
       else{
       mainObj.setFloatMsg("Configuration updated");
@@ -192,7 +204,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let email=document.getElementsByName('config[email]');
     email=email?email[0]:null;
       if(email){
-      email.value=state.user.email;
+      email.value=state.user.email||'';
       }
     let lunchStart=document.getElementsByName('config[lunch-start]');
     lunchStart=lunchStart?lunchStart[0]:null;

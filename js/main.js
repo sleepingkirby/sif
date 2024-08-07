@@ -202,27 +202,30 @@ class sif{
             state.user.config=JSON.parse(config[0].json);
             }
 
-          if(state?.user?.uuid){
-            const profile=this.sqlObj.runQuery(`
-            select
-            users.uuid,
-            users.username,
-            users.email,
-            users.notes,
-            ut.name as userType,
-            ut.uuid as userTypeId,
-            config.json
-            from users
-            left join users_type as u_t
-            on u_t.user_uuid=users.uuid
-            left join type as ut
-            on ut.uuid=u_t.type_uuid
-            left join config
-            on config.users_id=users.uuid
-            where users.uuid=?
-            `,[state.user.uuid]);
-  
+          const u=document.getElementById('databaseUsername');
+
+          const profile=this.sqlObj.runQuery(`
+          select
+          users.uuid,
+          users.username,
+          users.email,
+          users.notes,
+          ut.name as userType,
+          ut.uuid as userTypeId,
+          config.json
+          from users
+          left join users_type as u_t
+          on u_t.user_uuid=users.uuid
+          left join type as ut
+          on ut.uuid=u_t.type_uuid
+          left join config
+          on config.users_id=users.uuid
+          where users.email=?
+          `,[u.value||'']);
+
+          console.log(profile);
             if(profile&&profile.length>=1){
+            state.user.uuid=profile[0].uuid;
             state.user.username=profile[0].username;
             state.user.type=profile[0].userType;
             state.user.typeId=profile[0].userTypeId;
@@ -232,10 +235,6 @@ class sif{
               state.user.config=JSON.parse(profile[0].json);
               }
             }
-            else{
-            this.setState('pos',"config"); 
-            }
-          }
 
           document.getElementById('rightNav').innerHTML=this.genRightNav();
           this.afterHookEl();
@@ -250,6 +249,12 @@ class sif{
           this.addModule("invcsRghtMod", null, false);
           this.addModule("apptRghtMod", null, false);
           this.addModule("homeCamera", null, false);
+
+            if(!state.user.uuid){
+            this.setFloatMsg("User not found. Save to set up user.");
+            this.draw('config');
+            return null;
+            }
           this.draw(state.pos);
 
           /*reminder for later if needed
@@ -260,7 +265,13 @@ class sif{
         }
       break;
       case "pos":
-      this.draw(val);
+        if(!state.user.uuid){
+        this.setFloatMsg("User not found. Save to set up user.");
+        this.draw("config");
+        }
+        else{
+        this.draw(val);
+        }
       break;
       case "pageVars":
       break;
@@ -345,6 +356,7 @@ class sif{
       el.value="";
       };
     }
+
   //message floating element. Removes class on self
   const floatMsg=document.getElementById(this.msgFloatId);
     if(floatMsg){

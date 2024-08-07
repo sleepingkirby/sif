@@ -4,6 +4,21 @@ post: none
 common library for getting users
 -----------------------------------------------*/
 
+/*----------------------------------------------
+pre: sqlObj
+post: database updated
+creates the user that the person is on
+----------------------------------------------*/
+function createMe(id,obj=null){
+const query=`
+
+`;
+
+const tmp=sqlObj.runQuery(query,obj);
+return tmp;
+}
+
+
 /*-----------------------------------------------
 pre: this class
 post: none

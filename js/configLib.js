@@ -3,6 +3,15 @@ pre: sqlObj.runQuery
 post: database updated
 updates config 
 -------------------------------------*/
+function createConfig(uuid, config){
+
+}
+
+/*-------------------------------------
+pre: sqlObj.runQuery 
+post: database updated
+updates config 
+-------------------------------------*/
 function updtConfig(hshStr=null, id='global'){
   if(!hshStr||hshStr==''){
   return null;

@@ -268,7 +268,16 @@ display: flex;
 #enterDatabase{
 background-color: white;
 font-family: var(--font-family);
-border-radius: 4px;
+border-radius: var(--default-border-radius);
+width:240px;
+}
+
+#overEnterDatabase #databaseUsername{
+margin-bottom: 12px;
+border-radius:var(--default-border-radius);
+padding:var(--default-border-radius);
+width:240px;
+border:0px;  
 }
 
 .pageWrapper{
