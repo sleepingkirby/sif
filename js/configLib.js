@@ -4,7 +4,7 @@ post: database updated
 updates config 
 -------------------------------------*/
 function createConfig(uuid, config){
-
+console.log(config);
 }
 
 /*-------------------------------------

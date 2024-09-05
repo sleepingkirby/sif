@@ -39,16 +39,36 @@ class sif{
   this.tmpl['rightNav'].push(`</div></div>`);
 
     window.onbeforeunload=(e)=>{
-      if(state.dbModded){
-      const fn='sif-'+dtFlNm()+'.db';
-      this.sqlObj.writeDb(fn);
-      }
+    this.logout();
     e.preventDefault();
     e.returnValue=true;
     return "Are you sure you want to leave?";
     }
     window.onpagehide=(e)=>{
     return "Are you sure you want to leave?";
+    }
+  }
+
+
+  /*-------------------------------------
+  pre: this.mod, this.state, state.depModuleObjs
+  post: module's destructor ran.
+  run module's destructor function
+  -------------------------------------*/
+  logout(){
+  this.destructModule();
+    if(state.dbModded){
+    const fn='sif-'+dtFlNm()+'.db';
+    this.sqlObj.writeDb(fn);
+    }
+  state.dbModded=false;
+  this.setState('dbFile',"");
+  state.user={
+    "uuid":null,
+    "username":null,
+    "type":null,
+    "typeId":null,
+    'config':null
     }
   }
 
@@ -382,13 +402,7 @@ class sif{
   const el=document.getElementById("logout");
     if(el){
       el.onclick=(e)=>{
-      this.destructModule();
-        if(state.dbModded){
-        const fn='sif-'+dtFlNm()+'.db';
-        this.sqlObj.writeDb(fn);
-        }
-      state.dbModded=false;
-      this.setState('dbFile',"");
+      this.logout();
       }
     }
   }

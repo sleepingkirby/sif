@@ -53,7 +53,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <span class="configRowLabel redBold" style="font-size:small">Icon set change requires re-login</span>
           </div>
           <div class="configRowButton">
-            <input id="configCreateBtn" type="submit" value="Save" onclick=configObj.save('create') />
+            <input id="configCreateBtn" type="submit" value="Create" onclick=configObj.save('create') />
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" />
           </div>
         </div>
@@ -111,12 +111,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
     let success=false;
 
-
       if(user.email&&user.typeId){
       let type=this.types.find((e)=>e.uuid==user.typeId);
       user.type=type?type.name:null;
         if(type==='create'){
-        createMe(createUUID(),user);
+        success=createMe(createUUID(),user);
         }
         else{
         success=updtCurUser(state.user.uuid, user);
@@ -126,13 +125,16 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.user.type=user.type;
       }
 
-      if(success===false){
+      console.log(success);
+
+      if(!success){
       mainObj.setFloatMsg("Update to profile failed");
       }
 
-      if(els){
+      if(success&&els){
         if(type==="create"){
-        createConfig(crtUUID(),config);
+        success=createConfig(createUUID(),config);
+        console.log(success);
         }
         else{
         success=updtConfig(JSON.stringify(config));
@@ -140,7 +142,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.user.config=config;
       }
     
-      if(success===false){
+      if(!success){
       mainObj.setFloatMsg("Update to configuration failed");
       }
       else{

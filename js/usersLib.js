@@ -10,6 +10,10 @@ post: database updated
 creates the user that the person is on
 ----------------------------------------------*/
 function createMe(id,obj=null){
+//CREATE TABLE users(uuid text primary key, username text null, password text null, salt text null, pin text null, status_id text not null, email text null, create_dt integer not null, mod_dt integer not null, failLgn_dt integer null, lastLgn_dt integer null, role_id text, parent_user_id text, notes text, foreign key(status_id) references status(uuid), foreign key(role_id) references roles(uuid), foreign key(parent_user_id) references users(uuid));
+
+//CREATE TABLE users_type(uuid text not null primary key, user_uuid text not null, type_uuid text not null, foreign key(user_uuid) references users(uuid), foreign key(type_uuid) references type(uuid));
+
 const query=`
 
 `;
