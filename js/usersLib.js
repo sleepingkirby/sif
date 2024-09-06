@@ -9,17 +9,33 @@ pre: sqlObj
 post: database updated
 creates the user that the person is on
 ----------------------------------------------*/
-function createMe(id,obj=null){
-//CREATE TABLE users(uuid text primary key, username text null, password text null, salt text null, pin text null, status_id text not null, email text null, create_dt integer not null, mod_dt integer not null, failLgn_dt integer null, lastLgn_dt integer null, role_id text, parent_user_id text, notes text, foreign key(status_id) references status(uuid), foreign key(role_id) references roles(uuid), foreign key(parent_user_id) references users(uuid));
+function createMe(hsh=null, postFunc=null){
+let user_uuid=createUUID();
 
-//CREATE TABLE users_type(uuid text not null primary key, user_uuid text not null, type_uuid text not null, foreign key(user_uuid) references users(uuid), foreign key(type_uuid) references type(uuid));
+  try{
+  sqlObj.runQuery('insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, (select uuid from status where name="active"), $email ,datetime("now"), datetime("now"))', {$uuid:user_uuid, $email:hsh.email||""});
+  }
+  catch(e){
+  console.log('Unable to add entry to "users" table. query: '+'insert into users(uuid, status_id, email, create_dt, mod_dt) values($uuid, 0, $email ,datetime("now"), datetime("now"))'+', binds: '+JSON.stringify({$uuid:user_uuid, $email:hsh.email||""}));
+  console.log(e);
+  return null;
+  }
 
-const query=`
+//setting user type to users made here. Always users and always customer
+  try{
+  sqlObj.runQuery('insert into users_type(uuid, user_uuid, type_uuid) values($uuid, $user_uuid, $typeid)',{$uuid:createUUID(), $user_uuid:user_uuid, $typeid:hsh.typeId});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
 
-`;
+let rtrn=user_uuid;
+  if(postFunc){
+  rtrn=postFunc(user_uuid);
+  }
 
-const tmp=sqlObj.runQuery(query,obj);
-return tmp;
+return rtrn;
 }
 
 

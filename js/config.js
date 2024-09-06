@@ -12,6 +12,15 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         <div class="configArea">
           <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
           <div class="configRow configRowHead">
+          User:
+          </div>
+          <div class="configRow">
+             <span class="configRowLabel">User type:</span>
+            <select name="config[typeId]" title="Type for user">
+              <option>none</option>
+            </select>
+          </div>
+          <div class="configRow configRowHead">
           Home Page:
           </div>
           <div class="configRow">
@@ -36,12 +45,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </div>
           <div class="configRow configRowHead">
           Icons:
-          </div>
-          <div class="configRow">
-             <span class="configRowLabel">User type:</span>
-            <select name="config[typeId]" title="Type for user">
-              <option>none</option>
-            </select>
           </div>
           <div class="configRow">
             <span class="configRowLabel">Icon set:</span>
@@ -110,12 +113,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
 
     let success=false;
-
       if(user.email&&user.typeId){
-      let type=this.types.find((e)=>e.uuid==user.typeId);
-      user.type=type?type.name:null;
+      let uType=this.types.find((e)=>e.uuid==user.typeId);
+      user.type=uType?uType.name:null;
         if(type==='create'){
-        success=createMe(createUUID(),user);
+        success=createMe(user);
         }
         else{
         success=updtCurUser(state.user.uuid, user);
@@ -125,16 +127,14 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.user.type=user.type;
       }
 
-      console.log(success);
-
       if(!success){
-      mainObj.setFloatMsg("Update to profile failed");
+      mainObj.setFloatMsg("Update to user profile failed");
+      return null;
       }
 
       if(success&&els){
         if(type==="create"){
-        success=createConfig(createUUID(),config);
-        console.log(success);
+        success=createConfig(success,JSON.stringify(config),success); 
         }
         else{
         success=updtConfig(JSON.stringify(config));
@@ -147,8 +147,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
       else{
       mainObj.setFloatMsg("Configuration updated");
+        if(type==="create"){
+        mainObj.setState('pos', 'home');
+        }
       }
-
     }
 
  

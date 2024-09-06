@@ -3,8 +3,20 @@ pre: sqlObj.runQuery
 post: database updated
 updates config 
 -------------------------------------*/
-function createConfig(uuid, config){
-console.log(config);
+function createConfig(hshStr=null, userId=null, typeId='(select uuid from type where name="global" and categ="config")'){
+  if(!hshStr||hshStr==''||!userId||userId==''){
+  return null;
+  }
+
+let arr=[];
+arr.push(createUUID());
+arr.push(userId);
+arr.push(typeId);
+arr.push(hshStr);
+
+//CREATE TABLE config(uuid text primary key, users_id text not null, type_id text null, json text null, foreign key(users_id) references users(uuid), foreign key(type_id) references type(uuid));
+let query=`insert into config set values(?, ?, ?, ?);`;
+return sqlObj.runQuery(query, arr);
 }
 
 /*-------------------------------------
