@@ -29,6 +29,23 @@ color:var(--default-gray);
 margin-bottom: 12px;
 }
 
+.configArea .menuIcon{
+height:32px;
+width:32px;
+min-height:32px;
+min-width:32px;
+}
+
+.configArea .menuIcon:hover{
+background-color:transparent;
+}
+
+.configArea .menuIcon > svg{
+fill: var(--default-gray);
+height:100%;
+width:100%;
+}
+
 .configArea input{
 border-color: var(--default-gray);
 color: var(--default-gray);

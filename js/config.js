@@ -15,10 +15,23 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           User:
           </div>
           <div class="configRow">
-             <span class="configRowLabel">User type:</span>
+            <span class="configRowLabel">User type:</span>
             <select name="config[typeId]" title="Type for user">
               <option>none</option>
             </select>
+          </div>
+          <div class="configRow configRowHead">
+          User Types Management:
+          </div>
+          <div class="configRow">
+            <textarea name="config[newUserType]" type="text" placeholder="new user type name" title="new user type name"></textarea>
+            <div class="menuIcon" title="Add New User Type">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+          </div>
+          <div class="configRow">
+             <select name="config[mngUserType]" title="Manage User Type">
+              <option>none</option>
+            </select>
+            <div class="menuIcon" title="Delete User Type">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
           </div>
           <div class="configRow configRowHead">
           Home Page:

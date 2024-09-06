@@ -70,6 +70,7 @@ class sif{
     "typeId":null,
     'config':null
     }
+  state.pos='home';
   }
 
   /*-------------------------------------
