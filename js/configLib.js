@@ -15,7 +15,7 @@ arr.push(typeId);
 arr.push(hshStr);
 
 //CREATE TABLE config(uuid text primary key, users_id text not null, type_id text null, json text null, foreign key(users_id) references users(uuid), foreign key(type_id) references type(uuid));
-let query=`insert into config set values(?, ?, ?, ?);`;
+let query=`insert into config values(?, ?, ?, ?);`;
 return sqlObj.runQuery(query, arr);
 }
 

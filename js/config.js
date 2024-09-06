@@ -134,6 +134,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
 
       if(success&&els){
         if(type==="create"){
+        state.user.uuid=success; //user uuid
         success=createConfig(success,JSON.stringify(config),success); 
         }
         else{
@@ -146,9 +147,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       mainObj.setFloatMsg("Update to configuration failed");
       }
       else{
-      mainObj.setFloatMsg("Configuration updated");
         if(type==="create"){
+        delete state.pageVars['index.html']; //new user vars no longer needed
+        mainObj.setFloatMsg("New user and configuration updated");
         mainObj.setState('pos', 'home');
+        }
+        else{
+        mainObj.setFloatMsg("Configuration updated");
         }
       }
     }
@@ -208,7 +213,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let email=document.getElementsByName('config[email]');
     email=email?email[0]:null;
       if(email){
-      email.value=state.user.email||'';
+        if(!state.user.uuid){
+        email.value=state.pageVars['index.html'].email;
+        }
+        else{
+        email.value=state.user.email||'';
+        }
       }
     let lunchStart=document.getElementsByName('config[lunch-start]');
     lunchStart=lunchStart?lunchStart[0]:null;
@@ -239,9 +249,27 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     pre: none
     post: write the html to the page
     -----------------------------------------------*/
+    elSwitch(){
+    let crtBtn=document.getElementById('configCreateBtn');
+    let svBtn=document.getElementById('configSaveBtn');
+      if(!state.user.uuid){
+      crtBtn.style.display='flex';
+      svBtn.style.display='none';
+      }
+      else{
+      crtBtn.style.display='none';
+      svBtn.style.display='flex';
+      }
+    }
+
+    /*-----------------------------------------------
+    pre: none
+    post: write the html to the page
+    -----------------------------------------------*/
     run(){
     document.getElementById('mainEl').innerHTML=this.tmpl.main;
     document.getElementById('leftNavMod').innerHTML="Configurations";
+    this.elSwitch();
     this.popltData();
     }
   }

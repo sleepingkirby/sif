@@ -243,7 +243,6 @@ class sif{
           where users.email=?
           `,[u.value||'']);
 
-          console.log(profile);
             if(profile&&profile.length>=1){
             state.user.uuid=profile[0].uuid;
             state.user.username=profile[0].username;
@@ -272,6 +271,7 @@ class sif{
 
             if(!state.user.uuid){
             this.setFloatMsg("User not found. Save to set up user.");
+            state.pageVars['index.html']={'email':u.value};
             this.draw('config');
             return null;
             }
@@ -286,7 +286,9 @@ class sif{
       break;
       case "pos":
         if(!state.user.uuid){
+        const u=document.getElementById('databaseUsername');
         this.setFloatMsg("User not found. Save to set up user.");
+        state.pageVars['index.html']={'email':u.value};
         this.draw("config");
         }
         else{
