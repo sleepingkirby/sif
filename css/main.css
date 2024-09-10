@@ -280,6 +280,10 @@ width:240px;
 border:0px;  
 }
 
+#selectUserType{
+display:flex;
+}
+
 .pageWrapper{
 margin: 0px;
 padding: 0px;

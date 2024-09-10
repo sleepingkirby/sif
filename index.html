@@ -177,8 +177,17 @@
   <body>
 
     <div id="overEnterDatabase" class="enterDatabase">
-      <input id="databaseUsername" type="text" placeholder="Email"></input> 
-      <input id="enterDatabase" type="file" placeholder=""></input> 
+      <div id="menuLogo" class="menuIcon">
+      Logo
+      </div>
+      <div id='selectUserTypeWrap' style="display:none;">
+        <select id="selectUserType">
+          <option value="false">new user</option>
+        </select>
+      </div>
+      <div id="enterDatabaseWrap">
+      <input id="enterDatabase" type="file" placeholder="Select database file (.db)"></input> 
+      </div>
     </div>
 
     <div id="overMod" class="overMod" style="display:none;">

@@ -7,7 +7,7 @@ class sif{
   constructor(modObj, menuLftObj, scrptWrpId, dbInId, overId, sqljs){
   this.mod=modObj;
   this.dfltScrptId='modScript';
-  this.dbPgId=dbInId?dbInId:"enterDatabase";//file input to enter database file
+  this.dbPgId=dbInId?dbInId:"enterDatabaseWrap";//file input to enter database file
   this.overId=overId?overId:"overEnterDatabase";//file input to enter database file
   this.cssFadeOut="fadeOut";
   this.msgFloatId="msgFloat";
@@ -196,7 +196,19 @@ class sif{
         if(!state.dbFile){
         document.getElementById(this.overId).style.display="flex";
         }
-        else{
+        else if(state.dbFile && !state.user.uuid){
+          this.sqlObj.loadDB((e)=>{
+
+          let users=getUsers(null, 'email');
+         
+          let selectUserTypeWrap=document.getElementById('selectUserTypeWrap');
+          let selectUserType=document.getElementById('selectUserType');
+          selectUserType.innerHTML=genLoginUserSlct(users,'uuid', null);
+          selectUserTypeWrap.style.display="flex";
+          
+          }); 
+        }
+        else {
           // ----- this is, essentially, the initialization for the app once the user provides the database -----
           this.sqlObj.loadDB((e)=>{
           document.getElementById(this.overId).style.display="none";

@@ -256,6 +256,12 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.types=selectType('users');
       typeEl.innerHTML=genSlct(this.types,'uuid','name', state.user.typeId,null);
       }
+    
+    let mngTypeEl=document.getElementsByName('config[mngUserType]');
+    mngTypeEl=mngTypeEl?mngTypeEl[0]:null;
+      if(mngTypeEl){
+      mngTypeEl.innerHTML=genSlct(this.types,'uuid','name');
+      }
     }
 
     /*-----------------------------------------------

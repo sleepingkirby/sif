@@ -238,6 +238,29 @@ let arr=Object.keys(hsh);
 return html;
 }
 
+/*-----------------------------------------------
+pre: none
+post: none
+-----------------------------------------------*/
+function genLoginUserSlct(users=[], slctdPrp='uuid', slctdVl=null){
+  let html="";
+  for(const usr of users){
+  const fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
+  const lNm=usr.surName.length>=6?usr.surName.substr(0,3)+'...':usr.surName;
+  let selected='';{}
+  const show=`${usr.email}: ${lNm}, ${fNm} [${usr.type}]`;
+  const m=usr.mName!=''?usr.mName+' ':'';
+  const uNm=!usr.username||usr.username==''?'':'username: '+usr.username  ;
+  const title=`${usr.fName} ${m}${usr.surName} [${usr.type}]&#10;${uNm}&#10;phone: ${usr.phone}&#10;cellphone: ${usr.cellphone}&#10;email: ${usr.email}&#10;&#10;${usr.addr}&#10;${usr.addr2}&#10;${usr.city}, ${usr.prov} ${usr.zip}, ${usr.country}`;
+    if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
+    selected='selected';
+    }
+    html+='<option value="'+usr.uuid+'"'+' title="'+title+'" '+selected+'>'+show+"</option>";
+  }
+  html+='<option value=null>Create New User</option>';
+return html;
+}
+
 
 /*-----------------------------------------------
 pre: none

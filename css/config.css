@@ -46,6 +46,10 @@ height:100%;
 width:100%;
 }
 
+.menuIconLeft {
+margin-left: var(--default-border-radius);
+}
+
 .configArea input{
 border-color: var(--default-gray);
 color: var(--default-gray);
