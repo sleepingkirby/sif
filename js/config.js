@@ -69,8 +69,8 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <span class="configRowLabel redBold" style="font-size:small">Icon set change requires re-login</span>
           </div>
           <div class="configRowButton">
-            <input id="configCreateBtn" type="submit" value="Create" onclick=configObj.save('create') />
-            <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" />
+            <input id="configCreateBtn" type="submit" value="Create" onclick=configObj.save('create') title="Create new user" />
+            <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" title="Save user settings" />
           </div>
         </div>
       </div>
@@ -106,6 +106,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let typeEl=document.getElementsByName('config[mngUserType]');
       if(!typeEl||typeEl.length<=0||!typeEl[0].value||typeEl[0].value==''){
       mainObj.setFloatMsg("User type dropdown or value not found");
+      return null;
+      }
+
+      if(this.types.length<=1){
+      mainObj.setFloatMsg("At least 1 user type (that's not a customer) is needed.");
       return null;
       }
 
