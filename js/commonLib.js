@@ -250,8 +250,11 @@ function genLoginUserSlct(users=[], slctdPrp='uuid', slctdVl=null){
   let selected='';{}
   const show=`${usr.email}: ${lNm}, ${fNm} [${usr.type}]`;
   const m=usr.mName!=''?usr.mName+' ':'';
-  const uNm=!usr.username||usr.username==''?'':'username: '+usr.username  ;
-  const title=`${usr.fName} ${m}${usr.surName} [${usr.type}]&#10;${uNm}&#10;phone: ${usr.phone}&#10;cellphone: ${usr.cellphone}&#10;email: ${usr.email}&#10;&#10;${usr.addr}&#10;${usr.addr2}&#10;${usr.city}, ${usr.prov} ${usr.zip}, ${usr.country}`;
+  const uNm=!usr.username||usr.username==''?'':'username: '+usr.username;
+  const addrLst=usr.city||usr.prov||usr.zip||usr.country?`&#10;${usr.city}, ${usr.prov} ${usr.zip}, ${usr.country}`:'';
+  const addr2=!usr.addr2||usr.addr2==""?'':`&#10;${addr2}`;
+  const addr=usr.addr||usr.addr2?`&#10;&#10;${usr.addr}${addr2}${addrLst}`:'';
+  const title=`${usr.fName} ${m}${usr.surName} [${usr.type}]&#10;${uNm}&#10;phone: ${usr.phone}&#10;cellphone: ${usr.cellphone}&#10;email: ${usr.email}${addr}`;
     if(slctdPrp&&slctdVl&&usr[slctdPrp]==slctdVl){
     selected='selected';
     }

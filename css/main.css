@@ -280,8 +280,21 @@ width:240px;
 border:0px;  
 }
 
-#selectUserType{
+#selectUserTypeWrap{
 display:flex;
+flex-direction: column;
+justify-content: flex-start;
+align-items:center;
+}
+
+#selectUserTypeWrap div{
+display:flex;
+color:white;
+}
+
+#selectUserTypeWrap .selectUserTypeWrapLbl{
+font-weight: 600;
+font-size:x-large;
 }
 
 .pageWrapper{
@@ -336,6 +349,19 @@ visibility: hidden;
 
 .bttmElsActns{
 padding: 8px;
+}
+
+#modLogo{
+width: 60px;
+border: 1px solid white;
+border-radius: 6px;
+background-color: white;
+height: 60px;
+margin: 8px 8px 12px 8px;
+color: #71AEEC;
+display:flex;
+justify-content: center;
+align-items: center;
 }
 
 #menu{

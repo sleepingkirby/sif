@@ -173,6 +173,101 @@ class sif{
   this.addModule(str, this.dfltScrptId);
   }
 
+
+  /*----------- draw the module ----------
+  pre:
+  post:
+  gets config and user profile
+  --------------------------------------*/
+  getSetUser(){
+  // ----- this is, essentially, the initialization for the app once the user provides the database -----
+  this.sqlObj.loadDB((e)=>{
+  document.getElementById(this.overId).style.display="none";
+  //global configuration
+  const config=this.sqlObj.runQuery(`
+  select
+  config.uuid,
+  config.users_id,
+  config.json,
+  users.username,
+  users.email,
+  users.notes,
+  type.name
+  from config
+  left join users
+  on config.users_id=users.uuid
+  left join type
+  on config.type_id=type.uuid
+  where 
+  type.name="global"
+  `);
+  state.user.config=this.defaultConfig;
+    if(config&&config.length>0&&config[0].json){
+    state.user.config=JSON.parse(config[0].json);
+    }
+
+  const u=document.getElementById('databaseUsername');
+
+  const profile=this.sqlObj.runQuery(`
+  select
+  users.uuid,
+  users.username,
+  users.email,
+  users.notes,
+  ut.name as userType,
+  ut.uuid as userTypeId,
+  config.json
+  from users
+  left join users_type as u_t
+  on u_t.user_uuid=users.uuid
+  left join type as ut
+  on ut.uuid=u_t.type_uuid
+  left join config
+  on config.users_id=users.uuid
+  where users.email=?
+  `,[u.value||'']);
+
+    if(profile&&profile.length>=1){
+    state.user.uuid=profile[0].uuid;
+    state.user.username=profile[0].username;
+    state.user.type=profile[0].userType;
+    state.user.typeId=profile[0].userTypeId;
+    state.user.email=profile[0].email;
+
+      if(profile[0].json){
+      state.user.config=JSON.parse(profile[0].json);
+      }
+    }
+
+  document.getElementById('rightNav').innerHTML=this.genRightNav();
+  this.afterHookEl();
+  this.saveHookEl();
+  this.drawBottomEls();
+
+  //setting left menu
+  menuLftObj.setMenu();
+
+  //setting up modules that needs to be loaded and available.
+  this.addModule("apptQck", "lftModalScript");
+  this.addModule("invcsRghtMod", null, false);
+  this.addModule("apptRghtMod", null, false);
+  this.addModule("homeCamera", null, false);
+
+    if(!state.user.uuid){
+    this.setFloatMsg("User not found. Save to set up user.");
+    state.pageVars['index.html']={'email':u.value};
+    this.draw('config');
+    return null;
+    }
+  this.draw(state.pos);
+
+  /*reminder for later if needed
+  let mod=eval(`new ${state.pos}()`);
+  mod.draw();
+  */
+  });
+  }
+
   /*--------- setState --------------
   pre: this class, global state variable
   post: state modified, html modified(possibly)
@@ -206,96 +301,99 @@ class sif{
           selectUserType.innerHTML=genLoginUserSlct(users,'uuid', null);
           selectUserTypeWrap.style.display="flex";
           
+          let enterDatabaseWrap=document.getElementById('enterDatabaseWrap');
+          enterDatabaseWrap.style.display="none";
           }); 
         }
-        else {
-          // ----- this is, essentially, the initialization for the app once the user provides the database -----
-          this.sqlObj.loadDB((e)=>{
-          document.getElementById(this.overId).style.display="none";
-          //global configuration
-          const config=this.sqlObj.runQuery(`
-          select
-          config.uuid,
-          config.users_id,
-          config.json,
-          users.username,
-          users.email,
-          users.notes,
-          type.name
-          from config
-          left join users
-          on config.users_id=users.uuid
-          left join type
-          on config.type_id=type.uuid
-          where 
-          type.name="global"
-          `);
-          state.user.config=this.defaultConfig;
-            if(config&&config.length>0&&config[0].json){
-            state.user.config=JSON.parse(config[0].json);
+      break;
+      else {
+        // ----- this is, essentially, the initialization for the app once the user provides the database -----
+        this.sqlObj.loadDB((e)=>{
+        document.getElementById(this.overId).style.display="none";
+        //global configuration
+        const config=this.sqlObj.runQuery(`
+        select
+        config.uuid,
+        config.users_id,
+        config.json,
+        users.username,
+        users.email,
+        users.notes,
+        type.name
+        from config
+        left join users
+        on config.users_id=users.uuid
+        left join type
+        on config.type_id=type.uuid
+        where 
+        type.name="global"
+        `);
+        state.user.config=this.defaultConfig;
+          if(config&&config.length>0&&config[0].json){
+          state.user.config=JSON.parse(config[0].json);
+          }
+
+        const u=document.getElementById('databaseUsername');
+
+        const profile=this.sqlObj.runQuery(`
+        select
+        users.uuid,
+        users.username,
+        users.email,
+        users.notes,
+        ut.name as userType,
+        ut.uuid as userTypeId,
+        config.json
+        from users
+        left join users_type as u_t
+        on u_t.user_uuid=users.uuid
+        left join type as ut
+        on ut.uuid=u_t.type_uuid
+        left join config
+        on config.users_id=users.uuid
+        where users.email=?
+        `,[u.value||'']);
+
+          if(profile&&profile.length>=1){
+          state.user.uuid=profile[0].uuid;
+          state.user.username=profile[0].username;
+          state.user.type=profile[0].userType;
+          state.user.typeId=profile[0].userTypeId;
+          state.user.email=profile[0].email;
+
+            if(profile[0].json){
+            state.user.config=JSON.parse(profile[0].json);
             }
+          }
 
-          const u=document.getElementById('databaseUsername');
+        document.getElementById('rightNav').innerHTML=this.genRightNav();
+        this.afterHookEl();
+        this.saveHookEl();
+        this.drawBottomEls();
 
-          const profile=this.sqlObj.runQuery(`
-          select
-          users.uuid,
-          users.username,
-          users.email,
-          users.notes,
-          ut.name as userType,
-          ut.uuid as userTypeId,
-          config.json
-          from users
-          left join users_type as u_t
-          on u_t.user_uuid=users.uuid
-          left join type as ut
-          on ut.uuid=u_t.type_uuid
-          left join config
-          on config.users_id=users.uuid
-          where users.email=?
-          `,[u.value||'']);
+        //setting left menu
+        menuLftObj.setMenu();
 
-            if(profile&&profile.length>=1){
-            state.user.uuid=profile[0].uuid;
-            state.user.username=profile[0].username;
-            state.user.type=profile[0].userType;
-            state.user.typeId=profile[0].userTypeId;
-            state.user.email=profile[0].email;
+        //setting up modules that needs to be loaded and available.
+        this.addModule("apptQck", "lftModalScript");
+        this.addModule("invcsRghtMod", null, false);
+        this.addModule("apptRghtMod", null, false);
+        this.addModule("homeCamera", null, false);
 
-              if(profile[0].json){
-              state.user.config=JSON.parse(profile[0].json);
-              }
-            }
+          if(!state.user.uuid){
+          this.setFloatMsg("User not found. Save to set up user.");
+          state.pageVars['index.html']={'email':u.value};
+          this.draw('config');
+          return null;
+          }
+        this.draw(state.pos);
 
-          document.getElementById('rightNav').innerHTML=this.genRightNav();
-          this.afterHookEl();
-          this.saveHookEl();
-          this.drawBottomEls();
-
-          //setting left menu
-          menuLftObj.setMenu();
-
-          //setting up modules that needs to be loaded and available.
-          this.addModule("apptQck", "lftModalScript");
-          this.addModule("invcsRghtMod", null, false);
-          this.addModule("apptRghtMod", null, false);
-          this.addModule("homeCamera", null, false);
-
-            if(!state.user.uuid){
-            this.setFloatMsg("User not found. Save to set up user.");
-            state.pageVars['index.html']={'email':u.value};
-            this.draw('config');
-            return null;
-            }
-          this.draw(state.pos);
-
-          /*reminder for later if needed
-          let mod=eval(`new ${state.pos}()`);
-          mod.draw();
-          */
-          });
-        }
+        /*reminder for later if needed
+        let mod=eval(`new ${state.pos}()`);
+        mod.draw();
+        */
+        });
+      }
       break;
       case "pos":
         if(!state.user.uuid){
