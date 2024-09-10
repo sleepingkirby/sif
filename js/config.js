@@ -161,7 +161,6 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       }
       else{
         if(type==="create"){
-        delete state.pageVars['index.html']; //new user vars no longer needed
         mainObj.setFloatMsg("New user and configuration updated");
         mainObj.setState('pos', 'home');
         }
@@ -226,12 +225,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     let email=document.getElementsByName('config[email]');
     email=email?email[0]:null;
       if(email){
-        if(!state.user.uuid){
-        email.value=state.pageVars['index.html'].email;
-        }
-        else{
         email.value=state.user.email||'';
-        }
       }
     let lunchStart=document.getElementsByName('config[lunch-start]');
     lunchStart=lunchStart?lunchStart[0]:null;

@@ -244,6 +244,8 @@ post: none
 -----------------------------------------------*/
 function genLoginUserSlct(users=[], slctdPrp='uuid', slctdVl=null){
   let html="";
+
+  html+='<option>Select User</option>';
   for(const usr of users){
   const fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
   const lNm=usr.surName.length>=6?usr.surName.substr(0,1)+'.':usr.surName;

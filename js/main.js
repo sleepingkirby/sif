@@ -14,14 +14,14 @@ class sif{
   this.overModId="overModCloseId";
   this.selectUserId="selectUser";
   this.sqlObj=typeof sqljs=="object"?sqljs:sqlObj;
-  this.defaultConfig={
+    this.defaultConfig={
     "iconSet":"default",
     "clockInterval":60000,
     "ahead":"8",
     "behind":"4",
     "lunchStart":"12:00",
     "lunchDur":"30"
-  }
+    }
 
   this.defaultConfig=this.defaultConfig?this.defaultConfig:defaultConfig;
 
@@ -174,17 +174,50 @@ class sif{
   this.addModule(str, this.dfltScrptId);
   }
 
-  
 
+  /*--------------------------------------
+  pre:
+  post:
+  onchange hook for select user
+  --------------------------------------*/
+  flipDBSelect(whch='slct'){
+  let selectUserWrap=document.getElementById('selectUserWrap');
+  let enterDatabaseWrap=document.getElementById('enterDatabaseWrap');
+    if(whch=='slct'){
+    selectUserWrap.style.display='flex';
+    enterDatabaseWrap.style.display='none';
+    }
+    else{
+    selectUserWrap.style.display='none';
+    enterDatabaseWrap.style.display='flex';
+    }
+  }
+  
+  
+  /*--------------------------------------
+  pre:
+  post:
+  onchange hook for select user
+  --------------------------------------*/
+  hookSlctEl(){
+  let el=document.getElementById(this.selectUserId);
+    el.onchange=(e)=>{
+      if(e.target.value=="Select User"){
+      return null;
+      }
+    document.getElementById(this.overId).style.display="none";
+    this.getSetUser(e.target.value);
+    this.flipDBSelect('db');
+    }
+  }
 
   /*----------- draw the module ----------
-  pre:
+  pre: sqlObj
   post:
   gets config and user profile
   --------------------------------------*/
-  getSetUser(){
+  getSetUser(userId=null){
   // ----- this is, essentially, the initialization for the app once the user provides the database -----
-  document.getElementById(this.overId).style.display="none";
   //global configuration
   const config=this.sqlObj.runQuery(`
   select
@@ -203,12 +236,12 @@ class sif{
   where 
   type.name="global"
   `);
+  //global config setting (in case user doesn't have any)
   state.user.config=this.defaultConfig;
     if(config&&config.length>0&&config[0].json){
     state.user.config=JSON.parse(config[0].json);
     }
 
-  const u=document.getElementById('databaseUsername');
 
   const profile=this.sqlObj.runQuery(`
   select
@@ -226,8 +259,8 @@ class sif{
   on ut.uuid=u_t.type_uuid
   left join config
   on config.users_id=users.uuid
-  where users.email=?
-  `,[u.value||'']);
+  where users.uuid=?
+  `,[userId||'']);
 
     if(profile&&profile.length>=1){
     state.user.uuid=profile[0].uuid;
@@ -255,9 +288,8 @@ class sif{
   this.addModule("apptRghtMod", null, false);
   this.addModule("homeCamera", null, false);
 
-    if(!state.user.uuid){
-    this.setFloatMsg("User not found. Save to set up user.");
-    state.pageVars['index.html']={'email':u.value};
+    if(!userId||userId=='null'){
+    this.setFloatMsg("Create your new user");
     this.draw('config');
     return null;
     }
@@ -295,15 +327,12 @@ class sif{
         else if(state.dbFile && !state.user.uuid){
           this.sqlObj.loadDB((e)=>{
 
-          let users=getUsers(null, 'email');
-         
-          let selectUserWrap=document.getElementById('selectUserWrap');
-          let selectUser=document.getElementById('selectUser');
-          selectUser.innerHTML=genLoginUserSlct(users,'uuid', null);
-          selectUserWrap.style.display="flex";
+          let users=spltUsr(getUsers(null, 'email'));
           
-          let enterDatabaseWrap=document.getElementById('enterDatabaseWrap');
-          enterDatabaseWrap.style.display="none";
+          let selectUser=document.getElementById('selectUser');
+          selectUser.innerHTML=genLoginUserSlct(users[''],'uuid', null);
+          this.flipDBSelect('slct');
+          
           }); 
         }
       break;
@@ -414,6 +443,8 @@ class sif{
       this.closeFloatMsg();
       }
     }
+
+  this.hookSlctEl(); //select user event
   }
 
   /*---------------------------------------
