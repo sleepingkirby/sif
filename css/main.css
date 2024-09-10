@@ -236,7 +236,7 @@ background-color: transparent;
 padding-left: 8px;
 font-family: var(--font-family);
 font-weight: 600;
-resize: auto;
+resize: horizontal;
 overflow: auto;
 margin-right: 10px;
 min-height: 16px;

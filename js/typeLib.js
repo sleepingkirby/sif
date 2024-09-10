@@ -59,7 +59,7 @@ post: none
 get type
 -----------------------------------------------*/
 function selectType(categ=null){
-//CREATE TABLE status(uuid text primary key, name text not null, notes text);
+//CREATE TABLE type(uuid text primary key, name text null, categ text null, col text null, notes text null);
 let query='select uuid, name, categ, col from type';
 const where=' where';
 let obj={};
@@ -70,5 +70,43 @@ let obj={};
   }
 
 return sqlObj.runQuery(query, obj);
+}
+
+
+/*-----------------------------------------------
+pre: sqlObj, type table
+post: none
+get type
+-----------------------------------------------*/
+function addType(name=null, categ=null, col=null, note=null){
+  if(!name||name==""){
+  return null;
+  }
+//CREATE TABLE type(uuid text primary key, name text null, categ text null, col text null, notes text null);
+let query='insert into type(uuid, name, categ, col, notes) values(?, ?, ?, ?, ?)';
+let arr=[];
+arr.push(createUUID());
+arr.push(name||null);
+arr.push(categ||null);
+arr.push(col||null);
+arr.push(note||null);
+
+return sqlObj.runQuery(query, arr);
+}
+
+
+/*-----------------------------------------------
+pre: sqlObj, type table
+post: none
+get type
+-----------------------------------------------*/
+function delType(uuid=null){
+  if(!uuid||uuid==""){
+  return null;
+  }
+//CREATE TABLE type(uuid text primary key, name text null, categ text null, col text null, notes text null);
+let query='delete from type where uuid=?'
+
+return sqlObj.runQuery(query, [uuid]);
 }
 

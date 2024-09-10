@@ -332,7 +332,8 @@ class sif{
           let selectUser=document.getElementById('selectUser');
           selectUser.innerHTML=genLoginUserSlct(users[''],'uuid', null);
           this.flipDBSelect('slct');
-          
+          let dbEl=document.getElementById('enterDatabase');
+          dbEl.value="";
           }); 
         }
       break;

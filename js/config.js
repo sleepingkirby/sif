@@ -25,13 +25,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           </div>
           <div class="configRow">
             <textarea name="config[newUserType]" type="text" placeholder="new user type name" title="new user type name"></textarea>
-            <div class="menuIcon" title="Add New User Type">`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
+            <div class="menuIcon" title="Add New User Type" onclick=configObj.addType()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
           </div>
           <div class="configRow">
              <select name="config[mngUserType]" title="Manage User Type">
               <option>none</option>
             </select>
-            <div class="menuIcon" title="Delete User Type">`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
+            <div class="menuIcon" title="Delete User Type" onclick=configObj.delType()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
           </div>
           <div class="configRow configRowHead">
           Home Page:
@@ -76,6 +76,43 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       </div>
       `;
     let types=[];
+    }
+
+
+
+    /*-----------------------------------------------
+    pre: none
+    post:
+    -----------------------------------------------*/
+    addType(){
+    let typeEl=document.getElementsByName('config[newUserType]');
+      if(!typeEl||typeEl.length<=0||!typeEl[0].value||typeEl[0].value==''){
+      mainObj.setFloatMsg("No name entered for new user type");
+      return null;
+      }
+
+    let rtrn=addType(typeEl[0].value,'users');
+
+    this.popltUserType();
+    mainObj.setFloatMsg("New user type added");
+    }
+
+
+    /*-----------------------------------------------
+    pre: none
+    post:
+    -----------------------------------------------*/
+    delType(){
+    let typeEl=document.getElementsByName('config[mngUserType]');
+      if(!typeEl||typeEl.length<=0||!typeEl[0].value||typeEl[0].value==''){
+      mainObj.setFloatMsg("User type dropdown or value not found");
+      return null;
+      }
+
+    delType(typeEl[0].value);
+
+    this.popltUserType();
+    mainObj.setFloatMsg("User type deleted");
     }
 
 
@@ -197,6 +234,26 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     }
 
     /*-----------------------------------------------
+    pre: 
+    post:
+    -----------------------------------------------*/
+    popltUserType(){
+    this.types=selectType('users');
+    this.types=this.types.filter((t)=>t.name!="customer");
+    let typeEl=document.getElementsByName('config[typeId]');
+    typeEl=typeEl?typeEl[0]:null;
+      if(typeEl){
+      typeEl.innerHTML=genSlct(this.types,'uuid','name', state.user.typeId,null);
+      }
+
+    let mngTypeEl=document.getElementsByName('config[mngUserType]');
+    mngTypeEl=mngTypeEl?mngTypeEl[0]:null;
+      if(mngTypeEl){
+      mngTypeEl.innerHTML=genSlct(this.types,'uuid','name');
+      }
+    }
+
+    /*-----------------------------------------------
     pre: state.user.config, iconSets, config[iconSet] element
     post: write the html (with user data) to page
     -----------------------------------------------*/
@@ -243,19 +300,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       clockInterval.value=Number(state.user.config.clockInterval) / 1000;
       }
 
-    this.types=selectType('users');
-    let typeEl=document.getElementsByName('config[typeId]');
-    typeEl=typeEl?typeEl[0]:null;
-      if(typeEl){
-      this.types=selectType('users');
-      typeEl.innerHTML=genSlct(this.types,'uuid','name', state.user.typeId,null);
-      }
-    
-    let mngTypeEl=document.getElementsByName('config[mngUserType]');
-    mngTypeEl=mngTypeEl?mngTypeEl[0]:null;
-      if(mngTypeEl){
-      mngTypeEl.innerHTML=genSlct(this.types,'uuid','name');
-      }
+    this.popltUserType();
     }
 
     /*-----------------------------------------------
