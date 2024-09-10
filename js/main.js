@@ -340,7 +340,6 @@ class sif{
         if(!state.user.uuid){
         const u=document.getElementById('databaseUsername');
         this.setFloatMsg("User not found. Save to set up user.");
-        state.pageVars['index.html']={'email':u.value};
         this.draw("config");
         }
         else{
