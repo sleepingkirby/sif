@@ -364,6 +364,10 @@ justify-content: center;
 align-items: center;
 }
 
+.logoSVG{
+width:100%;
+}
+
 #menu{
 margin: 0px;
 }
