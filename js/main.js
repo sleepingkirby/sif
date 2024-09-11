@@ -251,14 +251,23 @@ class sif{
   users.notes,
   ut.name as userType,
   ut.uuid as userTypeId,
+  cntct.fName as fName,
+  cntct.surName as surName,
+  cntct.mName as mName,
+  cntct.phone as phone,
+  cntct.cellphone as cellphone,
+  cntct.addr as addr,
+  cntct.addr2 as addr2,
+  cntct.city as city,
+  cntct.prov as prov,
+  cntct.zip as zip,
+  cntct.country as country,
   config.json
   from users
-  left join users_type as u_t
-  on u_t.user_uuid=users.uuid
-  left join type as ut
-  on ut.uuid=u_t.type_uuid
-  left join config
-  on config.users_id=users.uuid
+  left join users_type as u_t on u_t.user_uuid=users.uuid
+  left join type as ut on ut.uuid=u_t.type_uuid
+  left join config on config.users_id=users.uuid
+  left join contacts as cntct on users.uuid=cntct.user_id
   where users.uuid=?
   `,[userId||'']);
 
@@ -268,6 +277,11 @@ class sif{
     state.user.type=profile[0].userType;
     state.user.typeId=profile[0].userTypeId;
     state.user.email=profile[0].email;
+    state.user.fName=profile[0].fName;
+    state.user.surName=profile[0].surName;
+    state.user.mName=profile[0].mName;
+    state.user.phone=profile[0].phone;
+    state.user.cellphone=profile[0].cellphone;
 
       if(profile[0].json){
       state.user.config=JSON.parse(profile[0].json);
@@ -328,7 +342,6 @@ class sif{
           this.sqlObj.loadDB((e)=>{
 
           let users=spltUsr(getUsers(null, 'email'));
-          
           let selectUser=document.getElementById('selectUser');
           selectUser.innerHTML=genLoginUserSlct(users[''],'uuid', null);
           this.flipDBSelect('slct');

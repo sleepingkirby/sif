@@ -21,7 +21,6 @@ let user_uuid=createUUID();
   return null;
   }
 
-//setting user type to users made here. Always users and always customer
   try{
   sqlObj.runQuery('insert into users_type(uuid, user_uuid, type_uuid) values($uuid, $user_uuid, $typeid)',{$uuid:createUUID(), $user_uuid:user_uuid, $typeid:hsh.typeId});
   }
@@ -29,6 +28,19 @@ let user_uuid=createUUID();
   console.log(e);
   return null;
   }
+
+//CREATE TABLE contacts(uuid text primary key, user_id text not null, fName text, surName text not null, mName text, nickName text, title text, suffix text, addr text, addr2 text, city text, prov text, zip text, country text, phone text, cellphone text, email text, type text, notes text, foreign key(user_id) references users(uuid), foreign key(type) references type(uuid));
+//CREATE INDEX contacts_users_id on contacts(uuid);
+
+  try{
+  sqlObj.runQuery('insert into contacts(uuid, user_id, fName, surName, mName, phone, cellphone) values($uuid, $user_id, $fName, $surName, $mName, $phone, $cellphone)',{$uuid:createUUID(), $user_id:user_uuid, $fName:hsh.fName, $surName:hsh.surName, $mName:hsh.mName, $phone:hsh.phone, $cellphone:hsh.cellphone});
+  }
+  catch(e){
+  console.log(e);
+  return null;
+  }
+
+
 
 let rtrn=user_uuid;
   if(postFunc){
@@ -52,6 +64,7 @@ c.fName as fName,
 c.surName as surName,
 c.mName as mName,
 s.name as status,
+t.uuid as typeId,
 t.name as type,
 u.email as email,
 c.email as cEmail,

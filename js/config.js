@@ -10,9 +10,18 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       this.tmpl.main=`
       <div class="configWrap">
         <div class="configArea">
-          <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
           <div class="configRow configRowHead">
           User:
+          </div>
+          <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
+          <div class="configRow configInputRow">
+            <textarea name="config[surName]" type="text" placeholder="Last Name" title="Last Name"></textarea>
+            <textarea name="config[mName]" type="text" placeholder="M." title="middle name" style="width:60px;"></textarea>
+            <textarea name="config[fName]" type="text" placeholder="First Name" title="First Name"></textarea>
+          </div>
+          <div class="configRow configInputRow">
+            <textarea class="configRowTA" name="config[phone]" type="text" placeholder="primary phone" title="primary phone"></textarea>
+            <textarea class="configRowTA" name="config[cellphone]" type="text" placeholder="cellphone" title="cell phone"></textarea>
           </div>
           <div class="configRow">
             <span class="configRowLabel">User type:</span>
@@ -139,7 +148,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       'lunchStart':null,
       'lunchDur':30
       };
-    let user={'email':null, 'typeId':null, 'type':null};
+    let user={'email':null, 'typeId':null, 'type':null, 'fName':null, 'surName':null, 'mName':null, 'phone':null, 'cellphone':null};
       for(let el of els){
         switch(getSubs(el.name,'config')){
         case 'ahead':
@@ -166,6 +175,21 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
         case 'typeId':
         user.typeId=el.value;
         break;
+        case 'fName':
+        user.fName=el.value;
+        break;
+        case 'surName':
+        user.surName=el.value;
+        break;
+        case 'mName':
+        user.mName=el.value;
+        break;
+        case 'phone':
+        user.phone=el.value;
+        break;
+        case 'cellphone':
+        user.cellphone=el.value;
+        break;
         default:
         break;
         }
@@ -184,6 +208,11 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.user.email=user.email;
       state.user.typeId=user.typeId;
       state.user.type=user.type;
+      state.user.fName=user.fName;
+      state.user.surName=user.surName;
+      state.user.mName=user.mName;
+      state.user.cellphone=user.cellphone;
+      state.user.phone=user.phone;
       }
 
       if(!success){
@@ -307,6 +336,31 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     clockInterval=clockInterval?clockInterval[0]:null;
       if(clockInterval){
       clockInterval.value=Number(state.user.config.clockInterval) / 1000;
+      }
+    let fName=document.getElementsByName('config[fName]');
+    fName=fName?fName[0]:null;
+      if(fName){
+        fName.value=state.user.fName||'';
+      }
+    let surName=document.getElementsByName('config[surName]');
+    surName=surName?surName[0]:null;
+      if(surName){
+        surName.value=state.user.surName||'';
+      }
+    let mName=document.getElementsByName('config[mName]');
+    mName=mName?mName[0]:null;
+      if(mName){
+        mName.value=state.user.mName||'';
+      }
+    let phone=document.getElementsByName('config[phone]');
+    phone=phone?phone[0]:null;
+      if(phone){
+        phone.value=state.user.phone||'';
+      }
+    let cellphone=document.getElementsByName('config[cellphone]');
+    cellphone=cellphone?cellphone[0]:null;
+      if(cellphone){
+        cellphone.value=state.user.cellphone||'';
       }
 
     this.popltUserType();

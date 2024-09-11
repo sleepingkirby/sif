@@ -96,7 +96,32 @@ let query=null;
     return false;
     }
   }
-   
+ 
+
+/*
+CREATE TABLE contacts(uuid text primary key, user_id text not null, fName text, surName text not null, mName text, nickName text, title text, suffix text, addr text, addr2 text, city text, prov text, zip text, country text, phone text, cellphone text, email text, type text, notes text, foreign key(user_id) references users(uuid), foreign key(type) references type(uuid));
+CREATE INDEX contacts_users_id on contacts(user_id);
+
+*/ 
+  query=`
+  update contacts set 
+  fName=?,
+  surName=?,
+  mName=?,
+  phone=?,
+  cellphone=?
+  where user_id=?
+  `;
+    try{
+    sqlObj.runQuery(query,[hsh.fName, hsh.surName, hsh.mName, hsh.phone, hsh.cellphone]);
+    }
+    catch(err){
+    console.log(err);
+    return false;
+    }
+ 
+
+ 
 return true;
 }
 

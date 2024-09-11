@@ -247,8 +247,8 @@ function genLoginUserSlct(users=[], slctdPrp='uuid', slctdVl=null){
 
   html+='<option>Select User</option>';
   for(const usr of users){
-  const fNm=usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
-  const lNm=usr.surName.length>=6?usr.surName.substr(0,1)+'.':usr.surName;
+  const fNm=usr.fName&&usr.fName.length>=8?usr.fName.substr(0,5)+'...':usr.fName;
+  const lNm=usr.surName&&usr.surName.length>=6?usr.surName.substr(0,1)+'.':usr.surName;
   let selected='';{}
   const show=`${usr.email} [${usr.type}]`;
   const m=usr.mName!=''?usr.mName+' ':'';
