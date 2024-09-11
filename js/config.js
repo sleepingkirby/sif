@@ -28,7 +28,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <div class="menuIcon" title="Add New User Type" onclick=configObj.addType()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'addCircle')+`</div>
           </div>
           <div class="configRow">
-             <select name="config[mngUserType]" title="Manage User Type">
+             <select name="config[mngUserType]" class="configRowSlctDrpDwn" title="Manage User Type">
               <option>none</option>
             </select>
             <div class="menuIcon" title="Delete User Type" onclick=configObj.delType()>`+getEvalIcon(iconSets, state.user.config.iconSet, 'delete')+`</div>
@@ -71,6 +71,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <div class="configRowButton">
             <input id="configCreateBtn" type="submit" value="Create" onclick=configObj.save('create') title="Create new user" />
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" title="Save user settings" />
+          </div>
+          <div class="configRow configAbout">
+            <a href="https://b3spage.sourceforge.io/index.html?sif" target="_blank" title="If you find this useful, please consider contributing. Any amount helps and allows me to continue to support and expand this application.">About/Contribute</a>
+            <a href="https://github.com/sleepingkirby/sif" target="_blank" title="Link to the original source code">Source Code</a>
           </div>
         </div>
       </div>
