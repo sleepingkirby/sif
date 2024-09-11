@@ -281,8 +281,13 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           document.getElementById('apptNewApptFormUserPhone').innerHTML=genUsrSlct(customers,'phone','Phone');
           //sync the select menu
           this.syncSlctEls(this.slctIdArr,val||"");
-          let btn=document.getElementById(this.newUserBtnId)
+          const btn=document.getElementById(this.newUserBtnId)
           btn.disabled=true;
+          const addAppt=document.getElementById(this.addApptBtnId);
+            if(addAppt){
+            addAppt.disabled=e.target.value?false:true;
+            }
+
           });
         }
 
