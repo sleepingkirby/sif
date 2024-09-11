@@ -653,7 +653,7 @@ manage inventory and services
     this.users=getUsers();
     const {customer:customers, '':users}=spltUsr(this.users);
     this.customers=customers;
-    document.getElementById('invcsSelectByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    document.getElementById('invcsSelectByUser').innerHTML=genUsrSlct(users,'email','Email','uuid',state.user.uuid);
     document.getElementById('invcsSelectForUser').innerHTML=genCustSlct(customers,'Customer','uuid',state.user.uuid);
 
     //fill inventory/services items

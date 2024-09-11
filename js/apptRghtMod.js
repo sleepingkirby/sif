@@ -635,7 +635,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
     document.getElementById('apptNewApptFormFullUserEmail').innerHTML=genUsrSlct(this.customers,'cEmail', 'E-Mail');
     document.getElementById('apptNewApptFormFullUserPhone').innerHTML=genUsrSlct(this.customers,'phone','Phone');
     document.getElementById('apptNewApptFormFullApptInfoSrv').innerHTML=genInvntSrv(this.invntSrvList);
-    document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'username','Username','uuid',state.user.uuid);
+    document.getElementById('apptNewApptFormFullApptInfoByUser').innerHTML=genUsrSlct(users,'email','Email','uuid',state.user.uuid);
     this.hookUsrTyp();
     document.getElementById('apptNewApptFormFullApptInfoByUserType').innerHTML=state.user.type;
     document.getElementById('apptNewApptFormFullApptStatus').innerHTML=genSttsSlct(this.statuses);
