@@ -5,6 +5,7 @@ post: html changed
 class sif{
 
   constructor(modObj, menuLftObj, scrptWrpId, dbInId, overId, sqljs){
+  this.version="1.0";
   this.mod=modObj;
   this.dfltScrptId='modScript';
   this.dbPgId=dbInId?dbInId:"enterDatabaseWrap";//file input to enter database file

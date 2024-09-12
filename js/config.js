@@ -82,6 +82,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
             <input id="configSaveBtn" type="submit" value="Save" onclick="configObj.save()" title="Save user settings" />
           </div>
           <div class="configRow configAbout">
+            <a href="./help.html" target="_blank" title="Help/FAQ">Help/FAQ</a>
             <a href="https://b3spage.sourceforge.io/index.html?sif" target="_blank" title="If you find this useful, please consider contributing. Any amount helps and allows me to continue to support and expand this application.">About/Contribute</a>
             <a href="https://github.com/sleepingkirby/sif" target="_blank" title="Link to the original source code">Source Code</a>
           </div>
