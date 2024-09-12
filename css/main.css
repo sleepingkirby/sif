@@ -23,6 +23,7 @@ margin: 0px;
 padding: 0px;
 font-family: var(--font-family);
 min-width: 500px;
+scroll-behavior: smooth;
 }
 
 table{

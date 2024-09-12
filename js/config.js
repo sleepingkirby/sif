@@ -13,7 +13,7 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
           <div class="configRow configRowHead">
           User:
           </div>
-          <textarea name="config[email]" type="text" placeholder="email" title="email"></textarea>
+          <textarea name="config[email]" type="text" placeholder="email (REQUIRED)" title="email (REQUIRED)"></textarea>
           <div class="configRow configInputRow">
             <textarea name="config[surName]" type="text" placeholder="Last Name" title="Last Name"></textarea>
             <textarea name="config[mName]" type="text" placeholder="M." title="middle name" style="width:60px;"></textarea>
@@ -214,6 +214,10 @@ class to appointment events. Events DOESN'T HAVE TO BE APPOINTMENTS
       state.user.mName=user.mName;
       state.user.cellphone=user.cellphone;
       state.user.phone=user.phone;
+      }
+      else{
+      mainObj.setFloatMsg("Update to user profile failed. Email address is required.");
+      return null;
       }
 
       if(!success){
