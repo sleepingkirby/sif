@@ -80,7 +80,8 @@ let prntUUID=null;
     }
 
     //decrement items in inventory/services
-    if(invcsItems[indx].hasOwnProperty('uuid')&&invcsItems[indx].uuid&&invcsItems[indx].hasOwnProperty('addAmnt')&&invcsItems[indx].addAmnt){
+    //don't decrement if item is a service
+    if(invcsItems[indx].hasOwnProperty('uuid')&&invcsItems[indx].uuid&&invcsItems[indx].hasOwnProperty('addAmnt')&&invcsItems[indx].addAmnt&&invcsItems[indx].type!="service"){
       try{
       chngInvntSrvNum(invcsItems[indx].uuid, invcsItems[indx].addAmnt);
       }

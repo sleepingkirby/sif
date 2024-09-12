@@ -28,7 +28,7 @@ manage inventory and services
       <div class="lbl">Invoice</div>
       <div id="invcsNewFormUUID">
         <input id="invcsNewFormInfoUUID" name="invcs[uuid]" type="hidden" />
-        <input id="invcsNewFormInfoApptUUID" name="invcs[appt_id]" type="hidden" />
+        <input id="invcsNewFormInfoApptUUID" name="invcs[event_id]" type="hidden" />
       </div>
       <div id="invcsNewFormInfo">
         <div id="invcsNewFormInvcsStts" class="row">
@@ -720,7 +720,7 @@ manage inventory and services
 
 
     //sets apptId
-    el=document.getElementsByName("invcs[appt_id]");
+    el=document.getElementsByName("invcs[event_id]");
     el[0].value=id;
 
     //updates invoice total_paid to total.
