@@ -62,7 +62,7 @@
             This is here in case anyone is interested in what this is/does in a technical term. If this is not you, feel free to <a href="#setUp">skip</a> to the next section.
             </div>
             <div>
-            Sif is a single page application written completely in Javascript. Asides from sqljs and its wasm to load, read and write a sqlite3 database file, no external libraries are used. Due to how browser safety and security works, the database can only be loaded into memory as browser javascript are not allowed to write files arbitrarily to the file system. To mitigate this, events have been set on the event "beforeunload". The function to write out on before page unload (which only runs to export the sqlite db file) will only run if there was a change to the db.
+            Sif is a single page application written completely in Javascript. Asides from sqlJS and its Wasm to load, read and write a sqlite3 database file, no external libraries are used. Due to how browser safety and security works, the database can only be loaded into memory as browser javascript are not allowed to write files arbitrarily to the file system. To mitigate this, events have been set on the event "beforeunload". The function to write out on before page unload (which only runs to export the sqlite db file) will only run if there was a change to the db.
             </div>
             <div>
             Sif should, theoretically, be computationally more efficient than frontend frameworks like ReactJS due to the fact that:

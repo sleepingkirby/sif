@@ -130,12 +130,3 @@ justify-content:center;
 align-items:flex-end;
 }
 
-
-.configAbout a{
-text-decoration:none;
-color: #0808ee;
-}
-
-.configAbout a:visited{
-color: #0808ee;
-}

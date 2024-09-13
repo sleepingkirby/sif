@@ -94,6 +94,16 @@ align-items:center;
 height:30px;
 }
 
+a{
+text-decoration:none;
+color: #0808ee;
+}
+
+a:visited{
+color: #0808ee;
+}
+
+
 .tblHdSrtArrw svg{
 width:30px;
 fill:var(--default-gray);
