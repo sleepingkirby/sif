@@ -22,4 +22,12 @@ Features:
 - Database in sqlite format for easily readability
 
 
+Installation:
+- Download the entire source into a folder
+- Open up index.html with a web browser
+- That's it
+
+How to use:
+- Upon opening index.html, you'll be presented with "Help/How to get Started" link. If you'd rather see a video, there's also the "Getting Started Video"
+
 
